@@ -207,15 +207,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## TODO:: Stretch Goals
 
 - [ ] Region-level dashboards (Ashanti, Greater Accra, etc.)
-- [ ] Multi-factor identity via GhanaCard API
 - [ ] Public GraphQL endpoint for journalists/researchers
 - [ ] Mobile app (React Native)
 - [ ] Advanced analytics and reporting
 - [ ] Multi-language support (English, Akan)
-- [ ] SMS OTP verification for non-Ghanaian IPs
 - [ ] Minister performance history tracking
 - [ ] Export functionality (CSV, PDF reports)
 
 ## Support
 
-For support, email support@citizen-safistication.gh or create an issue in the repository. 
+For support, email eg@entechnologygh.com or create an issue in the repository. 
