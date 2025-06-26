@@ -1,0 +1,6 @@
+{
+  "/api/ministers/trending/route": "app/api/ministers/trending/route.js",
+  "/api/analytics/nationalScore/route": "app/api/analytics/nationalScore/route.js",
+  "/page": "app/page.js",
+  "/api/ministers/route": "app/api/ministers/route.js"
+}
