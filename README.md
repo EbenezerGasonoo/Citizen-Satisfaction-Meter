@@ -1,43 +1,39 @@
-# Who is working? Know your Ministers
+# Citizen Satisfaction Meter
 
-A full-stack voting/polling system for Ghanaian citizens to rate cabinet ministers' performance. Built with Next.js 14, TypeScript, Prisma, and Tailwind CSS.
+A modern web application that allows Ghanaian citizens to rate the performance of cabinet ministers and view live satisfaction metrics. Built with Next.js, TypeScript, and Prisma.
 
-## Features
+## 🚀 Features
 
-- **Minister Directory**: View all current ministers with photos, names, and portfolios
-- **Voting System**: Cast satisfaction votes (👍 Satisfied / 👎 Not Satisfied) for each minister
-- **Daily Vote Limits**: One vote per minister per day (soft-locked by anonymized browser hash)
-- **National Satisfaction Meter**: Live 0-100% satisfaction rate with real-time updates
-- **Trending Ministers**: Top 3 trending ministers over the last 24 hours
-- **Ghanaian IP Detection**: Restrict voting to Ghanaian IP addresses
-- **Admin Dashboard**: CRUD operations for ministers, analytics, and data export
-- **Social Sharing**: Share minister scores via social media meta tags
+### For Citizens
+- **National Satisfaction Meter**: View overall satisfaction with the government
+- **Minister Directory**: Browse all ministers with search and filter functionality
+- **Trending Ministers**: See which ministers are currently trending
+- **Voting System**: Rate ministers as satisfied or not satisfied (one vote per day per minister)
+- **Real-time Updates**: Live notifications when votes are cast
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
 
-## Tech Stack
+### For Administrators
+- **Admin Dashboard**: Comprehensive overview of system statistics
+- **Minister Management**: View, edit, and manage minister profiles
+- **Analytics Dashboard**: Detailed charts and insights into voting patterns
+- **Daily Reports**: Track voting activity and satisfaction trends
+- **Data Export**: Export voting data for analysis
 
-- **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS, shadcn/ui
-- **Backend**: tRPC for type-safe API routes, Prisma ORM
-- **Database**: PostgreSQL (PlanetScale compatible)
-- **Authentication**: NextAuth.js (Credentials + GitHub)
-- **Real-time**: Ably channels for live updates
-- **Validation**: Zod schema validation
-- **Testing**: Jest + React Testing Library, Cypress E2E
-- **Internationalization**: next-intl (en, ak - future)
+## 🛠️ Tech Stack
 
-## Getting Started
+- **Frontend**: Next.js 14, React 18, TypeScript
+- **Styling**: Tailwind CSS, Framer Motion
+- **Database**: SQLite with Prisma ORM
+- **Charts**: Recharts
+- **Icons**: Lucide React
+- **Real-time**: Ably (planned integration)
 
-### Prerequisites
-
-- Node.js 18+ 
-- PostgreSQL database
-- npm or pnpm
-
-### Installation
+## 📦 Installation
 
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd citizen-safistication
+   cd citizen-satisfaction-meter
    ```
 
 2. **Install dependencies**
@@ -50,19 +46,15 @@ A full-stack voting/polling system for Ghanaian citizens to rate cabinet ministe
    cp .env.example .env.local
    ```
    
-   Update `.env.local` with your configuration:
-   ```env
-   DATABASE_URL="postgresql://username:password@localhost:5432/citizen_safistication"
-   NEXTAUTH_URL="http://localhost:3000"
-   NEXTAUTH_SECRET="your-secret-key-here"
-   ABLY_API_KEY="your-ably-api-key"
-   NEXT_PUBLIC_APP_URL="http://localhost:3000"
+   Add your database URL:
+   ```
+   DATABASE_URL="file:./dev.db"
    ```
 
 4. **Set up the database**
    ```bash
-   npx prisma generate
-   npx prisma db push
+   npm run db:generate
+   npm run db:push
    npm run db:seed
    ```
 
@@ -74,62 +66,60 @@ A full-stack voting/polling system for Ghanaian citizens to rate cabinet ministe
 6. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
-## Database Schema
+## 🗄️ Database Schema
 
-### Minister
-- `id`: Primary key
+### Ministers
+- `id`: Unique identifier
 - `fullName`: Minister's full name
 - `portfolio`: Ministerial portfolio/position
 - `photoUrl`: Profile photo URL
-- `bio`: Biography (optional)
-- `createdAt`: Creation timestamp
+- `bio`: Minister biography
+- `isTrending`: Whether the minister is currently trending
+- `createdAt`: Record creation timestamp
 
-### Vote
-- `id`: Primary key
-- `ministerId`: Foreign key to Minister
-- `positive`: Boolean (true = Satisfied)
-- `clientHash`: SHA-256 hash of (IP + UA + Date)
+### Votes
+- `id`: Unique identifier
+- `ministerId`: Reference to minister
+- `positive`: Boolean indicating satisfaction (true = satisfied)
+- `clientHash`: SHA-256 hash of client info for vote tracking
 - `createdAt`: Vote timestamp
 
-## API Endpoints
+## 🚀 API Endpoints
 
 ### Public Endpoints
-- `GET /api/ministers` - List all ministers with stats
-- `GET /api/ministers/[id]` - Get minister details
+- `GET /api/ministers` - Get all ministers with stats
+- `GET /api/ministers/[id]` - Get specific minister details
 - `GET /api/ministers/trending` - Get trending ministers
-- `GET /api/analytics/nationalScore` - Get national satisfaction score
 - `POST /api/ministers/[id]/vote` - Submit a vote
+- `GET /api/analytics/nationalScore` - Get national satisfaction score
 
-### Admin Endpoints (Protected)
-- `GET /api/admin/ministers` - Admin minister management
-- `POST /api/admin/ministers` - Create minister
-- `PUT /api/admin/ministers/[id]` - Update minister
-- `DELETE /api/admin/ministers/[id]` - Delete minister
-- `GET /api/admin/analytics` - Admin analytics
+### Admin Endpoints
+- `GET /api/analytics/daily` - Get daily voting analytics
+- `GET /admin/ministers` - Admin minister management
+- `GET /admin/analytics` - Admin analytics dashboard
 
-## Key Functions
+## 🎨 Components
 
-### Client Hashing
-```typescript
-hashClient(ip: string, userAgent: string, salt?: string): string
-```
-Creates a SHA-256 hash of IP + User Agent + Date for vote deduplication.
+### Core Components
+- `NationalMeter`: Displays national satisfaction percentage
+- `TrendingGrid`: Shows trending ministers
+- `MinisterDirectory`: Complete minister listing with search
+- `VoteButtons`: Voting interface for individual ministers
+- `VoteNotification`: Real-time vote notifications
+- `Navigation`: Main navigation component
 
-### IP Geolocation
-```typescript
-isGhanaianIP(ip: string): boolean
-```
-Checks if an IP address is within Ghana's IP ranges.
+### Admin Components
+- `AdminMinistersPage`: Minister management interface
+- `AdminAnalyticsPage`: Analytics dashboard with charts
 
-## Development
+## 🔧 Development
 
 ### Available Scripts
-
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
-- `npm run test` - Run unit tests
+- `npm run test` - Run Jest tests
 - `npm run test:e2e` - Run Cypress E2E tests
 - `npm run db:generate` - Generate Prisma client
 - `npm run db:push` - Push schema to database
@@ -137,29 +127,19 @@ Checks if an IP address is within Ghana's IP ranges.
 - `npm run db:studio` - Open Prisma Studio
 
 ### Project Structure
-
 ```
 src/
-├── app/                    # Next.js App Router
-│   ├── api/               # API routes
-│   ├── minister/[id]/     # Minister detail pages
-│   ├── admin/             # Admin dashboard
-│   ├── globals.css        # Global styles
-│   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Home page
-├── components/            # React components
-│   ├── NationalMeter.tsx  # Satisfaction meter
-│   ├── TrendingGrid.tsx   # Trending ministers
-│   ├── MinisterDirectory.tsx
-│   └── VoteButtons.tsx
-├── lib/                   # Utility functions
-│   ├── prisma.ts          # Prisma client
-│   ├── trpc.ts            # tRPC setup
-│   └── utils.ts           # Helper functions
-└── types/                 # TypeScript types
+├── app/                 # Next.js app directory
+│   ├── admin/          # Admin pages
+│   ├── api/            # API routes
+│   ├── minister/       # Minister detail pages
+│   └── globals.css     # Global styles
+├── components/         # React components
+├── lib/               # Utility functions
+└── prisma/            # Database schema and migrations
 ```
 
-## Testing
+## 🧪 Testing
 
 ### Unit Tests
 ```bash
@@ -171,49 +151,59 @@ npm run test
 npm run test:e2e
 ```
 
-## Deployment
+### Test Coverage
+The application includes comprehensive tests for:
+- Component rendering and interactions
+- API endpoint functionality
+- Database operations
+- User voting flows
+
+## 🚀 Deployment
 
 ### Vercel (Recommended)
 1. Connect your GitHub repository to Vercel
 2. Set environment variables in Vercel dashboard
 3. Deploy automatically on push to main branch
 
-### Manual Deployment
-1. Build the application: `npm run build`
-2. Start production server: `npm run start`
+### Other Platforms
+The application can be deployed to any platform that supports Next.js:
+- Netlify
+- Railway
+- DigitalOcean App Platform
+- AWS Amplify
 
-## Environment Variables
+## 🔒 Security Features
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `DATABASE_URL` | PostgreSQL connection string | Yes |
-| `NEXTAUTH_URL` | NextAuth.js base URL | Yes |
-| `NEXTAUTH_SECRET` | NextAuth.js secret key | Yes |
-| `ABLY_API_KEY` | Ably real-time API key | No |
-| `NEXT_PUBLIC_APP_URL` | Public app URL | Yes |
+- **Vote Rate Limiting**: One vote per day per minister per user
+- **Client Hashing**: SHA-256 hashing of client info for vote tracking
+- **Input Validation**: Comprehensive validation on all inputs
+- **SQL Injection Protection**: Prisma ORM prevents SQL injection
+- **XSS Protection**: React's built-in XSS protection
 
-## Contributing
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## License
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## TODO:: Stretch Goals
+## 🙏 Acknowledgments
 
-- [ ] Region-level dashboards (Ashanti, Greater Accra, etc.)
-- [ ] Public GraphQL endpoint for journalists/researchers
-- [ ] Mobile app (React Native)
-- [ ] Advanced analytics and reporting
-- [ ] Multi-language support (English, Akan)
-- [ ] Minister performance history tracking
-- [ ] Export functionality (CSV, PDF reports)
+- Ghanaian citizens for inspiration
+- Next.js team for the amazing framework
+- Prisma team for the excellent ORM
+- Tailwind CSS for the utility-first styling
+- Framer Motion for smooth animations
 
-## Support
+## 📞 Support
 
-For support, email eg@entechnologygh.com or create an issue in the repository. 
+For support, email support@citizensatisfactionmeter.com or create an issue in this repository.
+
+---
+
+**Built with ❤️ for Ghanaian democracy and transparency** 

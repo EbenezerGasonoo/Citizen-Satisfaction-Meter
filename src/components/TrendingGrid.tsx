@@ -72,7 +72,7 @@ export default function TrendingGrid() {
         animate={{ opacity: 1 }}
       >
         <motion.h2 
-          className="text-2xl font-semibold mb-8 text-gray-800"
+          className="text-2xl font-semibold mb-8 text-gray-800 dark:text-gray-200"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
@@ -82,14 +82,14 @@ export default function TrendingGrid() {
           {[1, 2, 3].map(i => (
             <motion.div 
               key={i} 
-              className="bg-white rounded-lg shadow-md p-6 animate-pulse"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 animate-pulse"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
             >
-              <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-4" />
-              <div className="h-4 bg-gray-200 rounded mb-2" />
-              <div className="h-3 bg-gray-200 rounded w-3/4" />
+              <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-4" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2" />
+              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
             </motion.div>
           ))}
         </div>
@@ -105,7 +105,7 @@ export default function TrendingGrid() {
       transition={{ duration: 0.6 }}
     >
       <motion.h2 
-        className="text-2xl font-semibold mb-8 text-gray-800"
+        className="text-2xl font-semibold mb-8 text-gray-800 dark:text-gray-200"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
@@ -132,7 +132,7 @@ export default function TrendingGrid() {
           >
             <Link href={`/minister/${minister.id}`}>
               <motion.div 
-                className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+                className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200 border border-gray-200 dark:border-gray-700"
                 whileHover={{ boxShadow: "0 10px 25px rgba(0,0,0,0.1)" }}
               >
                 <motion.div 
@@ -148,13 +148,13 @@ export default function TrendingGrid() {
                     sizes="64px"
                   />
                   {minister.isTrending && (
-                    <div className="absolute top-0 right-0 bg-white rounded-full p-1 shadow z-10">
+                    <div className="absolute top-0 right-0 bg-white dark:bg-gray-800 rounded-full p-1 shadow z-10 border border-gray-200 dark:border-gray-600">
                       <TrendingUp className="w-4 h-4 text-green-500" />
                     </div>
                   )}
                 </motion.div>
                 <motion.h3 
-                  className="font-semibold text-gray-800 mb-2"
+                  className="font-semibold text-gray-800 dark:text-gray-100 mb-2"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 + index * 0.1 }}
@@ -162,7 +162,7 @@ export default function TrendingGrid() {
                   {minister.fullName}
                 </motion.h3>
                 <motion.p 
-                  className="text-sm text-gray-600"
+                  className="text-sm text-gray-600 dark:text-gray-400"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.4 + index * 0.1 }}
@@ -171,12 +171,12 @@ export default function TrendingGrid() {
                 </motion.p>
                 <div className="flex items-center justify-center space-x-2">
                   <span className={`text-lg font-bold ${
-                    minister.trend === 'up' ? 'text-green-600' : 'text-red-600'
+                    minister.trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                   }`}>
                     {minister.satisfactionRate}%
                   </span>
                   <span className={`text-sm ${
-                    minister.trend === 'up' ? 'text-green-600' : 'text-red-600'
+                    minister.trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                   }`}>
                     {minister.trend === 'up' ? '+' : ''}{minister.voteChange}
                   </span>

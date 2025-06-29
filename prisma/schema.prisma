@@ -18,13 +18,63 @@ model Minister {
   bio       String?
   createdAt DateTime @default(now())
   votes     Vote[]
+  favorites Favorite[]
+  comments  Comment[]
+  policies  Policy[]
   isTrending Boolean @default(false)
+}
+
+model Policy {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  category    String   // e.g., "Economic", "Social", "Infrastructure", "Security"
+  status      String   // "Active", "Completed", "Planned", "Suspended"
+  startDate   DateTime?
+  endDate     DateTime?
+  budget      Float?
+  impact      String   // "High", "Medium", "Low"
+  ministerId  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  minister    Minister @relation(fields: [ministerId], references: [id])
+  votes       PolicyVote[]
+}
+
+model PolicyVote {
+  id         Int      @id @default(autoincrement())
+  policyId   Int
+  positive   Boolean  // true = Satisfied with policy
+  clientHash String   // SHA-256(ip + ua + salt)
+  createdAt  DateTime @default(now())
+  policy     Policy   @relation(fields: [policyId], references: [id])
+
+  @@unique([policyId, clientHash])
 }
 
 model Vote {
   id         Int      @id @default(autoincrement())
   ministerId Int
   positive   Boolean  // true = Satisfied
+  clientHash String   // SHA-256(ip + ua + salt)
+  createdAt  DateTime @default(now())
+  minister   Minister @relation(fields: [ministerId], references: [id])
+}
+
+model Favorite {
+  id         Int      @id @default(autoincrement())
+  ministerId Int
+  clientHash String   // SHA-256(ip + ua + salt) - same as Vote
+  createdAt  DateTime @default(now())
+  minister   Minister @relation(fields: [ministerId], references: [id])
+
+  @@unique([ministerId, clientHash])
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  ministerId Int
+  content    String
   clientHash String   // SHA-256(ip + ua + salt)
   createdAt  DateTime @default(now())
   minister   Minister @relation(fields: [ministerId], references: [id])

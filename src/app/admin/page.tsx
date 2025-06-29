@@ -6,24 +6,24 @@ export default function AdminPage() {
     <main className="container mx-auto px-4 py-8">
       <div className="max-w-6xl mx-auto">
         <header className="mb-8">
-          <h1 className="text-3xl font-bold text-cocoa-green mb-2">
+          <h1 className="text-3xl font-bold text-cocoa-green dark:text-green-400 mb-2">
             Admin Dashboard
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Manage ministers, view analytics, and export data
           </p>
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Minister Management */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Minister Management
             </h2>
             <div className="space-y-3">
               <Link
                 href="/admin/ministers"
-                className="block w-full text-center bg-cocoa-green text-white py-2 px-4 rounded-lg hover:bg-cocoa-green/90 transition-colors"
+                className="block w-full text-center bg-cocoa-green dark:bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-cocoa-green/90 dark:hover:bg-green-700 transition-colors"
               >
                 View All Ministers
               </Link>
@@ -36,9 +36,30 @@ export default function AdminPage() {
             </div>
           </div>
 
+          {/* Policy Management */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              Policy Management
+            </h2>
+            <div className="space-y-3">
+              <Link
+                href="/admin/policies"
+                className="block w-full text-center bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                View All Policies
+              </Link>
+              <Link
+                href="/admin/policies/new"
+                className="block w-full text-center bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600 transition-colors"
+              >
+                Create New Policy
+              </Link>
+            </div>
+          </div>
+
           {/* Analytics */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Analytics
             </h2>
             <div className="space-y-3">
@@ -58,8 +79,8 @@ export default function AdminPage() {
           </div>
 
           {/* System */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
               System
             </h2>
             <div className="space-y-3">
@@ -80,31 +101,31 @@ export default function AdminPage() {
         </div>
 
         {/* Quick Stats */}
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
             Quick Statistics
           </h2>
           <Suspense fallback={<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-20 bg-gray-200 rounded animate-pulse" />
+              <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
             ))}
           </div>}>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <div className="text-2xl font-bold text-green-600">0</div>
-                <div className="text-sm text-gray-600">Total Ministers</div>
+              <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                <div className="text-2xl font-bold text-green-600 dark:text-green-400">0</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Total Ministers</div>
               </div>
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <div className="text-2xl font-bold text-blue-600">0</div>
-                <div className="text-sm text-gray-600">Total Votes</div>
+              <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">0</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Total Votes</div>
               </div>
-              <div className="text-center p-4 bg-purple-50 rounded-lg">
-                <div className="text-2xl font-bold text-purple-600">0%</div>
-                <div className="text-sm text-gray-600">Satisfaction Rate</div>
+              <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">0%</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Satisfaction Rate</div>
               </div>
-              <div className="text-center p-4 bg-orange-50 rounded-lg">
-                <div className="text-2xl font-bold text-orange-600">0</div>
-                <div className="text-sm text-gray-600">Today's Votes</div>
+              <div className="text-center p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+                <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">0</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Today's Votes</div>
               </div>
             </div>
           </Suspense>

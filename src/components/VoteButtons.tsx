@@ -84,10 +84,10 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
           disabled={voted !== null || isVoting}
           className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-colors ${
             voted === 'satisfied'
-              ? 'bg-green-100 text-green-800 border-2 border-green-300'
+              ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border-2 border-green-300 dark:border-green-700'
               : voted === 'not-satisfied'
-              ? 'bg-gray-100 text-gray-400 border-2 border-gray-200 cursor-not-allowed'
-              : 'bg-green-500 text-white hover:bg-green-600 border-2 border-green-500'
+              ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border-2 border-gray-200 dark:border-gray-700 cursor-not-allowed'
+              : 'bg-green-500 dark:bg-green-600 text-white hover:bg-green-600 dark:hover:bg-green-700 border-2 border-green-500 dark:border-green-600'
           }`}
           variants={buttonVariants}
           initial="initial"
@@ -114,10 +114,10 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
           disabled={voted !== null || isVoting}
           className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-colors ${
             voted === 'not-satisfied'
-              ? 'bg-red-100 text-red-800 border-2 border-red-300'
+              ? 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 border-2 border-red-300 dark:border-red-700'
               : voted === 'satisfied'
-              ? 'bg-gray-100 text-gray-400 border-2 border-gray-200 cursor-not-allowed'
-              : 'bg-red-500 text-white hover:bg-red-600 border-2 border-red-500'
+              ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border-2 border-gray-200 dark:border-gray-700 cursor-not-allowed'
+              : 'bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700 border-2 border-red-500 dark:border-red-600'
           }`}
           variants={buttonVariants}
           initial="initial"
@@ -152,8 +152,8 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
             <motion.div
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${
                 voted === 'satisfied' 
-                  ? 'bg-green-100 text-green-800' 
-                  : 'bg-red-100 text-red-800'
+                  ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' 
+                  : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
               }`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -183,7 +183,7 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
             exit="exit"
           >
             <motion.div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-100 text-red-800"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}

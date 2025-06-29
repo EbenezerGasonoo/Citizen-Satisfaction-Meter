@@ -7,10 +7,10 @@ export async function GET() {
     
     const totalVotes = votes.length
     const positiveVotes = votes.filter(vote => vote.positive).length
-    const score = totalVotes > 0 ? Math.round((positiveVotes / totalVotes) * 100) : 0
+    const satisfactionPercentage = totalVotes > 0 ? Math.round((positiveVotes / totalVotes) * 100) : 0
 
     return NextResponse.json({
-      score,
+      satisfactionPercentage,
       totalVotes,
       positiveVotes,
     })

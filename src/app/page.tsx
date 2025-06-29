@@ -5,6 +5,7 @@ import { Suspense } from 'react'
 import NationalMeter from '@/components/NationalMeter'
 import TrendingGrid from '@/components/TrendingGrid'
 import MinisterDirectory from '@/components/MinisterDirectory'
+import VoteNotification from '@/components/VoteNotification'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -43,52 +44,58 @@ const titleVariants = {
 
 export default function Home() {
   return (
-    <motion.div
-      className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      <div className="container mx-auto px-4 py-8">
-        <motion.header 
-          className="text-center mb-12"
-          variants={titleVariants}
-        >
-          <motion.h1 
-            className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
+    <>
+      <motion.div
+        className="min-h-screen"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="container mx-auto px-4 py-8">
+          <motion.header 
+            className="text-center mb-12"
+            variants={titleVariants}
           >
-            Who is working? Know your Ministers
-          </motion.h1>
-          <motion.p 
-            className="text-xl text-gray-600 max-w-2xl mx-auto"
+            <motion.h1 
+              className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.2 }}
+            >
+              Who is working? Know your Ministers
+            </motion.h1>
+            <motion.p 
+              className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
+              variants={sectionVariants}
+            >
+              Rate the performance of Ghanaian cabinet ministers and see live satisfaction metrics
+            </motion.p>
+          </motion.header>
+
+          <motion.section 
+            id="national-meter"
+            className="mb-12"
             variants={sectionVariants}
           >
-            Rate the performance of Ghanaian cabinet ministers and see live satisfaction metrics
-          </motion.p>
-        </motion.header>
+            <NationalMeter />
+          </motion.section>
 
-        <motion.section 
-          className="mb-12"
-          variants={sectionVariants}
-        >
-          <NationalMeter />
-        </motion.section>
+          <motion.section 
+            id="trending"
+            className="mb-12"
+            variants={sectionVariants}
+          >
+            <TrendingGrid />
+          </motion.section>
 
-        <motion.section 
-          className="mb-12"
-          variants={sectionVariants}
-        >
-          <TrendingGrid />
-        </motion.section>
-
-        <motion.section 
-          variants={sectionVariants}
-        >
-          <MinisterDirectory />
-        </motion.section>
-      </div>
-    </motion.div>
+          <motion.section 
+            id="ministers"
+            variants={sectionVariants}
+          >
+            <MinisterDirectory />
+          </motion.section>
+        </div>
+      </motion.div>
+      <VoteNotification />
+    </>
   )
 } 

@@ -1,6 +1,13 @@
 {
-  "/api/ministers/trending/route": "app/api/ministers/trending/route.js",
-  "/api/analytics/nationalScore/route": "app/api/analytics/nationalScore/route.js",
   "/page": "app/page.js",
-  "/api/ministers/route": "app/api/ministers/route.js"
+  "/api/analytics/nationalScore/route": "app/api/analytics/nationalScore/route.js",
+  "/api/ministers/trending/route": "app/api/ministers/trending/route.js",
+  "/api/ministers/route": "app/api/ministers/route.js",
+  "/api/ministers/[id]/favorite/route": "app/api/ministers/[id]/favorite/route.js",
+  "/api/ministers/[id]/policies/route": "app/api/ministers/[id]/policies/route.js",
+  "/minister/[id]/page": "app/minister/[id]/page.js",
+  "/api/ministers/[id]/route": "app/api/ministers/[id]/route.js",
+  "/admin/page": "app/admin/page.js",
+  "/admin/policies/page": "app/admin/policies/page.js",
+  "/api/admin/policies/route": "app/api/admin/policies/route.js"
 }

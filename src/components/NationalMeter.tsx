@@ -37,7 +37,7 @@ export default function NationalMeter() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
-        <div className="w-64 h-64 bg-gray-200 rounded-full animate-pulse" />
+        <div className="w-64 h-64 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
       </motion.div>
     )
   }
@@ -45,7 +45,7 @@ export default function NationalMeter() {
   if (!score) {
     return (
       <motion.div 
-        className="text-center text-gray-500"
+        className="text-center text-gray-500 dark:text-gray-400"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
@@ -66,7 +66,7 @@ export default function NationalMeter() {
       transition={{ duration: 0.6 }}
     >
       <motion.h2 
-        className="text-2xl font-semibold mb-8 text-gray-800"
+        className="text-2xl font-semibold mb-8 text-gray-800 dark:text-gray-200"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
@@ -88,6 +88,7 @@ export default function NationalMeter() {
               cy="128"
               r="120"
               stroke="#e5e7eb"
+              className="dark:stroke-gray-700"
               strokeWidth="16"
               fill="none"
             />
@@ -115,7 +116,7 @@ export default function NationalMeter() {
             transition={{ delay: 1 }}
           >
             <motion.div 
-              className="text-4xl font-bold text-gray-800"
+              className="text-4xl font-bold text-gray-800 dark:text-gray-200"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.5, delay: 1.2 }}
@@ -123,7 +124,7 @@ export default function NationalMeter() {
               {score.satisfactionPercentage}%
             </motion.div>
             <motion.div 
-              className="text-sm text-gray-600 mt-1"
+              className="text-sm text-gray-600 dark:text-gray-400 mt-1"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.5 }}
@@ -135,7 +136,7 @@ export default function NationalMeter() {
       </motion.div>
       
       <motion.div 
-        className="mt-6 text-gray-600"
+        className="mt-6 text-gray-600 dark:text-gray-400"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.8 }}
