@@ -207,16 +207,14 @@ export default function MinisterDirectory() {
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Image
+                  <img
                     src={minister.photoUrl}
                     alt={minister.fullName}
-                    fill
-                    className="object-cover"
-                    sizes="80px"
+                    className="object-cover w-20 h-20 rounded-full"
+                    style={{ aspectRatio: '1/1' }}
                   />
                 </motion.div>
               </Link>
-
               <Link href={`/minister/${minister.id}`}>
                 <motion.h3 
                   className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100 cursor-pointer hover:text-cocoa-green dark:hover:text-green-400 transition-colors"
@@ -226,15 +224,12 @@ export default function MinisterDirectory() {
                   {minister.fullName}
                 </motion.h3>
               </Link>
-
               <p className="text-sm text-cocoa-green dark:text-green-400 font-medium mb-3">
                 {minister.portfolio}
               </p>
-
               <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
                 {minister.bio}
               </p>
-
               <Link href={`/minister/${minister.id}`}>
                 <motion.button
                   className="mt-4 w-full bg-cocoa-green dark:bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 dark:hover:bg-green-700 transition-colors duration-200"
@@ -248,21 +243,6 @@ export default function MinisterDirectory() {
           </motion.div>
         ))}
       </motion.div>
-
-      {filteredMinisters.length === 0 && !loading && (
-        <motion.div 
-          className="text-center py-12"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          <div className="text-gray-500 dark:text-gray-400 mb-4">
-            <Search className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p className="text-lg">No ministers found</p>
-            <p className="text-sm">Try adjusting your search terms</p>
-          </div>
-        </motion.div>
-      )}
     </motion.div>
   )
-} 
+}

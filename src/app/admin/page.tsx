@@ -68,6 +68,27 @@ export default async function AdminPage() {
             </div>
           </div>
 
+          {/* Action Management */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              Action Management
+            </h2>
+            <div className="space-y-3">
+              <Link
+                href="/admin/actions"
+                className="block w-full text-center bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                View All Actions
+              </Link>
+              <Link
+                href="/admin/actions/new"
+                className="block w-full text-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                Create New Action
+              </Link>
+            </div>
+          </div>
+
           {/* Analytics */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">

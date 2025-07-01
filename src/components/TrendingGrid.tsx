@@ -140,12 +140,11 @@ export default function TrendingGrid() {
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Image
+                  <img
                     src={minister.photoUrl}
                     alt={minister.fullName}
-                    fill
-                    className="object-cover"
-                    sizes="64px"
+                    className="object-cover w-16 h-16 rounded-full mx-auto mb-4"
+                    style={{ aspectRatio: '1/1' }}
                   />
                   {minister.isTrending && (
                     <div className="absolute top-0 right-0 bg-white dark:bg-gray-800 rounded-full p-1 shadow z-10 border border-gray-200 dark:border-gray-600">

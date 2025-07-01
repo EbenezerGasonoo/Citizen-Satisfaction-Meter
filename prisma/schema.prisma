@@ -22,6 +22,7 @@ model Minister {
   comments  Comment[]
   policies  Policy[]
   isTrending Boolean @default(false)
+  actions   Action[]
 }
 
 model Policy {
@@ -125,4 +126,17 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Action {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  status      String   // "Active", "Completed", "Planned", "Suspended"
+  date        DateTime
+  impact      String   // "High", "Medium", "Low"
+  ministerId  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  minister    Minister @relation(fields: [ministerId], references: [id])
 } 

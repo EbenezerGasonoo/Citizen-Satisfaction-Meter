@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X, Home, Users, TrendingUp, BarChart3, Settings } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
+import { signOut } from 'next-auth/react'
 
 const navigation = [
   { name: 'Home', href: '/', icon: Home },
@@ -20,10 +21,11 @@ export default function Navigation() {
   const pathname = usePathname()
 
   const isActive = (href: string) => {
+    const currentPath = pathname || '';
     if (href === '/') {
-      return pathname === '/'
+      return currentPath === '/'
     }
-    return pathname.startsWith(href)
+    return currentPath.startsWith(href)
   }
 
   return (
@@ -60,6 +62,14 @@ export default function Navigation() {
                 </Link>
               )
             })}
+            {pathname?.startsWith('/admin') && (
+              <button
+                onClick={() => signOut({ callbackUrl: '/' })}
+                className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 border border-transparent hover:border-red-200 dark:hover:border-red-700 transition-colors"
+              >
+                Sign Out
+              </button>
+            )}
             <ThemeToggle />
           </div>
 
@@ -115,6 +125,14 @@ export default function Navigation() {
               </motion.div>
             )
           })}
+          {pathname?.startsWith('/admin') && (
+            <button
+              onClick={() => { setIsOpen(false); signOut({ callbackUrl: '/' }) }}
+              className="flex w-full items-center px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 border border-transparent hover:border-red-200 dark:hover:border-red-700 transition-colors mt-2"
+            >
+              Sign Out
+            </button>
+          )}
         </div>
       </motion.div>
     </nav>

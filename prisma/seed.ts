@@ -198,9 +198,7 @@ async function main() {
   // Create ministers
   const createdMinisters = []
   for (const minister of ministers) {
-    const created = await prisma.minister.create({
-      data: minister,
-    })
+    const created = await prisma.minister.create({ data: minister })
     createdMinisters.push(created)
   }
 
@@ -318,6 +316,39 @@ async function main() {
       name: 'Admin User',
     },
   })
+
+  // Seed sample actions if ministers exist
+  if (createdMinisters.length > 0) {
+    await prisma.action.createMany({
+      data: [
+        {
+          title: 'Launch Free SHS',
+          description: 'Implemented free Senior High School education nationwide.',
+          status: 'Completed',
+          date: new Date('2017-09-01'),
+          impact: 'High',
+          ministerId: createdMinisters[0].id,
+        },
+        {
+          title: 'COVID-19 Response',
+          description: 'Coordinated national COVID-19 response and relief.',
+          status: 'Completed',
+          date: new Date('2020-04-01'),
+          impact: 'High',
+          ministerId: createdMinisters[0].id,
+        },
+        {
+          title: 'Planting for Food and Jobs',
+          description: 'Rolled out agricultural support for farmers.',
+          status: 'Active',
+          date: new Date('2023-01-15'),
+          impact: 'Medium',
+          ministerId: createdMinisters[0].id,
+        },
+      ],
+    });
+    console.log('Seeded sample actions.');
+  }
 
   console.log('🎉 Database seeding completed!')
 }
