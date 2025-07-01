@@ -1,7 +1,18 @@
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { redirect } from 'next/navigation'
+import React from 'react'
 import { Suspense } from 'react'
 import Link from 'next/link'
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const session = await getServerSession(authOptions)
+  if (!session) {
+    redirect('/auth/signin')
+  }
+  if ((session.user as any).role !== 'ADMIN') {
+    return <div className="p-8 text-center text-red-600">Unauthorized: Admins only.</div>
+  }
   return (
     <main className="container mx-auto px-4 py-8">
       <div className="max-w-6xl mx-auto">

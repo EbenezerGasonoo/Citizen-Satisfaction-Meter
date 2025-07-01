@@ -1,6 +1,8 @@
 {
-  "/not-found": "app/not-found.js",
   "/page": "app/page.js",
   "/minister/[id]/page": "app/minister/[id]/page.js",
+  "/api/ministers/[id]/route": "app/api/ministers/[id]/route.js",
+  "/api/ministers/[id]/favorite/route": "app/api/ministers/[id]/favorite/route.js",
+  "/api/ministers/[id]/policies/route": "app/api/ministers/[id]/policies/route.js",
   "/admin/page": "app/admin/page.js"
 }
