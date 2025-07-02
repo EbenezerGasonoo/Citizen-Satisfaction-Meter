@@ -39,6 +39,12 @@ export default function RootLayout({
           </main>
           <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-8 transition-colors duration-300">
             <div className="container mx-auto px-4 text-center">
+              {/* Suggestion Box Button */}
+              <div className="max-w-md mx-auto mb-6">
+                <a href="/suggest" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition-colors font-semibold">
+                  Got a suggestion?
+                </a>
+              </div>
               <p className="text-gray-600 dark:text-gray-300">
                 © 2024 Citizen Satisfaction Meter. Empowering citizens to hold government accountable.
               </p>
