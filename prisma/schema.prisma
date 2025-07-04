@@ -139,4 +139,16 @@ model Action {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   minister    Minister @relation(fields: [ministerId], references: [id])
+  votes       ActionVote[]
+}
+
+model ActionVote {
+  id         Int      @id @default(autoincrement())
+  actionId   Int
+  positive   Boolean  // true = Satisfied with action
+  clientHash String   // SHA-256(ip + ua + salt)
+  createdAt  DateTime @default(now())
+  action     Action   @relation(fields: [actionId], references: [id])
+
+  @@unique([actionId, clientHash])
 } 

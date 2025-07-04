@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Edit, TrendingUp, TrendingDown, Eye } from 'lucide-react'
+import ActionSection from '@/components/ActionSection'
 
 interface Minister {
   id: number
@@ -167,6 +168,9 @@ export default function AdminMinistersPage() {
                   </span>
                 </div>
               </div>
+
+              {/* Actions Section */}
+              <ActionSection ministerId={minister.id} />
 
               {minister.isTrending && (
                 <div className="mt-4 flex items-center justify-center text-green-600">

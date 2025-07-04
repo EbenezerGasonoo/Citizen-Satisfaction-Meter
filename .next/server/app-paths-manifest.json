@@ -1,12 +1,5 @@
 {
   "/page": "app/page.js",
-  "/admin/page": "app/admin/page.js",
-  "/admin/policies/new/page": "app/admin/policies/new/page.js",
-  "/admin/ministers/new/page": "app/admin/ministers/new/page.js",
-  "/admin/ministers/page": "app/admin/ministers/page.js",
-  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/api/analytics/nationalScore/route": "app/api/analytics/nationalScore/route.js",
-  "/api/ministers/trending/route": "app/api/ministers/trending/route.js",
-  "/api/ministers/route": "app/api/ministers/route.js",
-  "/api/ministers/[id]/favorite/route": "app/api/ministers/[id]/favorite/route.js"
+  "/minister/[id]/page": "app/minister/[id]/page.js",
+  "/admin/page": "app/admin/page.js"
 }
