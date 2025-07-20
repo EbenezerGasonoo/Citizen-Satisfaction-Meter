@@ -188,12 +188,14 @@ async function main() {
   console.log('🌱 Starting database seed...')
 
   // Clear existing data (order matters due to foreign key constraints)
-  await prisma.policyVote.deleteMany()
-  await prisma.policy.deleteMany()
-  await prisma.vote.deleteMany()
-  await prisma.favorite.deleteMany()
-  await prisma.comment.deleteMany()
-  await prisma.minister.deleteMany()
+  await prisma.actionVote.deleteMany();
+  await prisma.policyVote.deleteMany();
+  await prisma.vote.deleteMany();
+  await prisma.favorite.deleteMany();
+  await prisma.comment.deleteMany();
+  await prisma.policy.deleteMany();
+  await prisma.action.deleteMany();
+  await prisma.minister.deleteMany();
 
   // Create ministers
   const createdMinisters = []
