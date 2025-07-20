@@ -191,7 +191,7 @@ const ministers = [
   },
 ]
 
-async function main() {
+export async function main() {
   console.log('🌱 Starting database seed...')
 
   // Clear existing data (order matters due to foreign key constraints)
