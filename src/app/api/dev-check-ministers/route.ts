@@ -1,10 +1,10 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function GET() {
   const prisma = new PrismaClient();
   const ministers = await prisma.minister.findMany({
     select: { id: true, fullName: true, portfolio: true }
   });
-  res.status(200).json({ ministers });
+  return NextResponse.json({ ministers });
 } 
