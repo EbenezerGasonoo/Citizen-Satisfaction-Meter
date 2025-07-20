@@ -1,12 +1,10 @@
 {
   "/page": "app/page.js",
-  "/api/ministers/[id]/policies/route": "app/api/ministers/[id]/policies/route.js",
-  "/minister/[id]/page": "app/minister/[id]/page.js",
   "/api/ministers/[id]/route": "app/api/ministers/[id]/route.js",
-  "/api/ministers/[id]/favorite/route": "app/api/ministers/[id]/favorite/route.js",
-  "/admin/page": "app/admin/page.js",
   "/api/ministers/[id]/actions/route": "app/api/ministers/[id]/actions/route.js",
+  "/minister/[id]/page": "app/minister/[id]/page.js",
   "/admin/ministers/page": "app/admin/ministers/page.js",
+  "/admin/page": "app/admin/page.js",
   "/api/ministers/route": "app/api/ministers/route.js",
   "/admin/ministers/[id]/edit/page": "app/admin/ministers/[id]/edit/page.js"
 }
