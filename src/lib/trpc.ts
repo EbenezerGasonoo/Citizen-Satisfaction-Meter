@@ -2,7 +2,7 @@ import { initTRPC } from '@trpc/server'
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next'
 import { prisma } from './prisma'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions'
 
 export const createContext = async (opts: CreateNextContextOptions) => {
   const { req, res } = opts

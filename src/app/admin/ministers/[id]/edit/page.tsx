@@ -1,12 +1,12 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 
 export default function EditMinisterPage() {
   const router = useRouter();
   const params = useParams();
-  const { id } = params;
+  const id = typeof params?.id === 'string' ? params.id : Array.isArray(params?.id) ? params.id[0] : '';
   const [minister, setMinister] = useState({
     fullName: "",
     portfolio: "",
@@ -17,9 +17,6 @@ export default function EditMinisterPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [uploading, setUploading] = useState(false);
-  const [uploadError, setUploadError] = useState("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchMinister = async () => {
@@ -49,45 +46,17 @@ export default function EditMinisterPage() {
     setMinister({ ...minister, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    setUploadError("");
-    const formData = new FormData();
-    formData.append("file", file);
-    try {
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-      if (res.ok && data.url) {
-        setMinister((prev) => ({ ...prev, photoUrl: data.url }));
-      } else {
-        setUploadError(data.error || "Failed to upload image.");
-      }
-    } catch (err) {
-      setUploadError("An error occurred during upload.");
-    } finally {
-      setUploading(false);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
     setError("");
     setSuccess("");
-    console.log('Submitting minister:', minister);
     try {
-      const res = await fetch(`/api/ministers/${id}`, {
+      const res = await fetch(`/api/admin/ministers/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(minister),
       });
-      const data = await res.json();
-      console.log('PUT response:', data);
       if (res.ok) {
         setSuccess("Minister updated successfully.");
         setTimeout(() => router.push("/admin/ministers"), 1200);
@@ -132,20 +101,14 @@ export default function EditMinisterPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">Photo</label>
+          <label className="block mb-1 font-medium">Photo URL</label>
           <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleFileChange}
+            type="text"
+            name="photoUrl"
+            value={minister.photoUrl}
+            onChange={handleChange}
             className="w-full border rounded px-3 py-2"
-            disabled={uploading}
           />
-          {uploading && <div className="text-sm text-blue-600 mt-1">Uploading...</div>}
-          {uploadError && <div className="text-sm text-red-600 mt-1">{uploadError}</div>}
-          {minister.photoUrl && (
-            <img src={minister.photoUrl} alt="Minister" className="mt-2 w-24 h-24 object-cover rounded-full border" />
-          )}
         </div>
         <div>
           <label className="block mb-1 font-medium">Bio</label>
