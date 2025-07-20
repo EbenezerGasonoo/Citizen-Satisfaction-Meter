@@ -28,8 +28,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     const fetchMinister = async () => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-        const response = await fetch(`${baseUrl}/api/ministers/${params.id}`)
+        const response = await fetch(`/api/ministers/${params.id}`)
 
         if (!response.ok) {
           setMinister(null)
