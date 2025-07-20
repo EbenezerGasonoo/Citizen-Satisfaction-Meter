@@ -1,130 +1,35 @@
 {
   "pages": {
-    "/_not-found": [
-      "static/chunks/webpack-5a241bcc7907d22d.js",
-      "static/chunks/fd9d1056-098b09d98c40a7be.js",
-      "static/chunks/938-9166c4a6511998b4.js",
-      "static/chunks/main-app-af1a5887b02d2332.js",
-      "static/chunks/app/_not-found-655b2ce8f4ab99bf.js"
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
     ],
     "/layout": [
-      "static/chunks/webpack-5a241bcc7907d22d.js",
-      "static/chunks/fd9d1056-098b09d98c40a7be.js",
-      "static/chunks/938-9166c4a6511998b4.js",
-      "static/chunks/main-app-af1a5887b02d2332.js",
-      "static/chunks/250-61453098be97c510.js",
-      "static/chunks/581-bcc4f5b9cfb7cf34.js",
-      "static/chunks/232-ea83240fbea97b10.js",
-      "static/css/9537f989e7f93b51.css",
-      "static/chunks/app/layout-a0348a7fac0e918d.js"
-    ],
-    "/admin/actions/page": [
-      "static/chunks/webpack-5a241bcc7907d22d.js",
-      "static/chunks/fd9d1056-098b09d98c40a7be.js",
-      "static/chunks/938-9166c4a6511998b4.js",
-      "static/chunks/main-app-af1a5887b02d2332.js",
-      "static/chunks/app/admin/actions/page-4c8541b5913afaff.js"
-    ],
-    "/admin/actions/new/page": [
-      "static/chunks/webpack-5a241bcc7907d22d.js",
-      "static/chunks/fd9d1056-098b09d98c40a7be.js",
-      "static/chunks/938-9166c4a6511998b4.js",
-      "static/chunks/main-app-af1a5887b02d2332.js",
-      "static/chunks/250-61453098be97c510.js",
-      "static/chunks/app/admin/actions/new/page-45c4a5772fed7255.js"
-    ],
-    "/admin/analytics/page": [
-      "static/chunks/webpack-5a241bcc7907d22d.js",
-      "static/chunks/fd9d1056-098b09d98c40a7be.js",
-      "static/chunks/938-9166c4a6511998b4.js",
-      "static/chunks/main-app-af1a5887b02d2332.js",
-      "static/chunks/581-bcc4f5b9cfb7cf34.js",
-      "static/chunks/854-a20b592d33196b2a.js",
-      "static/chunks/app/admin/analytics/page-f40ba93bdede0b42.js"
-    ],
-    "/admin/ministers/new/page": [
-      "static/chunks/webpack-5a241bcc7907d22d.js",
-      "static/chunks/fd9d1056-098b09d98c40a7be.js",
-      "static/chunks/938-9166c4a6511998b4.js",
-      "static/chunks/main-app-af1a5887b02d2332.js",
-      "static/chunks/250-61453098be97c510.js",
-      "static/chunks/app/admin/ministers/new/page-f1f063c65cfbe1f3.js"
-    ],
-    "/admin/ministers/page": [
-      "static/chunks/webpack-5a241bcc7907d22d.js",
-      "static/chunks/fd9d1056-098b09d98c40a7be.js",
-      "static/chunks/938-9166c4a6511998b4.js",
-      "static/chunks/main-app-af1a5887b02d2332.js",
-      "static/chunks/250-61453098be97c510.js",
-      "static/chunks/581-bcc4f5b9cfb7cf34.js",
-      "static/chunks/717-dca3a55e8c389e6e.js",
-      "static/chunks/app/admin/ministers/page-6dcb2c210a9f4116.js"
-    ],
-    "/admin/page": [
-      "static/chunks/webpack-5a241bcc7907d22d.js",
-      "static/chunks/fd9d1056-098b09d98c40a7be.js",
-      "static/chunks/938-9166c4a6511998b4.js",
-      "static/chunks/main-app-af1a5887b02d2332.js",
-      "static/chunks/250-61453098be97c510.js",
-      "static/chunks/app/admin/page-e048f7756fe50849.js"
-    ],
-    "/admin/policies/new/page": [
-      "static/chunks/webpack-5a241bcc7907d22d.js",
-      "static/chunks/fd9d1056-098b09d98c40a7be.js",
-      "static/chunks/938-9166c4a6511998b4.js",
-      "static/chunks/main-app-af1a5887b02d2332.js",
-      "static/chunks/250-61453098be97c510.js",
-      "static/chunks/app/admin/policies/new/page-ed7c4d06d98dd172.js"
-    ],
-    "/admin/ministers/[id]/edit/page": [
-      "static/chunks/webpack-5a241bcc7907d22d.js",
-      "static/chunks/fd9d1056-098b09d98c40a7be.js",
-      "static/chunks/938-9166c4a6511998b4.js",
-      "static/chunks/main-app-af1a5887b02d2332.js",
-      "static/chunks/app/admin/ministers/[id]/edit/page-e30085582778efb1.js"
-    ],
-    "/admin/policies/page": [
-      "static/chunks/webpack-5a241bcc7907d22d.js",
-      "static/chunks/fd9d1056-098b09d98c40a7be.js",
-      "static/chunks/938-9166c4a6511998b4.js",
-      "static/chunks/main-app-af1a5887b02d2332.js",
-      "static/chunks/581-bcc4f5b9cfb7cf34.js",
-      "static/chunks/app/admin/policies/page-4a9cf99392a79e7f.js"
-    ],
-    "/auth/signin/page": [
-      "static/chunks/webpack-5a241bcc7907d22d.js",
-      "static/chunks/fd9d1056-098b09d98c40a7be.js",
-      "static/chunks/938-9166c4a6511998b4.js",
-      "static/chunks/main-app-af1a5887b02d2332.js",
-      "static/chunks/232-ea83240fbea97b10.js",
-      "static/chunks/app/auth/signin/page-06e0f5030092a846.js"
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
     ],
     "/minister/[id]/page": [
-      "static/chunks/webpack-5a241bcc7907d22d.js",
-      "static/chunks/fd9d1056-098b09d98c40a7be.js",
-      "static/chunks/938-9166c4a6511998b4.js",
-      "static/chunks/main-app-af1a5887b02d2332.js",
-      "static/chunks/250-61453098be97c510.js",
-      "static/chunks/581-bcc4f5b9cfb7cf34.js",
-      "static/chunks/717-dca3a55e8c389e6e.js",
-      "static/chunks/app/minister/[id]/page-d37de4585e99fc92.js"
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/minister/[id]/page.js"
     ],
-    "/page": [
-      "static/chunks/webpack-5a241bcc7907d22d.js",
-      "static/chunks/fd9d1056-098b09d98c40a7be.js",
-      "static/chunks/938-9166c4a6511998b4.js",
-      "static/chunks/main-app-af1a5887b02d2332.js",
-      "static/chunks/250-61453098be97c510.js",
-      "static/chunks/581-bcc4f5b9cfb7cf34.js",
-      "static/chunks/app/page-d0a2177377ed2612.js"
+    "/admin/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/admin/page.js"
     ],
-    "/suggest/page": [
-      "static/chunks/webpack-5a241bcc7907d22d.js",
-      "static/chunks/fd9d1056-098b09d98c40a7be.js",
-      "static/chunks/938-9166c4a6511998b4.js",
-      "static/chunks/main-app-af1a5887b02d2332.js",
-      "static/chunks/250-61453098be97c510.js",
-      "static/chunks/app/suggest/page-c863f92af0478658.js"
+    "/admin/ministers/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/admin/ministers/page.js"
+    ],
+    "/admin/ministers/[id]/edit/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/admin/ministers/[id]/edit/page.js"
     ]
   }
 }
