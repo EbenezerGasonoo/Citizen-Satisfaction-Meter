@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./prisma/dev.db"
 }
 
 model Minister {
@@ -58,6 +58,10 @@ model Vote {
   ministerId Int
   positive   Boolean  // true = Satisfied
   clientHash String   // SHA-256(ip + ua + salt)
+  ipAddress  String?  // IP address for analytics
+  country    String?  // Country code (e.g., "GH", "US")
+  region     String?  // Region/State
+  city       String?  // City name
   createdAt  DateTime @default(now())
   minister   Minister @relation(fields: [ministerId], references: [id])
 }
@@ -151,4 +155,14 @@ model ActionVote {
   action     Action   @relation(fields: [actionId], references: [id])
 
   @@unique([actionId, clientHash])
+}
+
+model Submission {
+  id         Int      @id @default(autoincrement())
+  type       String   // "suggestion", "bug", "nominate"
+  message    String
+  email      String?
+  status     String   @default("pending") // "pending", "reviewed", "resolved", "rejected"
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 } 

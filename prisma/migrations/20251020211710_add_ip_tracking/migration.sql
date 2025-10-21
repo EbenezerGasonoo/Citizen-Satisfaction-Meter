@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Vote" ADD COLUMN "city" TEXT;
+ALTER TABLE "Vote" ADD COLUMN "country" TEXT;
+ALTER TABLE "Vote" ADD COLUMN "ipAddress" TEXT;
+ALTER TABLE "Vote" ADD COLUMN "region" TEXT;

@@ -76,18 +76,18 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-4 justify-center">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-2xl mx-auto">
         {/* Satisfied Button */}
         <motion.button
           onClick={() => handleVote('satisfied')}
           disabled={voted !== null || isVoting}
-          className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-colors ${
+          className={`flex-1 flex items-center justify-center gap-3 px-6 sm:px-8 py-4 sm:py-5 rounded-2xl font-bold text-base sm:text-lg transition-all touch-manipulation ${
             voted === 'satisfied'
-              ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border-2 border-green-300 dark:border-green-700'
+              ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-xl shadow-green-500/30 ring-4 ring-green-200 dark:ring-green-900/50'
               : voted === 'not-satisfied'
-              ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border-2 border-gray-200 dark:border-gray-700 cursor-not-allowed'
-              : 'bg-green-500 dark:bg-green-600 text-white hover:bg-green-600 dark:hover:bg-green-700 border-2 border-green-500 dark:border-green-600'
+              ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border-2 border-gray-200 dark:border-gray-700 cursor-not-allowed opacity-50'
+              : 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg shadow-green-500/20 hover:shadow-xl hover:shadow-green-500/40 border-2 border-transparent'
           }`}
           variants={buttonVariants}
           initial="initial"
@@ -100,24 +100,24 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
             transition={{ duration: 1, repeat: isVoting ? Infinity : 0 }}
           >
             {voted === 'satisfied' ? (
-              <CheckCircle className="w-5 h-5" />
+              <CheckCircle className="w-6 h-6 sm:w-7 sm:h-7" />
             ) : (
-              <ThumbsUp className="w-5 h-5" />
+              <ThumbsUp className="w-6 h-6 sm:w-7 sm:h-7" />
             )}
           </motion.div>
-          {isVoting ? 'Voting...' : 'Satisfied'}
+          <span>{isVoting ? 'Voting...' : 'Satisfied'}</span>
         </motion.button>
 
         {/* Not Satisfied Button */}
         <motion.button
           onClick={() => handleVote('not-satisfied')}
           disabled={voted !== null || isVoting}
-          className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-colors ${
+          className={`flex-1 flex items-center justify-center gap-3 px-6 sm:px-8 py-4 sm:py-5 rounded-2xl font-bold text-base sm:text-lg transition-all touch-manipulation ${
             voted === 'not-satisfied'
-              ? 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 border-2 border-red-300 dark:border-red-700'
+              ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-xl shadow-red-500/30 ring-4 ring-red-200 dark:ring-red-900/50'
               : voted === 'satisfied'
-              ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border-2 border-gray-200 dark:border-gray-700 cursor-not-allowed'
-              : 'bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700 border-2 border-red-500 dark:border-red-600'
+              ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border-2 border-gray-200 dark:border-gray-700 cursor-not-allowed opacity-50'
+              : 'bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white shadow-lg shadow-red-500/20 hover:shadow-xl hover:shadow-red-500/40 border-2 border-transparent'
           }`}
           variants={buttonVariants}
           initial="initial"
@@ -130,12 +130,12 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
             transition={{ duration: 1, repeat: isVoting ? Infinity : 0 }}
           >
             {voted === 'not-satisfied' ? (
-              <XCircle className="w-5 h-5" />
+              <XCircle className="w-6 h-6 sm:w-7 sm:h-7" />
             ) : (
-              <ThumbsDown className="w-5 h-5" />
+              <ThumbsDown className="w-6 h-6 sm:w-7 sm:h-7" />
             )}
           </motion.div>
-          {isVoting ? 'Voting...' : 'Not Satisfied'}
+          <span>{isVoting ? 'Voting...' : 'Not Satisfied'}</span>
         </motion.button>
       </div>
 
@@ -150,22 +150,22 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
             exit="exit"
           >
             <motion.div
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${
+              className={`inline-flex items-center gap-3 px-6 py-4 rounded-2xl shadow-lg ${
                 voted === 'satisfied' 
-                  ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' 
-                  : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
+                  ? 'bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/50 dark:to-emerald-900/50 text-green-800 dark:text-green-200 border-2 border-green-300 dark:border-green-700' 
+                  : 'bg-gradient-to-r from-red-100 to-pink-100 dark:from-red-900/50 dark:to-pink-900/50 text-red-800 dark:text-red-200 border-2 border-red-300 dark:border-red-700'
               }`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              initial={{ opacity: 0, y: 10, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 0.2, type: "spring" }}
             >
               {voted === 'satisfied' ? (
-                <CheckCircle className="w-4 h-4" />
+                <CheckCircle className="w-6 h-6" />
               ) : (
-                <XCircle className="w-4 h-4" />
+                <XCircle className="w-6 h-6" />
               )}
-              <span className="font-medium">
-                Vote recorded! You can vote again tomorrow.
+              <span className="font-bold text-base sm:text-lg">
+                🎉 Vote recorded! You can vote again tomorrow.
               </span>
             </motion.div>
           </motion.div>
@@ -183,13 +183,13 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
             exit="exit"
           >
             <motion.div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
+              className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl shadow-lg bg-gradient-to-r from-red-100 to-pink-100 dark:from-red-900/50 dark:to-pink-900/50 text-red-800 dark:text-red-200 border-2 border-red-300 dark:border-red-700"
+              initial={{ opacity: 0, y: 10, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 0.1, type: "spring" }}
             >
-              <XCircle className="w-4 h-4" />
-              <span className="font-medium">{error}</span>
+              <XCircle className="w-6 h-6" />
+              <span className="font-bold text-base sm:text-lg">{error}</span>
             </motion.div>
           </motion.div>
         )}

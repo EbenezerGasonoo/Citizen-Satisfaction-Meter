@@ -3,7 +3,8 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
+    // Use request.nextUrl for searchParams (static-friendly in Next.js App Router)
+    const { searchParams } = request.nextUrl;
     const range = searchParams.get('range') || '30d'
 
     // Calculate date range

@@ -29,78 +29,95 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="bg-white dark:bg-gray-900 shadow-lg sticky top-0 z-50 transition-colors duration-300">
+    <nav className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-lg sticky top-0 z-50 transition-all duration-300 border-b border-gray-200/50 dark:border-gray-700/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between h-16 sm:h-20">
           <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0 flex items-center">
+            <Link href="/" className="flex-shrink-0 flex items-center touch-manipulation">
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="text-2xl font-bold text-cocoa-green dark:text-green-400"
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-2"
               >
-                Citizen Satisfaction Meter
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
+                  <span className="text-white font-bold text-lg">CS</span>
+                </div>
+                <span className="hidden sm:block text-lg lg:text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">
+                  Citizen Satisfaction
+                </span>
               </motion.div>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-2 lg:space-x-4">
             {navigation.map((item) => {
               const Icon = item.icon
               return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive(item.href)
-                      ? 'text-cocoa-green dark:text-green-400 bg-green-50 dark:bg-green-900/20'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-cocoa-green dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20'
-                  }`}
-                >
-                  <Icon className="w-4 h-4 mr-2" />
-                  {item.name}
-                </Link>
+                <motion.div key={item.name} whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
+                  <Link
+                    href={item.href}
+                    className={`flex items-center gap-2 px-3 lg:px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 touch-manipulation ${
+                      isActive(item.href)
+                        ? 'text-white bg-gradient-to-r from-green-600 to-emerald-600 shadow-lg shadow-green-500/30'
+                        : 'text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span className="hidden lg:inline">{item.name}</span>
+                  </Link>
+                </motion.div>
               )
             })}
             {pathname?.startsWith('/admin') && (
-              <button
+              <motion.button
+                whileHover={{ y: -2 }}
+                whileTap={{ y: 0 }}
                 onClick={() => signOut({ callbackUrl: '/' })}
-                className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 border border-transparent hover:border-red-200 dark:hover:border-red-700 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 border border-red-200 dark:border-red-700 hover:border-red-300 dark:hover:border-red-600 transition-all duration-200 touch-manipulation"
               >
                 Sign Out
-              </button>
+              </motion.button>
             )}
-            <ThemeToggle />
+            <div className="ml-2">
+              <ThemeToggle />
+            </div>
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2">
             <ThemeToggle />
-            <button
+            <motion.button
+              whileTap={{ scale: 0.9 }}
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 dark:text-gray-300 hover:text-cocoa-green dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cocoa-green"
+              className="inline-flex items-center justify-center p-2.5 rounded-xl text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors touch-manipulation"
             >
-              {isOpen ? (
-                <X className="block h-6 w-6" />
-              ) : (
-                <Menu className="block h-6 w-6" />
-              )}
-            </button>
+              <motion.div
+                animate={{ rotate: isOpen ? 90 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {isOpen ? (
+                  <X className="block h-6 w-6" />
+                ) : (
+                  <Menu className="block h-6 w-6" />
+                )}
+              </motion.div>
+            </motion.button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation - Improved with glassmorphism */}
       <motion.div
-        className={`md:hidden ${isOpen ? 'block' : 'hidden'}`}
+        className={`md:hidden overflow-hidden ${isOpen ? 'block' : 'hidden'}`}
         initial={{ opacity: 0, height: 0 }}
         animate={{ 
           opacity: isOpen ? 1 : 0, 
           height: isOpen ? 'auto' : 0 
         }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 transition-colors duration-300">
+        <div className="px-4 pt-2 pb-4 space-y-2 bg-gradient-to-b from-white/95 to-gray-50/95 dark:from-gray-900/95 dark:to-gray-800/95 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50">
           {navigation.map((item, index) => {
             const Icon = item.icon
             return (
@@ -108,30 +125,33 @@ export default function Navigation() {
                 key={item.name}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.05, duration: 0.2 }}
               >
                 <Link
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className={`flex items-center px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-base font-medium transition-all duration-200 touch-manipulation ${
                     isActive(item.href)
-                      ? 'text-cocoa-green dark:text-green-400 bg-green-50 dark:bg-green-900/20'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-cocoa-green dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20'
+                      ? 'text-white bg-gradient-to-r from-green-600 to-emerald-600 shadow-lg shadow-green-500/30'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 active:scale-95'
                   }`}
                 >
-                  <Icon className="w-5 h-5 mr-3" />
-                  {item.name}
+                  <Icon className="w-5 h-5 flex-shrink-0" />
+                  <span>{item.name}</span>
                 </Link>
               </motion.div>
             )
           })}
           {pathname?.startsWith('/admin') && (
-            <button
+            <motion.button
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: navigation.length * 0.05, duration: 0.2 }}
               onClick={() => { setIsOpen(false); signOut({ callbackUrl: '/' }) }}
-              className="flex w-full items-center px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 border border-transparent hover:border-red-200 dark:hover:border-red-700 transition-colors mt-2"
+              className="flex w-full items-center gap-3 px-4 py-3.5 rounded-xl text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 border-2 border-red-200 dark:border-red-700 hover:border-red-300 dark:hover:border-red-600 transition-all duration-200 mt-2 touch-manipulation"
             >
               Sign Out
-            </button>
+            </motion.button>
           )}
         </div>
       </motion.div>

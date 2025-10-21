@@ -104,17 +104,27 @@ export default function TrendingGrid() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <motion.h2 
-        className="text-2xl font-semibold mb-8 text-gray-800 dark:text-gray-200"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
-        Trending Ministers (Last 24 Hours)
-      </motion.h2>
+      <motion.div className="mb-8 sm:mb-10">
+        <motion.h2 
+          className="text-3xl sm:text-4xl font-bold mb-3 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 dark:from-purple-400 dark:via-pink-400 dark:to-red-400 bg-clip-text text-transparent"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          Trending Ministers
+        </motion.h2>
+        <motion.p
+          className="text-sm sm:text-base text-gray-600 dark:text-gray-400"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          Most discussed ministers in the last 24 hours
+        </motion.p>
+      </motion.div>
       
       <motion.div 
-        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -124,67 +134,104 @@ export default function TrendingGrid() {
             key={minister.id}
             variants={cardVariants}
             whileHover={{ 
-              y: -5, 
-              scale: 1.02,
-              transition: { duration: 0.2 }
+              y: -8, 
+              transition: { duration: 0.3, type: "spring", stiffness: 300 }
             }}
             whileTap={{ scale: 0.98 }}
           >
-            <Link href={`/minister/${minister.id}`}>
+            <Link href={`/minister/${minister.id}`} className="block h-full touch-manipulation">
               <motion.div 
-                className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200 border border-gray-200 dark:border-gray-700"
-                whileHover={{ boxShadow: "0 10px 25px rgba(0,0,0,0.1)" }}
+                className="relative bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg p-6 cursor-pointer hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 h-full overflow-hidden group"
               >
-                <motion.div 
-                  className="relative w-16 h-16 rounded-full mx-auto mb-4 overflow-visible"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <img
-                    src={minister.photoUrl}
-                    alt={minister.fullName}
-                    className="object-cover w-16 h-16 rounded-full mx-auto mb-4"
-                    style={{ aspectRatio: '1/1' }}
-                  />
-                  {minister.isTrending && (
-                    <div className="absolute top-0 right-0 bg-white dark:bg-gray-800 rounded-full p-1 shadow z-10 border border-gray-200 dark:border-gray-600">
-                      <TrendingUp className="w-4 h-4 text-green-500" />
+                {/* Trending Badge */}
+                {minister.isTrending && (
+                  <div className="absolute top-4 right-4 z-10">
+                    <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-full px-3 py-1 shadow-lg flex items-center gap-1">
+                      <TrendingUp className="w-3 h-3 text-white" />
+                      <span className="text-xs font-bold text-white">HOT</span>
                     </div>
-                  )}
-                </motion.div>
-                <motion.h3 
-                  className="font-semibold text-gray-800 dark:text-gray-100 mb-2"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 + index * 0.1 }}
-                >
-                  {minister.fullName}
-                </motion.h3>
-                <motion.p 
-                  className="text-sm text-gray-600 dark:text-gray-400"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 + index * 0.1 }}
-                >
-                  {minister.portfolio}
-                </motion.p>
-                <div className="flex items-center justify-center space-x-2">
-                  <span className={`text-lg font-bold ${
-                    minister.trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-                  }`}>
-                    {minister.satisfactionRate}%
-                  </span>
-                  <span className={`text-sm ${
-                    minister.trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-                  }`}>
-                    {minister.trend === 'up' ? '+' : ''}{minister.voteChange}
-                  </span>
+                  </div>
+                )}
+
+                {/* Background decoration */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5 dark:from-purple-500/10 dark:to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                <div className="relative">
+                  {/* Profile Image */}
+                  <motion.div 
+                    className="relative w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4"
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    transition={{ duration: 0.3, type: "spring" }}
+                  >
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 blur-md opacity-40" />
+                    <img
+                      src={minister.photoUrl}
+                      alt={minister.fullName}
+                      className="relative object-cover w-full h-full rounded-full border-4 border-white dark:border-gray-800 shadow-xl"
+                    />
+                  </motion.div>
+
+                  {/* Minister Info */}
+                  <motion.h3 
+                    className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2 min-h-[3.5rem]"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 + index * 0.1 }}
+                  >
+                    {minister.fullName}
+                  </motion.h3>
+                  
+                  <motion.p 
+                    className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 min-h-[2.5rem]"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.4 + index * 0.1 }}
+                  >
+                    {minister.portfolio}
+                  </motion.p>
+
+                  {/* Stats */}
+                  <div className="flex items-center justify-center gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold ${
+                      minister.trend === 'up' 
+                        ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' 
+                        : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
+                    }`}>
+                      <span className="text-xl">{minister.satisfactionRate}%</span>
+                    </div>
+                    
+                    <div className={`flex items-center gap-1 px-3 py-2 rounded-xl text-sm font-semibold ${
+                      minister.trend === 'up' 
+                        ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400' 
+                        : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400'
+                    }`}>
+                      {minister.trend === 'up' ? (
+                        <TrendingUp className="w-4 h-4" />
+                      ) : (
+                        <TrendingDown className="w-4 h-4" />
+                      )}
+                      <span>{minister.trend === 'up' ? '+' : ''}{minister.voteChange}</span>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             </Link>
           </motion.div>
         ))}
       </motion.div>
+
+      {trendingMinisters.length === 0 && !loading && (
+        <motion.div
+          className="text-center py-12"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <div className="text-gray-400 dark:text-gray-600 text-lg">
+            No trending ministers at the moment
+          </div>
+        </motion.div>
+      )}
     </motion.div>
   )
 } 

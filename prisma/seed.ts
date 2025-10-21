@@ -49,13 +49,7 @@ const ministers = [
     bio: 'Mohammed Mubarak Muntaka is a Ghanaian politician and Member of Parliament for Asawase constituency. He has served in various leadership positions in Parliament and government.',
     isTrending: false,
   },
-  {
-    fullName: 'Edward Omane Boamah',
-    portfolio: 'Minister for Defence',
-    photoUrl: '/uploads/edward_omane_boamah.jpg',
-    bio: 'Edward Omane Boamah is a Ghanaian politician and former Minister for Communications. He has extensive experience in government communications and public administration.',
-    isTrending: false,
-  },
+  // Edward Omane Boamah - Removed (deceased)
   {
     fullName: 'Dr Dominic Akuritinga Ayine (MP)',
     portfolio: 'Minister for Justice & Attorney General',
@@ -238,9 +232,9 @@ export async function main() {
       budget: 500000000,
       impact: 'Medium',
     },
-    // Haruna Iddrisu (Education)
+    // Haruna Iddrisu (Education) - Index updated after Edward Omane Boamah removal
     {
-      ministerId: createdMinisters[7].id,
+      ministerId: createdMinisters[6].id,
       title: 'Free Senior High School Expansion',
       description: 'Expanding the Free SHS program to cover more students and improve infrastructure.',
       category: 'Social',
@@ -251,7 +245,7 @@ export async function main() {
       impact: 'High',
     },
     {
-      ministerId: createdMinisters[7].id,
+      ministerId: createdMinisters[6].id,
       title: 'STEM Education Initiative',
       description: 'Promoting Science, Technology, Engineering, and Mathematics education nationwide.',
       category: 'Education',

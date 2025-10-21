@@ -74,96 +74,173 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <main className="container mx-auto px-4 py-8 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-950 min-h-screen">
-      <div className="max-w-5xl mx-auto">
-        {/* Back button */}
-        <Link
-          href="/"
-          className="inline-flex items-center text-cocoa-green dark:text-green-400 hover:text-cocoa-green/80 dark:hover:text-green-300 transition-colors mb-8"
-        >
-          ← Back to Home
-        </Link>
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="max-w-6xl mx-auto">
+          {/* Back button - Enhanced */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 text-green-600 dark:text-green-400 rounded-xl transition-all mb-8 shadow-md hover:shadow-lg touch-manipulation group"
+            >
+              <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              <span className="font-semibold">Back to Home</span>
+            </Link>
+          </motion.div>
 
-        {/* Minister Profile */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 border border-gray-200 dark:border-gray-700">
-          <div className="flex flex-col md:flex-row gap-8">
-            {/* Photo */}
-            <div className="flex-shrink-0 relative">
-              <div className="w-48 h-48 relative">
-                <Image
-                  src={minister.photoUrl}
-                  alt={minister.fullName}
-                  fill
-                  className="rounded-lg object-cover"
-                />
-              </div>
-              {/* Favorite Button */}
-              <div className="absolute top-2 right-2">
-                <FavoriteButton ministerId={minister.id} />
+          {/* Minister Profile - Modern Card */}
+          <motion.div 
+            className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-10 border border-gray-200 dark:border-gray-700 mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Photo - Enhanced with gradient ring */}
+              <motion.div 
+                className="flex-shrink-0 relative mx-auto lg:mx-0"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <div className="relative w-56 h-56 sm:w-64 sm:h-64">
+                  {/* Gradient ring */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-green-500 via-blue-500 to-purple-500 p-1">
+                    <div className="w-full h-full rounded-3xl overflow-hidden bg-white dark:bg-gray-900">
+                      <Image
+                        src={minister.photoUrl}
+                        alt={minister.fullName}
+                        fill
+                        className="rounded-3xl object-cover"
+                      />
+                    </div>
+                  </div>
+                  {/* Glow effect */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-green-500/20 to-purple-500/20 blur-2xl -z-10" />
+                </div>
+                {/* Favorite Button - Enhanced */}
+                <div className="absolute -top-2 -right-2">
+                  <div className="bg-white dark:bg-gray-800 rounded-full p-2 shadow-xl">
+                    <FavoriteButton ministerId={minister.id} />
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Info - Enhanced */}
+              <div className="flex-1 space-y-6">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                >
+                  <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-gray-100 mb-3 leading-tight">
+                    {minister.fullName}
+                  </h1>
+                  
+                  <div className="inline-block px-5 py-2 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/50 dark:to-emerald-900/50 rounded-2xl border-2 border-green-200 dark:border-green-800">
+                    <p className="text-xl sm:text-2xl font-bold text-green-700 dark:text-green-400">
+                      {minister.portfolio}
+                    </p>
+                  </div>
+                </motion.div>
+
+                {minister.bio && (
+                  <motion.div 
+                    className="prose max-w-none"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                  >
+                    <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                      {minister.bio}
+                    </p>
+                  </motion.div>
+                )}
+
+                {/* Stats - Modern Cards */}
+                <motion.div 
+                  className="grid grid-cols-3 gap-3 sm:gap-4"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                >
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-2xl p-4 sm:p-6 text-center border-2 border-green-200 dark:border-green-800">
+                    <div className="text-3xl sm:text-4xl font-extrabold text-green-600 dark:text-green-400">
+                      {minister.satisfactionRate}%
+                    </div>
+                    <div className="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-500 mt-1">Satisfaction</div>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/30 dark:to-cyan-900/30 rounded-2xl p-4 sm:p-6 text-center border-2 border-blue-200 dark:border-blue-800">
+                    <div className="text-3xl sm:text-4xl font-extrabold text-blue-600 dark:text-blue-400">
+                      {minister.totalVotes.toLocaleString()}
+                    </div>
+                    <div className="text-xs sm:text-sm font-semibold text-blue-700 dark:text-blue-500 mt-1">Total Votes</div>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-2xl p-4 sm:p-6 text-center border-2 border-purple-200 dark:border-purple-800">
+                    <div className="text-3xl sm:text-4xl font-extrabold text-purple-600 dark:text-purple-400">
+                      {minister.positiveVotes.toLocaleString()}
+                    </div>
+                    <div className="text-xs sm:text-sm font-semibold text-purple-700 dark:text-purple-500 mt-1">Positive</div>
+                  </div>
+                </motion.div>
+
+                {/* Vote Buttons */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                >
+                  <VoteButtons ministerId={minister.id} />
+                </motion.div>
               </div>
             </div>
+          </motion.div>
 
-            {/* Info */}
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-                {minister.fullName}
-              </h1>
-              
-              <p className="text-xl text-cocoa-green dark:text-green-400 font-semibold mb-4">
-                {minister.portfolio}
-              </p>
-
-              {minister.bio && (
-                <div className="prose max-w-none mb-6">
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                    {minister.bio}
-                  </p>
-                </div>
-              )}
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-4 mb-8">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-cocoa-green dark:text-green-400">
-                    {minister.satisfactionRate}%
-                  </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Satisfaction Rate</div>
-                </div>
-                
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-700 dark:text-gray-300">
-                    {minister.totalVotes.toLocaleString()}
-                  </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Total Votes</div>
-                </div>
-                
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                    {minister.positiveVotes.toLocaleString()}
-                  </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Positive Votes</div>
-                </div>
+          {/* Enhanced two-column layout for Actions and Policies */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            {/* Actions Section */}
+            <motion.div 
+              className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.7 }}
+            >
+              <div className="mb-6">
+                <h2 className="text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text text-transparent mb-2">
+                  ⚡ Key Actions
+                </h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Track major initiatives and activities</p>
               </div>
+              <ActionSection ministerId={minister.id} />
+              {/* Show History for Actions */}
+              <ShowHistoryTimeline type="actions" ministerId={minister.id} />
+            </motion.div>
 
-              {/* Vote Buttons */}
-              <VoteButtons ministerId={minister.id} />
-            </div>
-          </div>
-        </div>
-
-        {/* Enhanced two-column layout for Actions and Policies */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-8 md:divide-x md:divide-blue-200 dark:md:divide-blue-900">
-          <div className="pr-0 md:pr-8">
-            <h2 className="text-2xl font-extrabold text-blue-700 dark:text-blue-400 mb-6 text-center md:text-left tracking-tight">Key Actions</h2>
-            <ActionSection ministerId={minister.id} />
-            {/* Show History for Actions */}
-            <ShowHistoryTimeline type="actions" ministerId={minister.id} />
-          </div>
-          <div className="pl-0 md:pl-8">
-            <h2 className="text-2xl font-extrabold text-green-700 dark:text-green-400 mb-6 text-center md:text-left tracking-tight">Key Policies & Impact</h2>
-            <PolicySection ministerId={minister.id} />
-            {/* Show History for Policies */}
-            <ShowHistoryTimeline type="policies" ministerId={minister.id} />
+            {/* Policies Section */}
+            <motion.div 
+              className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-200 dark:border-gray-700"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
+              <div className="mb-6">
+                <h2 className="text-3xl font-extrabold bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent mb-2">
+                  📊 Key Policies
+                </h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Policies and their impact on citizens</p>
+              </div>
+              <PolicySection ministerId={minister.id} />
+              {/* Show History for Policies */}
+              <ShowHistoryTimeline type="policies" ministerId={minister.id} />
+            </motion.div>
           </div>
         </div>
       </div>
@@ -208,12 +285,14 @@ function ShowHistoryTimeline({ type, ministerId }: { type: 'actions' | 'policies
 
   return (
     <div className="mt-6">
-      <button
-        className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 font-semibold mb-2"
+      <motion.button
+        className="px-6 py-3 rounded-2xl bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 text-gray-800 dark:text-gray-200 hover:from-gray-200 hover:to-gray-300 dark:hover:from-gray-600 dark:hover:to-gray-500 font-bold shadow-lg hover:shadow-xl transition-all touch-manipulation border-2 border-gray-300 dark:border-gray-500"
         onClick={handleToggle}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
       >
-        {show ? 'Hide History' : 'Show History'}
-      </button>
+        {show ? '🔼 Hide History' : '🔽 Show History'}
+      </motion.button>
       <AnimatePresence>
         {show && (
           <motion.div

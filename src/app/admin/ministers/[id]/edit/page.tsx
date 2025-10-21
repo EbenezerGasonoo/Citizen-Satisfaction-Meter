@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 
 export default function EditMinisterPage() {
@@ -15,8 +15,11 @@ export default function EditMinisterPage() {
   });
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [uploadError, setUploadError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchMinister = async () => {
@@ -46,22 +49,55 @@ export default function EditMinisterPage() {
     setMinister({ ...minister, [e.target.name]: e.target.value });
   };
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setUploadError("");
+
+    const form = new FormData();
+    form.append("file", file);
+    form.append("ministerName", minister.fullName);
+    form.append("ministerId", id);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: form,
+      });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        setMinister((prev) => ({ ...prev, photoUrl: data.url }));
+        setSuccess("Photo uploaded successfully!");
+        setTimeout(() => setSuccess(""), 3000);
+      } else {
+        setUploadError(data.error || "Failed to upload image.");
+      }
+    } catch (err) {
+      setUploadError("An error occurred during upload.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
     setError("");
     setSuccess("");
     try {
-      const res = await fetch(`/api/admin/ministers/${id}`, {
+      const res = await fetch(`/api/ministers/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(minister),
       });
       if (res.ok) {
-        setSuccess("Minister updated successfully.");
-        setTimeout(() => router.push("/admin/ministers"), 1200);
+        setSuccess("Minister updated successfully!");
+        setTimeout(() => router.push("/admin/ministers"), 1500);
       } else {
-        setError("Failed to update minister.");
+        const data = await res.json();
+        setError(data.error || "Failed to update minister.");
       }
     } catch (err) {
       setError("An error occurred while updating minister.");
@@ -101,14 +137,38 @@ export default function EditMinisterPage() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">Photo URL</label>
+          <label className="block mb-1 font-medium">Photo</label>
           <input
-            type="text"
-            name="photoUrl"
-            value={minister.photoUrl}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="w-full border rounded px-3 py-2 bg-white dark:bg-gray-700"
+            disabled={uploading}
           />
+          {uploading && <div className="text-sm text-blue-600 mt-1">Uploading photo...</div>}
+          {uploadError && <div className="text-sm text-red-600 mt-1">{uploadError}</div>}
+          {minister.photoUrl && (
+            <div className="mt-3">
+              <img 
+                src={minister.photoUrl} 
+                alt={minister.fullName} 
+                className="w-32 h-32 object-cover rounded-lg border-2 border-gray-300" 
+              />
+              <p className="text-xs text-gray-500 mt-1">Current photo</p>
+            </div>
+          )}
+          <div className="mt-2">
+            <label className="block text-sm text-gray-600 mb-1">Or enter URL manually:</label>
+            <input
+              type="text"
+              name="photoUrl"
+              value={minister.photoUrl}
+              onChange={handleChange}
+              className="w-full border rounded px-3 py-2 text-sm"
+              placeholder="/uploads/minister_name.jpg"
+            />
+          </div>
         </div>
         <div>
           <label className="block mb-1 font-medium">Bio</label>
