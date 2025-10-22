@@ -1,0 +1,190 @@
+// Production Prisma schema for PostgreSQL
+// Copy this to schema.prisma when deploying to production
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Minister {
+  id        Int      @id @default(autoincrement())
+  fullName  String
+  portfolio String
+  photoUrl  String
+  bio       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  votes     Vote[]
+  favorites Favorite[]
+  comments  Comment[]
+  policies  Policy[]
+  isTrending Boolean @default(false)
+  actions   Action[]
+}
+
+model Policy {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String   @db.Text
+  category    String
+  status      String
+  startDate   DateTime?
+  endDate     DateTime?
+  budget      Float?
+  impact      String
+  ministerId  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  minister    Minister @relation(fields: [ministerId], references: [id], onDelete: Cascade)
+  votes       PolicyVote[]
+}
+
+model PolicyVote {
+  id         Int      @id @default(autoincrement())
+  policyId   Int
+  positive   Boolean
+  clientHash String
+  createdAt  DateTime @default(now())
+  policy     Policy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+
+  @@unique([policyId, clientHash])
+  @@index([policyId])
+  @@index([clientHash])
+}
+
+model Vote {
+  id         Int      @id @default(autoincrement())
+  ministerId Int
+  positive   Boolean
+  clientHash String
+  ipAddress  String?
+  country    String?
+  region     String?
+  city       String?
+  createdAt  DateTime @default(now())
+  minister   Minister @relation(fields: [ministerId], references: [id], onDelete: Cascade)
+
+  @@index([ministerId])
+  @@index([clientHash])
+  @@index([createdAt])
+}
+
+model Favorite {
+  id         Int      @id @default(autoincrement())
+  ministerId Int
+  clientHash String
+  createdAt  DateTime @default(now())
+  minister   Minister @relation(fields: [ministerId], references: [id], onDelete: Cascade)
+
+  @@unique([ministerId, clientHash])
+  @@index([ministerId])
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  ministerId Int
+  content    String   @db.Text
+  clientHash String
+  createdAt  DateTime @default(now())
+  minister   Minister @relation(fields: [ministerId], references: [id], onDelete: Cascade)
+
+  @@index([ministerId])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          String    @default("USER")
+  password      String?
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Action {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String   @db.Text
+  status      String
+  date        DateTime
+  impact      String
+  ministerId  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  minister    Minister @relation(fields: [ministerId], references: [id], onDelete: Cascade)
+  votes       ActionVote[]
+
+  @@index([ministerId])
+}
+
+model ActionVote {
+  id         Int      @id @default(autoincrement())
+  actionId   Int
+  positive   Boolean
+  clientHash String
+  createdAt  DateTime @default(now())
+  action     Action   @relation(fields: [actionId], references: [id], onDelete: Cascade)
+
+  @@unique([actionId, clientHash])
+  @@index([actionId])
+}
+
+model Submission {
+  id         Int      @id @default(autoincrement())
+  type       String
+  message    String   @db.Text
+  email      String?
+  status     String   @default("pending")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
