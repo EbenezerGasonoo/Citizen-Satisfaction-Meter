@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, Send, User } from 'lucide-react'
 
@@ -22,13 +22,7 @@ export default function Comments({ ministerId, ministerName }: CommentsProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [showComments, setShowComments] = useState(false)
 
-  useEffect(() => {
-    if (showComments) {
-      fetchComments()
-    }
-  }, [showComments, ministerId])
-
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       const response = await fetch(`/api/ministers/${ministerId}/comments`)
       if (response.ok) {
@@ -38,7 +32,13 @@ export default function Comments({ ministerId, ministerName }: CommentsProps) {
     } catch (error) {
       console.error('Error fetching comments:', error)
     }
-  }
+  }, [ministerId])
+
+  useEffect(() => {
+    if (showComments) {
+      fetchComments()
+    }
+  }, [showComments, fetchComments])
 
   const addComment = async (e: React.FormEvent) => {
     e.preventDefault()
