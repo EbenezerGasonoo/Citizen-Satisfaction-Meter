@@ -1,88 +1,95 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./prisma/dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Minister {
-  id        Int      @id @default(autoincrement())
-  fullName  String
-  portfolio String
-  photoUrl  String
-  bio       String?
-  createdAt DateTime @default(now())
-  votes     Vote[]
-  favorites Favorite[]
-  comments  Comment[]
-  policies  Policy[]
-  isTrending Boolean @default(false)
-  actions   Action[]
+  id         Int        @id @default(autoincrement())
+  fullName   String
+  portfolio  String
+  photoUrl   String
+  bio        String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  isTrending Boolean    @default(false)
+  actions    Action[]
+  comments   Comment[]
+  favorites  Favorite[]
+  policies   Policy[]
+  votes      Vote[]
 }
 
 model Policy {
-  id          Int      @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   title       String
   description String
-  category    String   // e.g., "Economic", "Social", "Infrastructure", "Security"
-  status      String   // "Active", "Completed", "Planned", "Suspended"
+  category    String
+  status      String
   startDate   DateTime?
   endDate     DateTime?
   budget      Float?
-  impact      String   // "High", "Medium", "Low"
+  impact      String
   ministerId  Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  minister    Minister @relation(fields: [ministerId], references: [id])
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  minister    Minister     @relation(fields: [ministerId], references: [id], onDelete: Cascade)
   votes       PolicyVote[]
 }
 
 model PolicyVote {
   id         Int      @id @default(autoincrement())
   policyId   Int
-  positive   Boolean  // true = Satisfied with policy
-  clientHash String   // SHA-256(ip + ua + salt)
+  positive   Boolean
+  clientHash String
   createdAt  DateTime @default(now())
-  policy     Policy   @relation(fields: [policyId], references: [id])
+  policy     Policy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
 
   @@unique([policyId, clientHash])
+  @@index([policyId])
+  @@index([clientHash])
 }
 
 model Vote {
   id         Int      @id @default(autoincrement())
   ministerId Int
-  positive   Boolean  // true = Satisfied
-  clientHash String   // SHA-256(ip + ua + salt)
-  ipAddress  String?  // IP address for analytics
-  country    String?  // Country code (e.g., "GH", "US")
-  region     String?  // Region/State
-  city       String?  // City name
+  positive   Boolean
+  clientHash String
+  ipAddress  String?
+  country    String?
+  region     String?
+  city       String?
   createdAt  DateTime @default(now())
-  minister   Minister @relation(fields: [ministerId], references: [id])
+  minister   Minister @relation(fields: [ministerId], references: [id], onDelete: Cascade)
+
+  @@index([ministerId])
+  @@index([clientHash])
+  @@index([createdAt])
 }
 
 model Favorite {
   id         Int      @id @default(autoincrement())
   ministerId Int
-  clientHash String   // SHA-256(ip + ua + salt) - same as Vote
+  clientHash String
   createdAt  DateTime @default(now())
-  minister   Minister @relation(fields: [ministerId], references: [id])
+  minister   Minister @relation(fields: [ministerId], references: [id], onDelete: Cascade)
 
   @@unique([ministerId, clientHash])
+  @@index([ministerId])
 }
 
 model Comment {
   id         Int      @id @default(autoincrement())
   ministerId Int
   content    String
-  clientHash String   // SHA-256(ip + ua + salt)
+  clientHash String
   createdAt  DateTime @default(now())
-  minister   Minister @relation(fields: [ministerId], references: [id])
+  minister   Minister @relation(fields: [ministerId], references: [id], onDelete: Cascade)
+
+  @@index([ministerId])
 }
 
 model Account {
@@ -98,10 +105,10 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -110,6 +117,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model User {
@@ -118,8 +127,10 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  role          String    @default("USER") // USER, ADMIN
+  role          String    @default("USER")
   password      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
 }
@@ -133,36 +144,48 @@ model VerificationToken {
 }
 
 model Action {
-  id          Int      @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   title       String
   description String
-  status      String   // "Active", "Completed", "Planned", "Suspended"
+  status      String
   date        DateTime
-  impact      String   // "High", "Medium", "Low"
+  impact      String
   ministerId  Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  minister    Minister @relation(fields: [ministerId], references: [id])
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  minister    Minister     @relation(fields: [ministerId], references: [id], onDelete: Cascade)
   votes       ActionVote[]
+
+  @@index([ministerId])
 }
 
 model ActionVote {
   id         Int      @id @default(autoincrement())
   actionId   Int
-  positive   Boolean  // true = Satisfied with action
-  clientHash String   // SHA-256(ip + ua + salt)
+  positive   Boolean
+  clientHash String
   createdAt  DateTime @default(now())
-  action     Action   @relation(fields: [actionId], references: [id])
+  action     Action   @relation(fields: [actionId], references: [id], onDelete: Cascade)
 
   @@unique([actionId, clientHash])
+  @@index([actionId])
 }
 
 model Submission {
-  id         Int      @id @default(autoincrement())
-  type       String   // "suggestion", "bug", "nominate"
-  message    String
-  email      String?
-  status     String   @default("pending") // "pending", "reviewed", "resolved", "rejected"
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-} 
+  id        Int      @id @default(autoincrement())
+  type      String
+  message   String
+  email     String?
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model playing_with_neon {
+  id    Int    @id @default(autoincrement())
+  name  String
+  value Float? @db.Real
+}
