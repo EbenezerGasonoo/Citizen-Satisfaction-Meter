@@ -110,6 +110,27 @@ export default async function AdminPage() {
             </div>
           </div>
 
+          {/* Trending Management */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              Trending Management
+            </h2>
+            <div className="space-y-3">
+              <Link
+                href="/admin/trending"
+                className="block w-full text-center bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                Manage Trending
+              </Link>
+              <Link
+                href="/admin/trending/analytics"
+                className="block w-full text-center bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors"
+              >
+                Trending Analytics
+              </Link>
+            </div>
+          </div>
+
           {/* System */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">

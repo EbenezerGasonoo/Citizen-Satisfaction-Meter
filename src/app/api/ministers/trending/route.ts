@@ -1,10 +1,14 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { calculateTrendingMinisters } from '@/lib/trending-calculator'
 
 export async function GET() {
   try {
-    // Fetch only ministers marked as trending by admins
-    const trendingMinisters = await prisma.minister.findMany({
+    // Get automatically calculated trending ministers
+    const trendingCandidates = await calculateTrendingMinisters()
+    
+    // Get ministers marked as trending by admins
+    const adminTrendingMinisters = await prisma.minister.findMany({
       where: {
         isTrending: true,
       },
@@ -22,10 +26,40 @@ export async function GET() {
       },
     })
 
-    const formattedTrendingMinisters = trendingMinisters.map((minister: any) => {
+    // Combine both sources and remove duplicates
+    const allTrendingIds = new Set([
+      ...trendingCandidates.map(c => c.ministerId),
+      ...adminTrendingMinisters.map(m => m.id)
+    ])
+
+    // Get final list of trending ministers
+    const finalTrendingMinisters = await prisma.minister.findMany({
+      where: {
+        id: { in: Array.from(allTrendingIds) }
+      },
+      include: {
+        votes: {
+          where: {
+            createdAt: {
+              gte: new Date(Date.now() - 24 * 60 * 60 * 1000), // Last 24 hours
+            },
+          },
+        },
+      },
+      orderBy: {
+        fullName: 'asc',
+      },
+    })
+
+    const formattedTrendingMinisters = finalTrendingMinisters.map((minister: any) => {
       const totalVotes = minister.votes.length
       const positiveVotes = minister.votes.filter((vote: any) => vote.positive).length
       const satisfactionRate = totalVotes > 0 ? Math.round((positiveVotes / totalVotes) * 100) : 50 // Default to 50% if no votes
+
+      // Check if this minister was auto-detected as trending
+      const autoDetected = trendingCandidates.find(c => c.ministerId === minister.id)
+      const trendingScore = autoDetected?.trendingScore || 0
+      const trendingReason = autoDetected?.reason || 'Admin selected'
 
       return {
         id: minister.id,
@@ -36,7 +70,18 @@ export async function GET() {
         voteChange: totalVotes,
         trend: satisfactionRate > 50 ? 'up' as const : 'down' as const,
         isTrending: true,
+        trendingScore,
+        trendingReason,
+        autoDetected: !!autoDetected
       }
+    })
+
+    // Sort by trending score (auto-detected first), then by satisfaction rate
+    formattedTrendingMinisters.sort((a, b) => {
+      if (a.autoDetected && !b.autoDetected) return -1
+      if (!a.autoDetected && b.autoDetected) return 1
+      if (a.trendingScore !== b.trendingScore) return b.trendingScore - a.trendingScore
+      return b.satisfactionRate - a.satisfactionRate
     })
 
     return NextResponse.json(formattedTrendingMinisters)
