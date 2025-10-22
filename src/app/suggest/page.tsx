@@ -44,9 +44,11 @@ export default function SuggestPage() {
   const [type, setType] = useState<SubmissionType>('suggestion');
 
   useEffect(() => {
-    const typeParam = searchParams.get('type');
-    if (typeParam === 'bug' || typeParam === 'nominate') {
-      setType(typeParam);
+    if (searchParams) {
+      const typeParam = searchParams.get('type');
+      if (typeParam === 'bug' || typeParam === 'nominate') {
+        setType(typeParam);
+      }
     }
   }, [searchParams]);
 
