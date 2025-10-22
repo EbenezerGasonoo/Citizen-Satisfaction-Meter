@@ -10,7 +10,6 @@ export interface VoteBackup {
   positive: boolean
   clientHash: string
   createdAt: Date
-  updatedAt?: Date
 }
 
 export interface VoteBackupMetadata {
@@ -66,8 +65,7 @@ export class VoteBackupManager {
           ministerId: vote.ministerId,
           positive: vote.positive,
           clientHash: vote.clientHash,
-          createdAt: vote.createdAt,
-          updatedAt: vote.updatedAt
+          createdAt: vote.createdAt
         }))
       }
 
@@ -129,8 +127,7 @@ export class VoteBackupManager {
             ministerId: vote.ministerId,
             positive: vote.positive,
             clientHash: vote.clientHash,
-            createdAt: new Date(vote.createdAt),
-            updatedAt: vote.updatedAt ? new Date(vote.updatedAt) : undefined
+            createdAt: new Date(vote.createdAt)
           }))
         })
       }
