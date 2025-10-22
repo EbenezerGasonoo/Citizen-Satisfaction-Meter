@@ -183,7 +183,7 @@ export default function PersonalizedRecommendations({ currentMinisterId }: Perso
                       {minister.portfolio}
                     </p>
                     <div className="flex items-center space-x-2 mt-1">
-                      {getRecommendationIcon(minister)}
+                      {getRecommendationIcon()}
                       <span className="text-xs text-gray-600 dark:text-gray-400">
                         {getRecommendationReason(minister, index)}
                       </span>
