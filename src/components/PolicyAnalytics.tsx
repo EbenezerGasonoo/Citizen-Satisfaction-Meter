@@ -1,16 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { 
   TrendingUp, 
-  TrendingDown, 
   DollarSign, 
-  Users, 
   Target, 
-  Calendar,
   BarChart3,
-  PieChart,
   Activity
 } from 'lucide-react'
 
@@ -55,11 +51,7 @@ export default function PolicyAnalytics() {
   const [loading, setLoading] = useState(true)
   const [timeRange, setTimeRange] = useState('30d')
 
-  useEffect(() => {
-    fetchAnalytics()
-  }, [timeRange])
-
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/analytics/policies?range=${timeRange}`)
       if (response.ok) {
@@ -71,7 +63,11 @@ export default function PolicyAnalytics() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [timeRange])
+
+  useEffect(() => {
+    fetchAnalytics()
+  }, [fetchAnalytics])
 
   if (loading) {
     return (
@@ -100,24 +96,24 @@ export default function PolicyAnalytics() {
     )
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Active': return 'text-green-600 dark:text-green-400'
-      case 'Completed': return 'text-blue-600 dark:text-blue-400'
-      case 'Planned': return 'text-yellow-600 dark:text-yellow-400'
-      case 'Suspended': return 'text-red-600 dark:text-red-400'
-      default: return 'text-gray-600 dark:text-gray-400'
-    }
-  }
+  // const getStatusColor = (status: string) => {
+  //   switch (status) {
+  //     case 'Active': return 'text-green-600 dark:text-green-400'
+  //     case 'Completed': return 'text-blue-600 dark:text-blue-400'
+  //     case 'Planned': return 'text-yellow-600 dark:text-yellow-400'
+  //     case 'Suspended': return 'text-red-600 dark:text-red-400'
+  //     default: return 'text-gray-600 dark:text-gray-400'
+  //   }
+  // }
 
-  const getImpactColor = (impact: string) => {
-    switch (impact) {
-      case 'High': return 'text-red-600 dark:text-red-400'
-      case 'Medium': return 'text-yellow-600 dark:text-yellow-400'
-      case 'Low': return 'text-green-600 dark:text-green-400'
-      default: return 'text-gray-600 dark:text-gray-400'
-    }
-  }
+  // const getImpactColor = (impact: string) => {
+  //   switch (impact) {
+  //     case 'High': return 'text-red-600 dark:text-red-400'
+  //     case 'Medium': return 'text-yellow-600 dark:text-yellow-400'
+  //     case 'Low': return 'text-green-600 dark:text-green-400'
+  //     default: return 'text-gray-600 dark:text-gray-400'
+  //   }
+  // }
 
   return (
     <div className="space-y-8">
@@ -228,7 +224,7 @@ export default function PolicyAnalytics() {
             Policies by Category
           </h3>
           <div className="space-y-3">
-            {analytics.categoryBreakdown.map((category, index) => (
+            {analytics.categoryBreakdown.map((category) => (
               <div key={category.category} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 rounded-full bg-blue-500"></div>

@@ -227,7 +227,7 @@ export default function NationalMeter() {
                 />
 
                 {/* Decorative dots along the circle */}
-                {[...Array(12)].map((_, _i) => {
+                {[...Array(12)].map((_, i) => {
                   const angle = (i / 12) * 2 * Math.PI
                   const x = 128 + 110 * Math.cos(angle)
                   const y = 128 + 110 * Math.sin(angle)

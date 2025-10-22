@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Sparkles, TrendingUp, Clock, Star } from 'lucide-react'
+import Image from 'next/image'
 
 interface Minister {
   id: number
@@ -23,11 +24,7 @@ export default function PersonalizedRecommendations({ currentMinisterId }: Perso
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<'trending' | 'similar' | 'popular'>('trending')
 
-  useEffect(() => {
-    fetchRecommendations()
-  }, [currentMinisterId, activeTab])
-
-  const fetchRecommendations = async () => {
+  const fetchRecommendations = useCallback(async () => {
     setLoading(true)
     try {
       let endpoint = '/api/ministers/trending'
@@ -48,7 +45,11 @@ export default function PersonalizedRecommendations({ currentMinisterId }: Perso
     } finally {
       setLoading(false)
     }
-  }
+  }, [currentMinisterId, activeTab])
+
+  useEffect(() => {
+    fetchRecommendations()
+  }, [fetchRecommendations])
 
   const getRecommendationReason = (minister: Minister, index: number) => {
     if (activeTab === 'trending') {
@@ -60,7 +61,7 @@ export default function PersonalizedRecommendations({ currentMinisterId }: Perso
     }
   }
 
-  const getRecommendationIcon = (minister: Minister) => {
+  const getRecommendationIcon = () => {
     if (activeTab === 'trending') {
       return <TrendingUp className="w-4 h-4 text-orange-500" />
     } else if (activeTab === 'similar') {
@@ -114,7 +115,7 @@ export default function PersonalizedRecommendations({ currentMinisterId }: Perso
           return (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key as any)}
+              onClick={() => setActiveTab(tab.key as 'trending' | 'similar' | 'popular')}
               className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                 activeTab === tab.key
                   ? 'bg-white dark:bg-gray-600 text-cocoa-green dark:text-green-400 shadow-sm'
@@ -167,9 +168,11 @@ export default function PersonalizedRecommendations({ currentMinisterId }: Perso
               {/* Minister Info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center space-x-3">
-                  <img
+                  <Image
                     src={minister.photoUrl}
                     alt={minister.fullName}
+                    width={48}
+                    height={48}
                     className="w-12 h-12 rounded-full object-cover"
                   />
                   <div className="min-w-0 flex-1">
