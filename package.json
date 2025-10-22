@@ -13,7 +13,11 @@
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "safety-check:pre": "node scripts/safety-check.js pre-update",
+    "safety-check:post": "node scripts/safety-check.js post-update",
+    "backup:create": "node -e \"require('./src/lib/vote-backup-manager').voteBackupManager.createBackup()\"",
+    "backup:verify": "node -e \"require('./src/lib/vote-backup-manager').voteBackupManager.verifyVoteIntegrity()\""
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

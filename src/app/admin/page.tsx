@@ -110,6 +110,27 @@ export default async function AdminPage() {
             </div>
           </div>
 
+          {/* Vote Preservation */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              Vote Preservation
+            </h2>
+            <div className="space-y-3">
+              <Link
+                href="/admin/vote-preservation"
+                className="block w-full text-center bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Manage Vote Backups
+              </Link>
+              <Link
+                href="/admin/vote-preservation?action=verify"
+                className="block w-full text-center bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors"
+              >
+                Verify Vote Integrity
+              </Link>
+            </div>
+          </div>
+
           {/* Trending Management */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
