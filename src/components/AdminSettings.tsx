@@ -26,13 +26,26 @@ interface AdminProfile {
 }
 
 export default function AdminSettings() {
-  const { data: session, status } = useSession()
   const [profile, setProfile] = useState<AdminProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [isClient, setIsClient] = useState(false)
+  const [isSessionReady, setIsSessionReady] = useState(false)
+  const [sessionError, setSessionError] = useState<string | null>(null)
+
+  // Safely get session data
+  let session, status
+  try {
+    const sessionData = useSession()
+    session = sessionData.data
+    status = sessionData.status
+  } catch (err) {
+    console.error('Session error:', err)
+    setSessionError('Session initialization failed')
+    status = 'error'
+  }
 
   // Form states
   const [name, setName] = useState('')
@@ -52,13 +65,19 @@ export default function AdminSettings() {
   }, [])
 
   useEffect(() => {
-    if (isClient && status === 'authenticated') {
-      fetchProfile()
+    if (isClient && status !== 'loading') {
+      setIsSessionReady(true)
+      if (status === 'authenticated') {
+        fetchProfile()
+      } else {
+        setLoading(false)
+      }
     }
   }, [isClient, status])
 
   const fetchProfile = async () => {
     setLoading(true)
+    setError(null)
     try {
       const response = await fetch('/api/admin/settings')
       if (response.ok) {
@@ -67,11 +86,12 @@ export default function AdminSettings() {
         setName(data.admin.name || '')
         setEmail(data.admin.email || '')
       } else {
-        setError('Failed to fetch profile')
+        const errorData = await response.json()
+        setError(errorData.error || 'Failed to fetch profile')
       }
     } catch (error) {
       console.error('Error fetching profile:', error)
-      setError('Failed to fetch profile')
+      setError('Network error. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -225,10 +245,46 @@ export default function AdminSettings() {
   }
 
   // Show loading while client-side rendering is not ready
-  if (!isClient) {
+  if (!isClient || !isSessionReady) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cocoa-green"></div>
+      </div>
+    )
+  }
+
+  // Handle session error
+  if (sessionError) {
+    return (
+      <div className="text-center py-8">
+        <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+          Session Error
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-4">
+          {sessionError}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-cocoa-green text-white rounded-lg hover:bg-green-600 transition-colors"
+        >
+          Reload Page
+        </button>
+      </div>
+    )
+  }
+
+  // Check if user is authenticated
+  if (status === 'unauthenticated') {
+    return (
+      <div className="text-center py-8">
+        <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+          Access Denied
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400">
+          You must be logged in as an admin to access this page.
+        </p>
       </div>
     )
   }
