@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         photoUrl: true,
         votes: {
           select: {
-            isPositive: true,
+            positive: true,
           },
         },
       },
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     const totalVotes = minister.votes.length
-    const positiveVotes = minister.votes.filter((v) => v.isPositive).length
+    const positiveVotes = minister.votes.filter((v) => v.positive).length
     const satisfactionRate = totalVotes > 0 ? Math.round((positiveVotes / totalVotes) * 100) : 0
 
     const description = minister.bio 
