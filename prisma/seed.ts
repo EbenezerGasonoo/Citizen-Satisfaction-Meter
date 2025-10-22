@@ -22,7 +22,7 @@ const ministers = [
   {
     fullName: 'Jane Naana Opoku-Agyemang',
     portfolio: 'Vice President',
-    photoUrl: '/uploads/jane_naana_opoku_agyemang.jpg',
+    photoUrl: '/uploads/jane_naana_opoku_agyemang.webp',
     bio: 'Professor Naana Jane Opoku-Agyemang is a distinguished academic, administrator, and public servant. She served as Chancellor of the Women\'s University in Africa (2018–2024) and was Ghana\'s first female Vice Chancellor, leading the University of Cape Coast (2008–2012). As Minister for Education (2013–2017), she implemented reforms to improve access and quality in Ghana\'s education sector.',
     isTrending: false,
   },
@@ -125,13 +125,6 @@ const ministers = [
     portfolio: 'Minister for Lands & Natural Resources',
     photoUrl: '/uploads/emmanuel_armah_kofi_buah_mp.jpg',
     bio: 'Emmanuel Armah Kofi Buah is a Ghanaian politician and Member of Parliament for Ellembelle constituency. He has served in various ministerial positions including Petroleum and Energy.',
-    isTrending: false,
-  },
-  {
-    fullName: 'Ibrahim Murtala Muhammed (MP)',
-    portfolio: 'Minister for Environment, Science & Technology',
-    photoUrl: '/uploads/ibrahim_murtala_muhammed_mp.jpg',
-    bio: 'Ibrahim Murtala Muhammed is a Ghanaian politician and Member of Parliament for Tamale Central constituency. He has been involved in environmental and technology policy development.',
     isTrending: false,
   },
   {
