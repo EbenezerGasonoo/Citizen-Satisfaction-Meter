@@ -196,7 +196,7 @@ export default function SuggestPage() {
                   onChange={e => setValue(e.target.value)}
                   required
                   style={{
-                    focusRingColor: type === 'bug' ? '#dc2626' : type === 'nominate' ? '#2563eb' : '#059669'
+                    outlineColor: type === 'bug' ? '#dc2626' : type === 'nominate' ? '#2563eb' : '#059669'
                   }}
                 />
               </div>
