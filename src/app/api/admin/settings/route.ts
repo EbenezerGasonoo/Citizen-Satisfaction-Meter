@@ -81,6 +81,13 @@ export async function PUT(request: NextRequest) {
         )
       }
 
+      if (!currentAdmin.password) {
+        return NextResponse.json(
+          { error: 'No password set for this account' },
+          { status: 400 }
+        )
+      }
+
       const isCurrentPasswordValid = await bcrypt.compare(
         currentPassword,
         currentAdmin.password
@@ -193,6 +200,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate current password
+    if (!currentAdmin.password) {
+      return NextResponse.json(
+        { error: 'No password set for this account' },
+        { status: 400 }
+      )
+    }
+
     const isCurrentPasswordValid = await bcrypt.compare(
       currentPassword,
       currentAdmin.password
