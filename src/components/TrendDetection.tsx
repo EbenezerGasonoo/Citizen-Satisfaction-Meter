@@ -24,10 +24,6 @@ export default function TrendDetection({ ministerId }: TrendDetectionProps) {
   const [loading, setLoading] = useState(true)
   const [activeFilter, setActiveFilter] = useState<'all' | 'positive' | 'negative' | 'neutral'>('all')
 
-  useEffect(() => {
-    fetchTrends()
-  }, [ministerId, fetchTrends])
-
   const fetchTrends = useCallback(async () => {
     setLoading(true)
     try {
@@ -49,6 +45,10 @@ export default function TrendDetection({ ministerId }: TrendDetectionProps) {
       setLoading(false)
     }
   }, [ministerId])
+
+  useEffect(() => {
+    fetchTrends()
+  }, [ministerId, fetchTrends])
 
   const generateMockTrends = (): Trend[] => {
     return [
