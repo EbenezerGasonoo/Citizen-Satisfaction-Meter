@@ -81,11 +81,11 @@ export default function NationalMeter() {
   }
 
   const circumference = 2 * Math.PI * 110
-  const strokeDashoffset = circumference - (score.satisfactionPercentage / 100) * circumference
+  const strokeDashoffset = circumference - ((score?.satisfactionPercentage || 0) / 100) * circumference
 
   // Color scheme based on score
   const getColors = () => {
-    if (score.satisfactionPercentage >= 70) {
+    if ((score?.satisfactionPercentage || 0) >= 70) {
       return {
         primary: '#10b981',
         secondary: '#34d399',
@@ -97,7 +97,7 @@ export default function NationalMeter() {
         badgeBg: 'bg-emerald-100 dark:bg-emerald-900/40',
         shadow: 'shadow-emerald-500/20'
       }
-    } else if (score.satisfactionPercentage >= 50) {
+    } else if ((score?.satisfactionPercentage || 0) >= 50) {
       return {
         primary: '#f59e0b',
         secondary: '#fbbf24',
@@ -127,14 +127,14 @@ export default function NationalMeter() {
   const colors = getColors()
 
   const getStatusText = () => {
-    if (score.satisfactionPercentage >= 70) return 'Excellent Performance'
-    if (score.satisfactionPercentage >= 50) return 'Moderate Performance'
+    if ((score?.satisfactionPercentage || 0) >= 70) return 'Excellent Performance'
+    if ((score?.satisfactionPercentage || 0) >= 50) return 'Moderate Performance'
     return 'Needs Improvement'
   }
 
   const getStatusDescription = () => {
-    if (score.satisfactionPercentage >= 70) return 'Ministers are performing exceptionally well'
-    if (score.satisfactionPercentage >= 50) return 'Performance shows room for improvement'
+    if ((score?.satisfactionPercentage || 0) >= 70) return 'Ministers are performing exceptionally well'
+    if ((score?.satisfactionPercentage || 0) >= 50) return 'Performance shows room for improvement'
     return 'Significant improvements needed in multiple areas'
   }
 
@@ -231,7 +231,7 @@ export default function NationalMeter() {
                   const angle = (i / 12) * 2 * Math.PI
                   const x = 128 + 110 * Math.cos(angle)
                   const y = 128 + 110 * Math.sin(angle)
-                  const isActive = (i / 12) <= (score.satisfactionPercentage / 100)
+                  const isActive = (i / 12) <= ((score?.satisfactionPercentage || 0) / 100)
                   
                   return (
                     <motion.circle
@@ -278,7 +278,7 @@ export default function NationalMeter() {
                 </motion.div>
 
                 {/* Award badge for high scores */}
-                {score.satisfactionPercentage >= 70 && (
+                {(score?.satisfactionPercentage || 0) >= 70 && (
                   <motion.div
                     initial={{ opacity: 0, y: 10, scale: 0 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
