@@ -4,8 +4,9 @@ import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Edit, TrendingUp, TrendingDown, Eye } from 'lucide-react'
+import { Edit, TrendingUp, TrendingDown, Eye, Trash2 } from 'lucide-react'
 import ActionSection from '@/components/ActionSection'
+import RemoveMinisterDialog from '@/components/RemoveMinisterDialog'
 
 interface Minister {
   id: number
@@ -23,6 +24,10 @@ export default function AdminMinistersPage() {
   const [ministers, setMinisters] = useState<Minister[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
+  const [removeDialog, setRemoveDialog] = useState<{ isOpen: boolean; minister: Minister | null }>({
+    isOpen: false,
+    minister: null
+  })
 
   useEffect(() => {
     const fetchMinisters = async () => {
@@ -46,6 +51,26 @@ export default function AdminMinistersPage() {
     minister.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     minister.portfolio.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  const handleRemoveMinister = (minister: Minister) => {
+    setRemoveDialog({ isOpen: true, minister })
+  }
+
+  const handleRemoveSuccess = () => {
+    // Refresh the ministers list
+    const fetchMinisters = async () => {
+      try {
+        const response = await fetch('/api/ministers')
+        if (response.ok) {
+          const data = await response.json()
+          setMinisters(data)
+        }
+      } catch (error) {
+        console.error('Failed to fetch ministers:', error)
+      }
+    }
+    fetchMinisters()
+  }
 
   if (loading) {
     return (
@@ -135,6 +160,13 @@ export default function AdminMinistersPage() {
                   >
                     <Edit className="w-4 h-4" />
                   </Link>
+                  <button
+                    onClick={() => handleRemoveMinister(minister)}
+                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    title="Remove Minister"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
 
@@ -190,6 +222,14 @@ export default function AdminMinistersPage() {
           </div>
         )}
       </div>
+
+      {/* Remove Minister Dialog */}
+      <RemoveMinisterDialog
+        minister={removeDialog.minister}
+        isOpen={removeDialog.isOpen}
+        onClose={() => setRemoveDialog({ isOpen: false, minister: null })}
+        onSuccess={handleRemoveSuccess}
+      />
     </div>
   )
 } 
