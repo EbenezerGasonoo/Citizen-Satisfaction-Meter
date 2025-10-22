@@ -34,6 +34,9 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
       if (response.ok) {
         setVoted(voteType)
         onVoteSuccess?.()
+        
+        // Dispatch custom event to update meter
+        window.dispatchEvent(new CustomEvent('voteSubmitted'))
       } else {
         const errorData = await response.json()
         setError(errorData.error || 'Failed to submit vote')

@@ -16,22 +16,40 @@ export default function NationalMeter() {
   const rounded = useTransform(count, (latest) => Math.round(latest))
   const [displayCount, setDisplayCount] = useState(0)
 
-  useEffect(() => {
-    const fetchScore = async () => {
-      try {
-        const response = await fetch('/api/analytics/nationalScore')
-        if (response.ok) {
-          const data = await response.json()
-          setScore(data)
-        }
-      } catch (error) {
-        console.error('Failed to fetch national score:', error)
-      } finally {
-        setLoading(false)
+  const fetchScore = async () => {
+    try {
+      const response = await fetch('/api/analytics/nationalScore')
+      if (response.ok) {
+        const data = await response.json()
+        setScore(data)
       }
+    } catch (error) {
+      console.error('Failed to fetch national score:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchScore()
+  }, [])
+
+  // Listen for vote updates
+  useEffect(() => {
+    const handleVoteUpdate = () => {
+      fetchScore()
     }
 
-    fetchScore()
+    // Listen for custom vote events
+    window.addEventListener('voteSubmitted', handleVoteUpdate)
+    
+    // Also poll every 30 seconds for updates
+    const interval = setInterval(fetchScore, 30000)
+
+    return () => {
+      window.removeEventListener('voteSubmitted', handleVoteUpdate)
+      clearInterval(interval)
+    }
   }, [])
 
   // Animate vote count

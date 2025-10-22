@@ -81,6 +81,8 @@ export default function PolicySection({ ministerId }: { ministerId: number }) {
         setError(err.error || "Failed to vote");
       } else {
         setVoted((v) => ({ ...v, [policyId]: true }));
+        // Dispatch custom event to update meter
+        window.dispatchEvent(new CustomEvent('voteSubmitted'));
         // Optionally, refresh policies
         const updated = await res.json();
         setPolicies((prev) =>
