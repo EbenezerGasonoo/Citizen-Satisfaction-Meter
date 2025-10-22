@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Navigation from '@/components/Navigation'
 import { ThemeProvider } from '@/components/ThemeProvider'
+import { SessionProvider } from 'next-auth/react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -157,9 +158,10 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} antialiased touch-manipulation`}>
-        <ThemeProvider>
-          <Navigation />
-          {children}
+        <SessionProvider>
+          <ThemeProvider>
+            <Navigation />
+            {children}
           <footer className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 border-t border-gray-200 dark:border-gray-800 py-12 transition-colors duration-300">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="max-w-5xl mx-auto text-center space-y-8">
@@ -216,7 +218,8 @@ export default function RootLayout({
               </div>
             </div>
           </footer>
-        </ThemeProvider>
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   )

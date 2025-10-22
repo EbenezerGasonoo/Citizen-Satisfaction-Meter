@@ -35,17 +35,18 @@ export default function AdminSettings() {
   const [isSessionReady, setIsSessionReady] = useState(false)
   const [sessionError, setSessionError] = useState<string | null>(null)
 
-  // Safely get session data
-  let session, status
-  try {
-    const sessionData = useSession()
-    session = sessionData.data
-    status = sessionData.status
-  } catch (err) {
-    console.error('Session error:', err)
-    setSessionError('Session initialization failed')
-    status = 'error'
-  }
+  // Use a more defensive approach to get session data
+  const sessionData = useSession()
+  const session = sessionData?.data
+  const status = sessionData?.status || 'loading'
+
+  // Check if session provider is available
+  useEffect(() => {
+    if (isClient && !sessionData) {
+      console.error('Session provider not available')
+      setSessionError('Session provider not available. Please ensure you are logged in.')
+    }
+  }, [isClient, sessionData])
 
   // Form states
   const [name, setName] = useState('')
@@ -65,11 +66,19 @@ export default function AdminSettings() {
   }, [])
 
   useEffect(() => {
-    if (isClient && status !== 'loading') {
-      setIsSessionReady(true)
-      if (status === 'authenticated') {
+    if (isClient) {
+      if (status === 'loading') {
+        // Still loading, keep waiting
+        return
+      } else if (status === 'unauthenticated') {
+        setIsSessionReady(true)
+        setLoading(false)
+      } else if (status === 'authenticated') {
+        setIsSessionReady(true)
         fetchProfile()
       } else {
+        // Handle any other status
+        setIsSessionReady(true)
         setLoading(false)
       }
     }
