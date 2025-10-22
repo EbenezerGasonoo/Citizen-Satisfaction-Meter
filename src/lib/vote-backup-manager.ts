@@ -123,7 +123,7 @@ export class VoteBackupManager {
         console.log(`📦 Processing batch ${i + 1}/${batches.length} (${batch.length} votes)`)
         
         await prisma.vote.createMany({
-          data: batch.map(vote => ({
+          data: batch.map((vote: VoteBackup) => ({
             ministerId: vote.ministerId,
             positive: vote.positive,
             clientHash: vote.clientHash,
