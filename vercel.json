@@ -5,16 +5,6 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["iad1"],
-  "env": {
-    "DATABASE_URL": "@database-url",
-    "NEXTAUTH_URL": "@nextauth-url",
-    "NEXTAUTH_SECRET": "@nextauth-secret"
-  },
-  "build": {
-    "env": {
-      "DATABASE_URL": "@database-url"
-    }
-  },
   "functions": {
     "pages/api/**/*.ts": {
       "maxDuration": 10
