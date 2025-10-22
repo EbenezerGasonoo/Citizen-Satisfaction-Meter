@@ -256,11 +256,42 @@ export async function main() {
 
   console.log(`✅ Seeded ${samplePolicies.length} sample policies`)
 
-  // Remove vote seeding so all ministers start with 0 votes
-  // (Commented out)
-  // for (const vote of sampleVotes) {
-  //   await prisma.vote.create({ data: vote })
-  // }
+  // Add sample votes for demonstration
+  const sampleVotes = [
+    // President votes
+    { ministerId: createdMinisters[0].id, positive: true, clientHash: 'demo_vote_1' },
+    { ministerId: createdMinisters[0].id, positive: true, clientHash: 'demo_vote_2' },
+    { ministerId: createdMinisters[0].id, positive: false, clientHash: 'demo_vote_3' },
+    { ministerId: createdMinisters[0].id, positive: true, clientHash: 'demo_vote_4' },
+    { ministerId: createdMinisters[0].id, positive: true, clientHash: 'demo_vote_5' },
+    
+    // Vice President votes
+    { ministerId: createdMinisters[1].id, positive: true, clientHash: 'demo_vote_6' },
+    { ministerId: createdMinisters[1].id, positive: true, clientHash: 'demo_vote_7' },
+    { ministerId: createdMinisters[1].id, positive: true, clientHash: 'demo_vote_8' },
+    { ministerId: createdMinisters[1].id, positive: false, clientHash: 'demo_vote_9' },
+    
+    // Finance Minister votes
+    { ministerId: createdMinisters[2].id, positive: false, clientHash: 'demo_vote_10' },
+    { ministerId: createdMinisters[2].id, positive: false, clientHash: 'demo_vote_11' },
+    { ministerId: createdMinisters[2].id, positive: true, clientHash: 'demo_vote_12' },
+    { ministerId: createdMinisters[2].id, positive: false, clientHash: 'demo_vote_13' },
+    { ministerId: createdMinisters[2].id, positive: true, clientHash: 'demo_vote_14' },
+    { ministerId: createdMinisters[2].id, positive: false, clientHash: 'demo_vote_15' },
+    
+    // Education Minister votes
+    { ministerId: createdMinisters[6].id, positive: true, clientHash: 'demo_vote_16' },
+    { ministerId: createdMinisters[6].id, positive: true, clientHash: 'demo_vote_17' },
+    { ministerId: createdMinisters[6].id, positive: true, clientHash: 'demo_vote_18' },
+    { ministerId: createdMinisters[6].id, positive: true, clientHash: 'demo_vote_19' },
+    { ministerId: createdMinisters[6].id, positive: false, clientHash: 'demo_vote_20' },
+  ]
+
+  for (const vote of sampleVotes) {
+    await prisma.vote.create({ data: vote })
+  }
+
+  console.log(`✅ Seeded ${sampleVotes.length} sample votes`)
 
   // Create default admin user
   const adminEmail = 'eg@entechnologygh.com'

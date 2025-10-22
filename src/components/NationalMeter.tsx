@@ -21,7 +21,10 @@ export default function NationalMeter() {
       const response = await fetch('/api/analytics/nationalScore')
       if (response.ok) {
         const data = await response.json()
+        console.log('National score data:', data) // Debug log
         setScore(data)
+      } else {
+        console.error('Failed to fetch national score:', response.status, response.statusText)
       }
     } catch (error) {
       console.error('Failed to fetch national score:', error)
@@ -55,6 +58,9 @@ export default function NationalMeter() {
   // Animate vote count
   useEffect(() => {
     if (score) {
+      // Set initial display count immediately
+      setDisplayCount(score.totalVotes)
+      
       const controls = animate(count, score.totalVotes, { 
         duration: 2,
         ease: "easeOut"
@@ -335,7 +341,7 @@ export default function NationalMeter() {
                   className="text-5xl font-black text-blue-900 dark:text-blue-100"
                   key={displayCount}
                 >
-                  {displayCount.toLocaleString()}
+                  {(displayCount || score?.totalVotes || 0).toLocaleString()}
                 </motion.div>
                 <div className="text-sm text-blue-600 dark:text-blue-400 mt-2 font-medium">
                   Citizens have participated
