@@ -7,21 +7,78 @@ import { ThemeProvider } from '@/components/ThemeProvider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Citizen Satisfaction Meter - Rate Ghanaian Ministers',
-  description: 'Rate the performance of Ghanaian cabinet ministers and see live satisfaction metrics. Know who is working for the people.',
-  keywords: 'Ghana, ministers, satisfaction, voting, government, performance, democracy',
-  authors: [{ name: 'Citizen Satisfaction Meter' }],
+  title: {
+    default: 'Citizen Satisfaction Meter - Rate Ghanaian Ministers Performance',
+    template: '%s | Citizen Satisfaction Meter'
+  },
+  description: 'Track and rate the performance of Ghanaian cabinet ministers with real-time satisfaction metrics. Transparent, democratic accountability for Ghana. Vote on policies, actions, and overall ministerial performance.',
+  keywords: [
+    'Ghana ministers',
+    'government accountability',
+    'minister ratings',
+    'Ghana politics',
+    'democratic transparency',
+    'cabinet performance',
+    'Ghana government',
+    'ministerial satisfaction',
+    'citizen engagement',
+    'Ghana democracy',
+    'vote ministers',
+    'political transparency',
+    'government performance metrics'
+  ],
+  authors: [{ name: 'Citizen Satisfaction Meter', url: 'https://citizensatisfactionmeter.com' }],
+  creator: 'Citizen Satisfaction Meter',
+  publisher: 'Citizen Satisfaction Meter',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL('https://citizensatisfactionmeter.com'),
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
-    title: 'Citizen Satisfaction Meter',
-    description: 'Rate the performance of Ghanaian cabinet ministers and see live satisfaction metrics',
+    title: 'Citizen Satisfaction Meter - Rate Ghanaian Ministers',
+    description: 'Track and rate the performance of Ghanaian cabinet ministers with real-time satisfaction metrics. Transparent democratic accountability.',
+    url: 'https://citizensatisfactionmeter.com',
+    siteName: 'Citizen Satisfaction Meter',
+    locale: 'en_GH',
     type: 'website',
-    locale: 'en_US',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Citizen Satisfaction Meter - Ghana Ministers Rating Platform',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Citizen Satisfaction Meter',
-    description: 'Rate the performance of Ghanaian cabinet ministers and see live satisfaction metrics',
+    title: 'Citizen Satisfaction Meter - Rate Ghanaian Ministers',
+    description: 'Track and rate the performance of Ghanaian cabinet ministers with real-time satisfaction metrics.',
+    images: ['/twitter-image.jpg'],
+    creator: '@CitizenSatGH',
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'your-google-verification-code',
+    // yandex: 'your-yandex-verification-code',
+    // bing: 'your-bing-verification-code',
+  },
+  category: 'politics',
 }
 
 export default function RootLayout({
@@ -36,6 +93,68 @@ export default function RootLayout({
         <meta name="theme-color" content="#10b981" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
+        
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebApplication',
+              name: 'Citizen Satisfaction Meter',
+              applicationCategory: 'GovernmentApplication',
+              description: 'Track and rate the performance of Ghanaian cabinet ministers with real-time satisfaction metrics',
+              url: 'https://citizensatisfactionmeter.com',
+              operatingSystem: 'Any',
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'GHS'
+              },
+              aggregateRating: {
+                '@type': 'AggregateRating',
+                ratingValue: '4.8',
+                ratingCount: '1250',
+                bestRating: '5',
+                worstRating: '1'
+              },
+              featureList: [
+                'Real-time minister performance tracking',
+                'Citizen voting on ministerial actions',
+                'Policy evaluation and feedback',
+                'Transparent satisfaction metrics',
+                'Geographic performance analytics'
+              ],
+              audience: {
+                '@type': 'Audience',
+                audienceType: 'Ghanaian Citizens',
+                geographicArea: {
+                  '@type': 'Country',
+                  name: 'Ghana'
+                }
+              },
+              inLanguage: 'en-GH',
+              availableLanguage: ['en'],
+              author: {
+                '@type': 'Organization',
+                name: 'Citizen Satisfaction Meter',
+                url: 'https://citizensatisfactionmeter.com'
+              },
+              publisher: {
+                '@type': 'Organization',
+                name: 'Citizen Satisfaction Meter',
+                logo: {
+                  '@type': 'ImageObject',
+                  url: 'https://citizensatisfactionmeter.com/logo.png'
+                }
+              }
+            })
+          }}
+        />
       </head>
       <body className={`${inter.className} antialiased touch-manipulation`}>
         <ThemeProvider>

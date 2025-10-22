@@ -1,0 +1,28 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://citizensatisfactionmeter.com
+
+# Sitemaps
+Sitemap: https://citizensatisfactionmeter.com/sitemap.xml
+
+# Disallow admin routes
+User-agent: *
+Disallow: /admin/
+Disallow: /api/
+
+# Crawl-delay for all bots
+Crawl-delay: 1
+
+# Google bot
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Bing bot
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+

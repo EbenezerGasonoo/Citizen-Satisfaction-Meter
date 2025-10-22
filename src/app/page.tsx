@@ -6,7 +6,7 @@ import NationalMeter from '@/components/NationalMeter'
 import TrendingGrid from '@/components/TrendingGrid'
 import MinisterDirectory from '@/components/MinisterDirectory'
 import VoteNotification from '@/components/VoteNotification'
-import { Sparkles, TrendingUp, Users } from 'lucide-react'
+import { Sparkles, TrendingUp, Users, BarChart3, Clock, MapPin } from 'lucide-react'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -130,9 +130,9 @@ export default function Home() {
                 variants={containerVariants}
               >
                 {[
-                  { icon: Users, label: 'Ministers', value: '30+' },
-                  { icon: TrendingUp, label: 'Active Voters', value: '1000+' },
-                  { icon: Sparkles, label: 'Transparency', value: '100%' }
+                  { icon: BarChart3, label: 'Live Data', value: 'Real-time' },
+                  { icon: Clock, label: 'Real-time', value: '24/7' },
+                  { icon: MapPin, label: 'Regions', value: '16' }
                 ].map((stat, index) => (
                   <motion.div
                     key={stat.label}

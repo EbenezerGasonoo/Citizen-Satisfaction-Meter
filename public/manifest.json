@@ -1,0 +1,30 @@
+{
+  "name": "Citizen Satisfaction Meter",
+  "short_name": "CSM Ghana",
+  "description": "Track and rate the performance of Ghanaian cabinet ministers with real-time satisfaction metrics",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#10b981",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["politics", "government", "news"],
+  "lang": "en-GH",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false
+}
+
