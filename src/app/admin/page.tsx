@@ -162,7 +162,7 @@ export default async function AdminPage() {
                 href="/admin/settings"
                 className="block w-full text-center bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors"
               >
-                Settings
+                Admin Settings
               </Link>
               <Link
                 href="/admin/logs"
