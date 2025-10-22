@@ -38,7 +38,7 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
         const errorData = await response.json()
         setError(errorData.error || 'Failed to submit vote')
       }
-    } catch (err) {
+    } catch {
       setError('Network error. Please try again.')
     } finally {
       setIsVoting(false)

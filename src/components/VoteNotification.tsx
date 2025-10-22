@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { CheckCircle, XCircle, ThumbsUp, ThumbsDown } from 'lucide-react'
+import { XCircle, ThumbsUp, ThumbsDown } from 'lucide-react'
 
 interface VoteNotification {
   id: string
@@ -15,8 +15,27 @@ interface VoteNotification {
 export default function VoteNotification() {
   const [notifications, setNotifications] = useState<VoteNotification[]>([])
   const [isConnected, setIsConnected] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768) // 768px is typical tablet breakpoint
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
+    // Don't start notifications on mobile devices
+    if (isMobile) {
+      setIsConnected(false)
+      return
+    }
+
     // Mock real-time notifications for demo purposes
     // In production, this would use Ably or similar real-time service
     const mockNotifications = [
@@ -58,10 +77,15 @@ export default function VoteNotification() {
     setIsConnected(true)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [isMobile])
 
   const removeNotification = (id: string) => {
     setNotifications(prev => prev.filter(n => n.id !== id))
+  }
+
+  // Don't render on mobile devices
+  if (isMobile) {
+    return null
   }
 
   return (

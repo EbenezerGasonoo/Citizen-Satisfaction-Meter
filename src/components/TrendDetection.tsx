@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { TrendingUp, AlertTriangle, Activity, Zap, ArrowUp, ArrowDown } from 'lucide-react'
 
@@ -26,9 +26,9 @@ export default function TrendDetection({ ministerId }: TrendDetectionProps) {
 
   useEffect(() => {
     fetchTrends()
-  }, [ministerId])
+  }, [ministerId, fetchTrends])
 
-  const fetchTrends = async () => {
+  const fetchTrends = useCallback(async () => {
     setLoading(true)
     try {
       const endpoint = ministerId 
@@ -48,7 +48,7 @@ export default function TrendDetection({ ministerId }: TrendDetectionProps) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [ministerId])
 
   const generateMockTrends = (): Trend[] => {
     return [
@@ -166,7 +166,7 @@ export default function TrendDetection({ ministerId }: TrendDetectionProps) {
           return (
             <button
               key={filter.key}
-              onClick={() => setActiveFilter(filter.key as any)}
+              onClick={() => setActiveFilter(filter.key as 'all' | 'positive' | 'negative' | 'neutral')}
               className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                 activeFilter === filter.key
                   ? 'bg-white dark:bg-gray-600 text-cocoa-green dark:text-green-400 shadow-sm'

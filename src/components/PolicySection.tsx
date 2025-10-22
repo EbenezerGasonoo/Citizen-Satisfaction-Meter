@@ -58,7 +58,7 @@ export default function PolicySection({ ministerId }: { ministerId: number }) {
         const res = await fetch(`/api/ministers/${ministerId}/policies`);
         const data = await res.json();
         setPolicies(data.policies || []);
-      } catch (e) {
+      } catch {
         setError("Failed to load policies");
       } finally {
         setLoading(false);
@@ -91,7 +91,7 @@ export default function PolicySection({ ministerId }: { ministerId: number }) {
           )
         );
       }
-    } catch (e) {
+    } catch {
       setError("Network error");
     } finally {
       setVoting((v) => ({ ...v, [policyId]: false }));

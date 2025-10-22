@@ -164,9 +164,11 @@ export default function TrendingGrid() {
                     transition={{ duration: 0.3, type: "spring" }}
                   >
                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 blur-md opacity-40" />
-                    <img
+                    <Image
                       src={minister.photoUrl}
                       alt={minister.fullName}
+                      width={96}
+                      height={96}
                       className="relative object-cover w-full h-full rounded-full border-4 border-white dark:border-gray-800 shadow-xl"
                     />
                   </motion.div>
