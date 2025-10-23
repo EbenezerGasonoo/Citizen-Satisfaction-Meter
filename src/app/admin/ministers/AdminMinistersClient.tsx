@@ -217,7 +217,7 @@ export default function AdminMinistersClient() {
         isOpen={removeDialog.isOpen}
         minister={removeDialog.minister}
         onClose={() => setRemoveDialog({ isOpen: false, minister: null })}
-        onConfirm={handleConfirmRemove}
+        onSuccess={handleConfirmRemove}
       />
     </div>
   )
