@@ -16,8 +16,12 @@
     "postinstall": "prisma generate",
     "safety-check:pre": "node scripts/safety-check.js pre-update",
     "safety-check:post": "node scripts/safety-check.js post-update",
-    "backup:create": "node -e \"require('./src/lib/vote-backup-manager').voteBackupManager.createBackup()\"",
-    "backup:verify": "node -e \"require('./src/lib/vote-backup-manager').voteBackupManager.verifyVoteIntegrity()\""
+    "backup:votes": "tsx scripts/backup-votes.ts",
+    "restore:votes": "tsx scripts/restore-votes.ts",
+    "test:vote-integrity": "tsx scripts/test-vote-integrity.ts",
+    "cleanup:backups": "tsx scripts/cleanup-backups.ts",
+    "deploy:safe": "bash scripts/deploy-with-backup.sh",
+    "restore:emergency": "bash scripts/restore-votes.sh"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

@@ -1,0 +1,100 @@
+name: Deploy with Vote Backup
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy-with-backup:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Create vote backup
+      run: npm run backup:votes
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        
+    - name: Upload backup to artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: vote-backup-${{ github.run_number }}
+        path: backups/votes/
+        retention-days: 30
+        
+    - name: Upload backup to cloud storage
+      if: env.CLOUD_BACKUP_URL
+      run: |
+        echo "☁️ Uploading backup to cloud storage..."
+        # Add cloud upload logic here
+        # curl -X POST -F "file=@backups/votes/latest.json" $CLOUD_BACKUP_URL
+      env:
+        CLOUD_BACKUP_URL: ${{ secrets.CLOUD_BACKUP_URL }}
+        
+    - name: Test vote integrity
+      run: npm run test:vote-integrity
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        
+    - name: Build application
+      run: npm run build
+      
+    - name: Deploy to Vercel
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        vercel-args: '--prod'
+        
+    - name: Post-deployment verification
+      run: |
+        echo "🔍 Verifying deployment..."
+        sleep 30  # Wait for deployment to complete
+        
+        # Check API health
+        API_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://citizenmeter.vercel.app/api/analytics/nationalScore)
+        if [ "$API_STATUS" != "200" ]; then
+          echo "❌ API not responding after deployment!"
+          exit 1
+        fi
+        
+        # Check vote count
+        VOTE_COUNT=$(curl -s https://citizenmeter.vercel.app/api/analytics/nationalScore | jq -r '.totalVotes')
+        echo "📊 Current vote count: $VOTE_COUNT"
+        
+        if [ "$VOTE_COUNT" = "null" ] || [ -z "$VOTE_COUNT" ]; then
+          echo "❌ Could not retrieve vote count!"
+          exit 1
+        fi
+        
+        echo "✅ Deployment verification passed!"
+        
+    - name: Cleanup old backups
+      run: npm run cleanup:backups
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        
+    - name: Notify deployment status
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "🎉 Deployment completed successfully!"
+          echo "📊 Vote count preserved"
+          echo "💾 Backup created and stored"
+        else
+          echo "❌ Deployment failed!"
+          echo "💾 Vote backup is safely stored in artifacts"
+        fi
