@@ -18,6 +18,8 @@
     "safety-check:post": "node scripts/safety-check.js post-update",
     "backup:votes": "tsx scripts/backup-votes.ts",
     "restore:votes": "tsx scripts/restore-votes.ts",
+    "backup:nextcloud": "tsx scripts/backup-to-nextcloud.ts",
+    "restore:nextcloud": "tsx scripts/restore-from-nextcloud.ts",
     "test:vote-integrity": "tsx scripts/test-vote-integrity.ts",
     "cleanup:backups": "tsx scripts/cleanup-backups.ts",
     "deploy:safe": "bash scripts/deploy-with-backup.sh",
@@ -56,6 +58,7 @@
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.3.3",
+    "webdav": "^5.8.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {

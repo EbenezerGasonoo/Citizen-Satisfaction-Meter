@@ -27,6 +27,16 @@ jobs:
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
         
+    - name: Backup to Nextcloud
+      run: npm run backup:nextcloud
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        NEXTCLOUD_SERVER_URL: ${{ secrets.NEXTCLOUD_SERVER_URL }}
+        NEXTCLOUD_USERNAME: ${{ secrets.NEXTCLOUD_USERNAME }}
+        NEXTCLOUD_PASSWORD: ${{ secrets.NEXTCLOUD_PASSWORD }}
+        NEXTCLOUD_BACKUP_PATH: ${{ secrets.NEXTCLOUD_BACKUP_PATH }}
+      continue-on-error: true
+        
     - name: Upload backup to artifacts
       uses: actions/upload-artifact@v4
       with:

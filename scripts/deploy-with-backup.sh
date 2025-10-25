@@ -35,6 +35,16 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# Step 1.5: Backup to Nextcloud (if configured)
+if [ ! -z "$NEXTCLOUD_SERVER_URL" ]; then
+    print_status "Uploading backup to Nextcloud..."
+    npm run backup:nextcloud
+    
+    if [ $? -ne 0 ]; then
+        print_warning "Nextcloud backup failed, but local backup exists. Continuing..."
+    fi
+fi
+
 # Step 2: Verify backup was created
 BACKUP_DIR="./backups/votes"
 LATEST_BACKUP=$(ls -t $BACKUP_DIR/votes-backup-*.json 2>/dev/null | head -n1)
