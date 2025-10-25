@@ -8,20 +8,31 @@ export async function POST(
 ) {
   const startTime = Date.now()
   try {
+    console.log('Vote API called with minister ID:', params.id)
     const { positive } = await request.json()
     const ministerId = parseInt(params.id)
     
+    console.log('Parsed minister ID:', ministerId, 'Positive:', positive)
+    
     if (isNaN(ministerId)) {
+      console.log('Invalid minister ID:', params.id)
       return NextResponse.json(
         { error: 'Invalid minister ID' },
         { status: 400 }
       )
     }
 
+    // Test database connection
+    console.log('Testing database connection...')
+    const ministerCount = await prisma.minister.count()
+    console.log('Total ministers in database:', ministerCount)
+    
     // Get client information
     const ip = getClientIP(request)
     const userAgent = request.headers.get('user-agent') || ''
     const clientHash = hashClient(ip, userAgent)
+    
+    console.log('Client info - IP:', ip, 'UserAgent:', userAgent.substring(0, 50), 'Hash:', clientHash.substring(0, 20) + '...')
 
     // Check if minister exists and if user already voted today in one query
     const today = new Date()
@@ -33,12 +44,16 @@ export async function POST(
     // Use a transaction to ensure atomicity and better performance
     const result = await prisma.$transaction(async (tx) => {
       // Check if minister exists
+      console.log('Looking for minister with ID:', ministerId)
       const minister = await tx.minister.findUnique({
         where: { id: ministerId },
         select: { id: true } // Only select what we need
       })
 
+      console.log('Minister found:', minister)
+
       if (!minister) {
+        console.log('Minister not found in database')
         throw new Error('Minister not found')
       }
 

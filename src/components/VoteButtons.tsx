@@ -17,35 +17,45 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
   const handleVote = async (voteType: 'satisfied' | 'not-satisfied') => {
     if (voted || isVoting) return
 
+    console.log('VoteButtons: Starting vote for minister', ministerId, 'type:', voteType)
     setIsVoting(true)
     setError(null)
 
     try {
+      const voteData = { positive: voteType === 'satisfied' }
+      console.log('VoteButtons: Sending vote data:', voteData)
+      
       const response = await fetch(`/api/ministers/${ministerId}/vote`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          positive: voteType === 'satisfied' 
-        }),
+        body: JSON.stringify(voteData),
       })
 
+      console.log('VoteButtons: Response status:', response.status)
+      console.log('VoteButtons: Response ok:', response.ok)
+
       if (response.ok) {
+        const responseData = await response.json()
+        console.log('VoteButtons: Vote successful, response:', responseData)
+        
         setVoted(voteType)
         onVoteSuccess?.()
         
         // Dispatch custom event to update meter with a delay to ensure DB is updated
-        console.log('Vote successful, dispatching voteSubmitted event')
+        console.log('VoteButtons: Dispatching voteSubmitted event')
         setTimeout(() => {
-          console.log('Dispatching voteSubmitted event after delay')
+          console.log('VoteButtons: Dispatching voteSubmitted event after delay')
           window.dispatchEvent(new CustomEvent('voteSubmitted'))
         }, 500) // Increased delay to ensure database transaction is committed
       } else {
         const errorData = await response.json()
+        console.error('VoteButtons: Vote failed:', errorData)
         setError(errorData.error || 'Failed to submit vote')
       }
-    } catch {
+    } catch (error) {
+      console.error('VoteButtons: Network error:', error)
       setError('Network error. Please try again.')
     } finally {
       setIsVoting(false)

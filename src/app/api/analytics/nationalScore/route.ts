@@ -6,17 +6,19 @@ export async function GET() {
     console.log('Fetching national score...')
     console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'Set' : 'Not set')
     
+    // Get ALL votes (temporarily including demo votes for debugging)
+    const allVotes = await prisma.vote.findMany()
+    console.log('All votes found:', allVotes.length)
+    
     // Get only real votes (exclude sample/demo votes)
-    const votes = await prisma.vote.findMany({
-      where: {
-        clientHash: {
-          not: {
-            startsWith: 'demo_vote'
-          }
-        }
-      }
-    })
+    const votes = allVotes.filter(vote => !vote.clientHash.startsWith('demo_vote'))
     console.log('Real votes found:', votes.length)
+    console.log('Demo votes found:', allVotes.length - votes.length)
+    
+    // Log some sample client hashes for debugging
+    if (allVotes.length > 0) {
+      console.log('Sample client hashes:', allVotes.slice(0, 3).map(v => ({ id: v.id, clientHash: v.clientHash.substring(0, 20) + '...' })))
+    }
     
     const totalVotes = votes.length
     const positiveVotes = votes.filter(vote => vote.positive).length
