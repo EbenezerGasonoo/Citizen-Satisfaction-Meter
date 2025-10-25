@@ -48,6 +48,32 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
     fetchMinister()
   }, [params.id])
 
+  // Listen for vote updates to refresh minister data
+  useEffect(() => {
+    const handleVoteUpdate = () => {
+      fetchMinister()
+    }
+
+    const fetchMinister = async () => {
+      try {
+        const response = await fetch(`/api/ministers/${params.id}`)
+        if (response.ok) {
+          const data = await response.json()
+          setMinister(data)
+        }
+      } catch (error) {
+        console.error('Error fetching minister after vote:', error)
+      }
+    }
+
+    // Listen for custom vote events
+    window.addEventListener('voteSubmitted', handleVoteUpdate)
+
+    return () => {
+      window.removeEventListener('voteSubmitted', handleVoteUpdate)
+    }
+  }, [params.id])
+
   if (loading) {
     return (
       <main className="container mx-auto px-4 py-8">

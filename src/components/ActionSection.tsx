@@ -85,8 +85,10 @@ export default function ActionSection({ ministerId }: { ministerId: number }) {
         setVoted((v) => ({ ...v, [actionId]: true }));
         setConfettiAction(actionId);
         setTimeout(() => setConfettiAction(null), 1200);
-        // Dispatch custom event to update meter
-        window.dispatchEvent(new CustomEvent('voteSubmitted'));
+        // Dispatch custom event to update meter with delay
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent('voteSubmitted'));
+        }, 100);
       }
     } catch (e) {
       setError("Network error");

@@ -40,6 +40,7 @@ export default function NationalMeter() {
   // Listen for vote updates
   useEffect(() => {
     const handleVoteUpdate = () => {
+      console.log('NationalMeter: Received voteSubmitted event, refreshing score')
       fetchScore()
     }
 
