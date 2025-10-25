@@ -12,6 +12,11 @@ export async function GET() {
         createdAt: {
           gte: sevenDaysAgo,
         },
+        clientHash: {
+          not: {
+            startsWith: 'demo_vote'
+          }
+        }
       },
       include: {
         minister: {

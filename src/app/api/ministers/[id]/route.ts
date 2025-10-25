@@ -20,7 +20,15 @@ export async function GET(
     const minister = await prisma.minister.findUnique({
       where: { id: ministerId },
       include: {
-        votes: true,
+        votes: {
+          where: {
+            clientHash: {
+              not: {
+                startsWith: 'demo_vote'
+              }
+            }
+          }
+        },
       },
     })
 

@@ -15,6 +15,11 @@ export async function GET(request: Request) {
         createdAt: {
           gte: thirtySecondsAgo,
         },
+        clientHash: {
+          not: {
+            startsWith: 'demo_vote'
+          }
+        }
       },
       include: {
         minister: {
