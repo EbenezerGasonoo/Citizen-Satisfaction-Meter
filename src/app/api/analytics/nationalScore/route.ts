@@ -22,8 +22,9 @@ export async function GET() {
     })
   } catch (error) {
     console.error('Error fetching national score:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
     return NextResponse.json(
-      { error: 'Failed to fetch national score', details: error.message },
+      { error: 'Failed to fetch national score', details: errorMessage },
       { status: 500 }
     )
   }
