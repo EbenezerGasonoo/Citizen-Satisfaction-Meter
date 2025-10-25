@@ -50,7 +50,7 @@ export default function VoteNotification() {
     }
 
     // Listen for vote submissions - only show notifications when someone actually votes
-    const handleVoteSubmitted = async (event: CustomEvent) => {
+    const handleVoteSubmitted = async (event: Event) => {
       try {
         // Get the most recent vote from the event data or fetch it
         const response = await fetch('/api/analytics/recent-votes?limit=1')
@@ -90,7 +90,7 @@ export default function VoteNotification() {
     }
 
     // Listen for the custom voteSubmitted event
-    window.addEventListener('voteSubmitted', handleVoteSubmitted as EventListener)
+    window.addEventListener('voteSubmitted', handleVoteSubmitted)
 
     setIsConnected(true)
 
@@ -98,7 +98,7 @@ export default function VoteNotification() {
     checkVoteCount()
 
     return () => {
-      window.removeEventListener('voteSubmitted', handleVoteSubmitted as EventListener)
+      window.removeEventListener('voteSubmitted', handleVoteSubmitted)
     }
   }, [isMobile])
 
