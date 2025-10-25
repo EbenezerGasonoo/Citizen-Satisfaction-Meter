@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url)
+    const limit = parseInt(searchParams.get('limit') || '10')
+    
     // Get votes from the last 30 seconds
     const thirtySecondsAgo = new Date()
     thirtySecondsAgo.setSeconds(thirtySecondsAgo.getSeconds() - 30)
@@ -24,7 +27,7 @@ export async function GET() {
       orderBy: {
         createdAt: 'desc',
       },
-      take: 10, // Limit to 10 most recent votes
+      take: limit, // Use the limit parameter
     })
 
     const formattedVotes = recentVotes.map(vote => ({

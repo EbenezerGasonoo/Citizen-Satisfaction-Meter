@@ -37,39 +37,6 @@ export default function VoteNotification() {
       return
     }
 
-    let interval: NodeJS.Timeout | null = null
-
-    const fetchRecentVotes = async () => {
-      try {
-        // Get recent votes from the last 30 seconds
-        const response = await fetch('/api/analytics/recent-votes')
-        if (response.ok) {
-          const recentVotes = await response.json()
-          
-          // Add new votes as notifications
-          recentVotes.forEach((vote: any) => {
-            const notification: VoteNotification = {
-              id: `vote-${vote.id}`,
-              ministerName: vote.ministerName,
-              portfolio: vote.portfolio,
-              positive: vote.positive,
-              timestamp: new Date(vote.createdAt)
-            }
-            
-            setNotifications(prev => {
-              // Avoid duplicates
-              if (prev.some(n => n.id === notification.id)) {
-                return prev
-              }
-              return [notification, ...prev.slice(0, 4)]
-            })
-          })
-        }
-      } catch (error) {
-        console.error('Error fetching recent votes:', error)
-      }
-    }
-
     const checkVoteCount = async () => {
       try {
         const response = await fetch('/api/analytics/nationalScore')
@@ -82,30 +49,56 @@ export default function VoteNotification() {
       }
     }
 
-    // Listen for vote submissions
-    const handleVoteSubmitted = () => {
-      // Check for new votes immediately when a vote is submitted
-      fetchRecentVotes()
-      checkVoteCount()
+    // Listen for vote submissions - only show notifications when someone actually votes
+    const handleVoteSubmitted = async (event: CustomEvent) => {
+      try {
+        // Get the most recent vote from the event data or fetch it
+        const response = await fetch('/api/analytics/recent-votes?limit=1')
+        if (response.ok) {
+          const recentVotes = await response.json()
+          
+          if (recentVotes.length > 0) {
+            const vote = recentVotes[0]
+            const notification: VoteNotification = {
+              id: `vote-${vote.id}-${Date.now()}`, // Add timestamp to ensure uniqueness
+              ministerName: vote.ministerName,
+              portfolio: vote.portfolio,
+              positive: vote.positive,
+              timestamp: new Date(vote.createdAt)
+            }
+            
+            setNotifications(prev => {
+              // Avoid duplicates by checking if we already have this vote
+              if (prev.some(n => n.id === notification.id)) {
+                return prev
+              }
+              return [notification, ...prev.slice(0, 2)] // Limit to 2 notifications max
+            })
+
+            // Auto-dismiss notification after 3 seconds
+            setTimeout(() => {
+              setNotifications(prev => prev.filter(n => n.id !== notification.id))
+            }, 3000)
+          }
+        }
+        
+        // Update vote count
+        await checkVoteCount()
+      } catch (error) {
+        console.error('Error handling vote submission:', error)
+      }
     }
 
-    window.addEventListener('voteSubmitted', handleVoteSubmitted)
-
-    // Start real-time monitoring
-    interval = setInterval(async () => {
-      await fetchRecentVotes()
-      await checkVoteCount()
-    }, 3000) // Check every 3 seconds for new votes
+    // Listen for the custom voteSubmitted event
+    window.addEventListener('voteSubmitted', handleVoteSubmitted as EventListener)
 
     setIsConnected(true)
 
-    // Initial check
-    fetchRecentVotes()
+    // Initial vote count check
     checkVoteCount()
 
     return () => {
-      if (interval) clearInterval(interval)
-      window.removeEventListener('voteSubmitted', handleVoteSubmitted)
+      window.removeEventListener('voteSubmitted', handleVoteSubmitted as EventListener)
     }
   }, [isMobile])
 
@@ -128,52 +121,48 @@ export default function VoteNotification() {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 300, scale: 0.8 }}
             transition={{ duration: 0.3 }}
-            className={`bg-white dark:bg-gray-800 rounded-xl shadow-xl border-l-4 p-4 max-w-sm border ${
+            className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg border-l-4 p-3 max-w-xs border ${
               notification.positive 
                 ? 'border-l-green-500 border-green-100 dark:border-green-800' 
                 : 'border-l-red-500 border-red-100 dark:border-red-800'
             }`}
           >
-            <div className="flex items-start space-x-3">
-              <div className={`p-2 rounded-full ${
+            <div className="flex items-center space-x-2">
+              <div className={`p-1.5 rounded-full ${
                 notification.positive 
                   ? 'bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800' 
                   : 'bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900 dark:to-red-800'
               }`}>
                 {notification.positive ? (
-                  <ThumbsUp className="w-4 h-4 text-green-600 dark:text-green-400" />
+                  <ThumbsUp className="w-3 h-3 text-green-600 dark:text-green-400" />
                 ) : (
-                  <ThumbsDown className="w-4 h-4 text-red-600 dark:text-red-400" />
+                  <ThumbsDown className="w-3 h-3 text-red-600 dark:text-red-400" />
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                <p className="text-xs font-bold text-gray-900 dark:text-gray-100 truncate">
                   {notification.ministerName}
                 </p>
-                <p className="text-xs text-gray-600 dark:text-gray-300 font-medium">
+                <p className="text-xs text-gray-600 dark:text-gray-300 truncate">
                   {notification.portfolio}
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  {notification.timestamp.toLocaleTimeString()}
                 </p>
               </div>
               <button
                 onClick={() => removeNotification(notification.id)}
                 className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
               >
-                <XCircle className="w-4 h-4" />
+                <XCircle className="w-3 h-3" />
               </button>
             </div>
-            <div className="mt-2 flex items-center space-x-2">
-              <span className={`text-xs font-bold px-2 py-1 rounded-full ${
+            <div className="mt-1 flex items-center justify-between">
+              <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                 notification.positive 
                   ? 'text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/30' 
                   : 'text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/30'
               }`}>
-                {notification.positive ? '✓ Satisfied' : '✗ Not Satisfied'}
+                {notification.positive ? '✓' : '✗'}
               </span>
-              <span className="text-xs text-gray-400 dark:text-gray-500">•</span>
-              <span className="text-xs text-yellow-600 dark:text-yellow-400 font-bold">🇬🇭 Live Vote</span>
+              <span className="text-xs text-yellow-600 dark:text-yellow-400 font-bold">🇬🇭 Live</span>
             </div>
           </motion.div>
         ))}
