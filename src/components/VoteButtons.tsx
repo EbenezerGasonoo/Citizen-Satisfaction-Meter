@@ -87,10 +87,10 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
           disabled={voted !== null || isVoting}
           className={`flex-1 flex items-center justify-center gap-3 px-6 sm:px-8 py-4 sm:py-5 rounded-2xl font-bold text-base sm:text-lg transition-all touch-manipulation ${
             voted === 'satisfied'
-              ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-xl shadow-green-500/30 ring-4 ring-green-200 dark:ring-green-900/50'
+              ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-xl shadow-green-500/30 ring-4 ring-green-200 dark:ring-green-900/50'
               : voted === 'not-satisfied'
               ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border-2 border-gray-200 dark:border-gray-700 cursor-not-allowed opacity-50'
-              : 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg shadow-green-500/20 hover:shadow-xl hover:shadow-green-500/40 border-2 border-transparent'
+              : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg shadow-green-500/20 hover:shadow-xl hover:shadow-green-500/40 border-2 border-transparent'
           }`}
           variants={buttonVariants}
           initial="initial"
@@ -108,7 +108,7 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
               <ThumbsUp className="w-6 h-6 sm:w-7 sm:h-7" />
             )}
           </motion.div>
-          <span>{isVoting ? 'Voting...' : 'Satisfied'}</span>
+          <span>{isVoting ? 'Voting...' : '🇬🇭 Satisfied'}</span>
         </motion.button>
 
         {/* Not Satisfied Button */}
@@ -138,7 +138,7 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
               <ThumbsDown className="w-6 h-6 sm:w-7 sm:h-7" />
             )}
           </motion.div>
-          <span>{isVoting ? 'Voting...' : 'Not Satisfied'}</span>
+          <span>{isVoting ? 'Voting...' : '🇬🇭 Not Satisfied'}</span>
         </motion.button>
       </div>
 

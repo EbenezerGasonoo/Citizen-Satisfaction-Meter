@@ -24,6 +24,9 @@ export default function SignInPage() {
     if (res?.error) {
       setError("Invalid email or password.")
     } else {
+      // Redirect based on user role
+      // Note: We'll need to check the role after the session is established
+      // For now, redirect to home and let the navigation handle admin routing
       router.push("/")
     }
   }

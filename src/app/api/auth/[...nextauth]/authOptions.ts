@@ -42,6 +42,14 @@ export const authOptions: NextAuthOptions = {
       }
       return token
     },
+    async redirect({ url, baseUrl }) {
+      // If the URL is a relative URL, make it absolute
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // If the URL is on the same origin, allow it
+      else if (new URL(url).origin === baseUrl) return url
+      // Otherwise, redirect to the base URL
+      return baseUrl
+    },
   },
   pages: {
     signIn: '/auth/signin',

@@ -4,14 +4,17 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Home, Users, TrendingUp, BarChart3, Settings } from 'lucide-react'
+import { Menu, X, Home, Users, TrendingUp, BarChart3, Settings, LogIn } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 
-const navigation = [
+const publicNavigation = [
   { name: 'Home', href: '/', icon: Home },
   { name: 'Ministers', href: '/#ministers', icon: Users },
   { name: 'Trending', href: '/#trending', icon: TrendingUp },
+]
+
+const adminNavigation = [
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
   { name: 'Admin', href: '/admin', icon: Settings },
 ]
@@ -19,6 +22,8 @@ const navigation = [
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
+  const { data: session, status } = useSession()
+  const isAdmin = session?.user?.role === 'ADMIN'
 
   const isActive = (href: string) => {
     const currentPath = pathname || '';
@@ -27,6 +32,9 @@ export default function Navigation() {
     }
     return currentPath.startsWith(href)
   }
+
+  // Determine which navigation items to show
+  const navigation = isAdmin ? [...publicNavigation, ...adminNavigation] : publicNavigation
 
   return (
     <nav className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-lg sticky top-0 z-50 transition-all duration-300 border-b border-gray-200/50 dark:border-gray-700/50">
@@ -69,7 +77,8 @@ export default function Navigation() {
                 </motion.div>
               )
             })}
-            {pathname?.startsWith('/admin') && (
+            {/* Admin Sign Out Button */}
+            {isAdmin && pathname?.startsWith('/admin') && (
               <motion.button
                 whileHover={{ y: -2 }}
                 whileTap={{ y: 0 }}
@@ -78,6 +87,23 @@ export default function Navigation() {
               >
                 Sign Out
               </motion.button>
+            )}
+            
+            {/* Hidden Admin Access - Only show when not authenticated */}
+            {!session && (
+              <motion.div 
+                whileHover={{ y: -2 }} 
+                whileTap={{ y: 0 }}
+                className="opacity-0 hover:opacity-100 transition-opacity duration-300"
+                title="Admin Access"
+              >
+                <Link
+                  href="/admin-access"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-all duration-200"
+                >
+                  <Settings className="w-4 h-4" />
+                </Link>
+              </motion.div>
             )}
             <div className="ml-2">
               <ThemeToggle />
@@ -142,7 +168,8 @@ export default function Navigation() {
               </motion.div>
             )
           })}
-          {pathname?.startsWith('/admin') && (
+          {/* Admin Sign Out Button for Mobile */}
+          {isAdmin && pathname?.startsWith('/admin') && (
             <motion.button
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -152,6 +179,25 @@ export default function Navigation() {
             >
               Sign Out
             </motion.button>
+          )}
+          
+          {/* Hidden Admin Access for Mobile - Only show when not authenticated */}
+          {!session && (
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: (navigation.length + 1) * 0.05, duration: 0.2 }}
+              className="opacity-50 hover:opacity-100 transition-opacity duration-300"
+            >
+              <Link
+                href="/admin-access"
+                onClick={() => setIsOpen(false)}
+                className="flex w-full items-center gap-3 px-4 py-3.5 rounded-xl text-base font-medium text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-all duration-200 mt-2"
+              >
+                <Settings className="w-5 h-5" />
+                <span>Admin Access</span>
+              </Link>
+            </motion.div>
           )}
         </div>
       </motion.div>

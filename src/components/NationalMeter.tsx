@@ -107,37 +107,37 @@ export default function NationalMeter() {
   const circumference = 2 * Math.PI * 110
   const strokeDashoffset = circumference - ((score?.satisfactionPercentage || 0) / 100) * circumference
 
-  // Color scheme based on score
+  // Ghanaian flag color scheme based on score
   const getColors = () => {
     if ((score?.satisfactionPercentage || 0) >= 70) {
       return {
-        primary: '#10b981',
+        primary: '#10b981', // Green
         secondary: '#34d399',
-        gradient: 'from-emerald-500 via-green-400 to-emerald-500',
-        bg: 'from-emerald-50 to-green-50 dark:from-emerald-950 dark:to-green-950',
-        border: 'border-emerald-200 dark:border-emerald-800',
-        text: 'text-emerald-700 dark:text-emerald-300',
-        icon: 'text-emerald-600 dark:text-emerald-400',
-        badgeBg: 'bg-emerald-100 dark:bg-emerald-900/40',
-        shadow: 'shadow-emerald-500/20'
+        gradient: 'from-green-500 via-green-400 to-green-500',
+        bg: 'from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950',
+        border: 'border-green-200 dark:border-green-800',
+        text: 'text-green-700 dark:text-green-300',
+        icon: 'text-green-600 dark:text-green-400',
+        badgeBg: 'bg-green-100 dark:bg-green-900/40',
+        shadow: 'shadow-green-500/20'
       }
     } else if ((score?.satisfactionPercentage || 0) >= 50) {
       return {
-        primary: '#f59e0b',
+        primary: '#f59e0b', // Yellow
         secondary: '#fbbf24',
-        gradient: 'from-amber-500 via-yellow-400 to-amber-500',
-        bg: 'from-amber-50 to-yellow-50 dark:from-amber-950 dark:to-yellow-950',
-        border: 'border-amber-200 dark:border-amber-800',
-        text: 'text-amber-700 dark:text-amber-300',
-        icon: 'text-amber-600 dark:text-amber-400',
-        badgeBg: 'bg-amber-100 dark:bg-amber-900/40',
-        shadow: 'shadow-amber-500/20'
+        gradient: 'from-yellow-500 via-yellow-400 to-yellow-500',
+        bg: 'from-yellow-50 to-amber-50 dark:from-yellow-950 dark:to-amber-950',
+        border: 'border-yellow-200 dark:border-yellow-800',
+        text: 'text-yellow-700 dark:text-yellow-300',
+        icon: 'text-yellow-600 dark:text-yellow-400',
+        badgeBg: 'bg-yellow-100 dark:bg-yellow-900/40',
+        shadow: 'shadow-yellow-500/20'
       }
     } else {
       return {
-        primary: '#ef4444',
+        primary: '#ef4444', // Red
         secondary: '#f87171',
-        gradient: 'from-red-500 via-rose-400 to-red-500',
+        gradient: 'from-red-500 via-red-400 to-red-500',
         bg: 'from-red-50 to-rose-50 dark:from-red-950 dark:to-rose-950',
         border: 'border-red-200 dark:border-red-800',
         text: 'text-red-700 dark:text-red-300',
@@ -177,6 +177,23 @@ export default function NationalMeter() {
         <p className="text-lg text-gray-600 dark:text-gray-400">
           Real-time performance ratings from citizens across Ghana
         </p>
+        <div className="mt-3 bg-gradient-to-r from-red-50 via-yellow-50 to-green-50 dark:from-red-900/20 dark:via-yellow-900/20 dark:to-green-900/20 rounded-xl p-4 border border-red-200 dark:border-red-800">
+          <div className="flex items-center justify-between text-sm mb-2">
+            <span className="text-gray-700 dark:text-gray-300 font-bold">🇬🇭 Live Vote Progress</span>
+            <span className="font-bold text-gray-800 dark:text-gray-200">{score?.totalVotes || 0} votes</span>
+          </div>
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+            <motion.div
+              className="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min(((score?.totalVotes || 0) / 100) * 100, 100)}%` }}
+              transition={{ duration: 1, ease: "easeOut" }}
+            />
+          </div>
+          <div className="mt-2 text-xs text-gray-600 dark:text-gray-400 text-center">
+            Real-time updates every 3 seconds
+          </div>
+        </div>
       </motion.div>
 
       {/* Main Content */}

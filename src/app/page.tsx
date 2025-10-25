@@ -107,8 +107,8 @@ export default function Home() {
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2 }}
               >
-                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
-                  Who is working?
+                <span className="bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 dark:from-red-400 dark:via-yellow-400 dark:to-green-400 bg-clip-text text-transparent">
+                  Who is working? 🇬🇭
                 </span>
                 <br />
                 <span className="text-gray-800 dark:text-gray-100">
