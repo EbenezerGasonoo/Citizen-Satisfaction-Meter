@@ -87,8 +87,9 @@ export default function ActionSection({ ministerId }: { ministerId: number }) {
         setTimeout(() => setConfettiAction(null), 1200);
         // Dispatch custom event to update meter with delay
         setTimeout(() => {
+          console.log('ActionSection: Dispatching voteSubmitted event after delay')
           window.dispatchEvent(new CustomEvent('voteSubmitted'));
-        }, 100);
+        }, 500);
       }
     } catch (e) {
       setError("Network error");

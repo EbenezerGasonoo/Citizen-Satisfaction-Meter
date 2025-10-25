@@ -18,16 +18,17 @@ export default function NationalMeter() {
 
   const fetchScore = async () => {
     try {
+      console.log('NationalMeter: Fetching national score...')
       const response = await fetch('/api/analytics/nationalScore')
       if (response.ok) {
         const data = await response.json()
-        console.log('National score data:', data) // Debug log
+        console.log('NationalMeter: Received data:', data) // Debug log
         setScore(data)
       } else {
-        console.error('Failed to fetch national score:', response.status, response.statusText)
+        console.error('NationalMeter: Failed to fetch national score:', response.status, response.statusText)
       }
     } catch (error) {
-      console.error('Failed to fetch national score:', error)
+      console.error('NationalMeter: Error fetching national score:', error)
     } finally {
       setLoading(false)
     }

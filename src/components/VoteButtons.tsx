@@ -35,11 +35,12 @@ export default function VoteButtons({ ministerId, onVoteSuccess }: VoteButtonsPr
         setVoted(voteType)
         onVoteSuccess?.()
         
-        // Dispatch custom event to update meter with a small delay to ensure DB is updated
+        // Dispatch custom event to update meter with a delay to ensure DB is updated
         console.log('Vote successful, dispatching voteSubmitted event')
         setTimeout(() => {
+          console.log('Dispatching voteSubmitted event after delay')
           window.dispatchEvent(new CustomEvent('voteSubmitted'))
-        }, 100) // Small delay to ensure database is updated
+        }, 500) // Increased delay to ensure database transaction is committed
       } else {
         const errorData = await response.json()
         setError(errorData.error || 'Failed to submit vote')

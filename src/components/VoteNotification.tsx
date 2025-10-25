@@ -39,19 +39,23 @@ export default function VoteNotification() {
 
     const checkVoteCount = async () => {
       try {
+        console.log('VoteNotification: Fetching vote count...')
         const response = await fetch('/api/analytics/nationalScore')
         if (response.ok) {
           const data = await response.json()
+          console.log('VoteNotification: Received vote count data:', data)
           setTotalVotes(data.totalVotes || 0)
         }
       } catch (error) {
-        console.error('Error fetching vote count:', error)
+        console.error('VoteNotification: Error fetching vote count:', error)
       }
     }
 
     // Listen for vote submissions - only show notifications when someone actually votes
     const handleVoteSubmitted = async (event: Event) => {
       try {
+        console.log('VoteNotification: Received voteSubmitted event')
+        
         // Get the most recent vote from the event data or fetch it
         const response = await fetch('/api/analytics/recent-votes?limit=1')
         if (response.ok) {
@@ -83,9 +87,10 @@ export default function VoteNotification() {
         }
         
         // Update vote count
+        console.log('VoteNotification: Updating vote count...')
         await checkVoteCount()
       } catch (error) {
-        console.error('Error handling vote submission:', error)
+        console.error('VoteNotification: Error handling vote submission:', error)
       }
     }
 

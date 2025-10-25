@@ -83,8 +83,9 @@ export default function PolicySection({ ministerId }: { ministerId: number }) {
         setVoted((v) => ({ ...v, [policyId]: true }));
         // Dispatch custom event to update meter with delay
         setTimeout(() => {
+          console.log('PolicySection: Dispatching voteSubmitted event after delay')
           window.dispatchEvent(new CustomEvent('voteSubmitted'));
-        }, 100);
+        }, 500);
         // Optionally, refresh policies
         const updated = await res.json();
         setPolicies((prev) =>
