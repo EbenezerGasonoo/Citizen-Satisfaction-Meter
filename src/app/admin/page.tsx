@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import React from 'react'
 import { Suspense } from 'react'
 import Link from 'next/link'
+import AdminStatsClient from './AdminStatsClient'
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions)
@@ -184,24 +185,7 @@ export default async function AdminPage() {
               <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
             ))}
           </div>}>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                <div className="text-2xl font-bold text-green-600 dark:text-green-400">0</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Total Ministers</div>
-              </div>
-              <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">0</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Total Votes</div>
-              </div>
-              <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
-                <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">0%</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Satisfaction Rate</div>
-              </div>
-              <div className="text-center p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
-                <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">0</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Today's Votes</div>
-              </div>
-            </div>
+            <AdminStatsClient />
           </Suspense>
         </div>
       </div>

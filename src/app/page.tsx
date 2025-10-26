@@ -108,7 +108,7 @@ export default function Home() {
                 transition={{ duration: 0.2 }}
               >
                 <span className="bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 dark:from-red-400 dark:via-yellow-400 dark:to-green-400 bg-clip-text text-transparent">
-                  Who is working? 🇬🇭
+                  Who is working?
                 </span>
                 <br />
                 <span className="text-gray-800 dark:text-gray-100">

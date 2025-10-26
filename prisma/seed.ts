@@ -192,106 +192,11 @@ export async function main() {
   await prisma.minister.deleteMany();
 
   // Create ministers
-  const createdMinisters = []
   for (const minister of ministers) {
-    const created = await prisma.minister.create({ data: minister })
-    createdMinisters.push(created)
+    await prisma.minister.create({ data: minister })
   }
 
   console.log(`✅ Seeded ${ministers.length} ministers`)
-
-  // Add sample policies for demonstration
-  const samplePolicies = [
-    // Cassiel Ato Forson (Finance)
-    {
-      ministerId: createdMinisters[2].id,
-      title: 'Ghana Economic Recovery Plan',
-      description: 'A comprehensive plan to stabilize the economy, reduce inflation, and create jobs.',
-      category: 'Economic',
-      status: 'Active',
-      startDate: new Date('2025-01-15'),
-      endDate: null,
-      budget: 2000000000,
-      impact: 'High',
-    },
-    {
-      ministerId: createdMinisters[2].id,
-      title: 'Public Sector Wage Reform',
-      description: 'Restructuring public sector wages to ensure equity and fiscal sustainability.',
-      category: 'Economic',
-      status: 'Planned',
-      startDate: new Date('2025-06-01'),
-      endDate: null,
-      budget: 500000000,
-      impact: 'Medium',
-    },
-    // Haruna Iddrisu (Education) - Index updated after Edward Omane Boamah removal
-    {
-      ministerId: createdMinisters[6].id,
-      title: 'Free Senior High School Expansion',
-      description: 'Expanding the Free SHS program to cover more students and improve infrastructure.',
-      category: 'Social',
-      status: 'Active',
-      startDate: new Date('2025-02-01'),
-      endDate: null,
-      budget: 800000000,
-      impact: 'High',
-    },
-    {
-      ministerId: createdMinisters[6].id,
-      title: 'STEM Education Initiative',
-      description: 'Promoting Science, Technology, Engineering, and Mathematics education nationwide.',
-      category: 'Education',
-      status: 'Planned',
-      startDate: new Date('2025-09-01'),
-      endDate: null,
-      budget: 300000000,
-      impact: 'Medium',
-    },
-  ]
-
-  for (const policy of samplePolicies) {
-    await prisma.policy.create({ data: policy })
-  }
-
-  console.log(`✅ Seeded ${samplePolicies.length} sample policies`)
-
-  // Add sample votes for demonstration
-  const sampleVotes = [
-    // President votes
-    { ministerId: createdMinisters[0].id, positive: true, clientHash: 'demo_vote_1' },
-    { ministerId: createdMinisters[0].id, positive: true, clientHash: 'demo_vote_2' },
-    { ministerId: createdMinisters[0].id, positive: false, clientHash: 'demo_vote_3' },
-    { ministerId: createdMinisters[0].id, positive: true, clientHash: 'demo_vote_4' },
-    { ministerId: createdMinisters[0].id, positive: true, clientHash: 'demo_vote_5' },
-    
-    // Vice President votes
-    { ministerId: createdMinisters[1].id, positive: true, clientHash: 'demo_vote_6' },
-    { ministerId: createdMinisters[1].id, positive: true, clientHash: 'demo_vote_7' },
-    { ministerId: createdMinisters[1].id, positive: true, clientHash: 'demo_vote_8' },
-    { ministerId: createdMinisters[1].id, positive: false, clientHash: 'demo_vote_9' },
-    
-    // Finance Minister votes
-    { ministerId: createdMinisters[2].id, positive: false, clientHash: 'demo_vote_10' },
-    { ministerId: createdMinisters[2].id, positive: false, clientHash: 'demo_vote_11' },
-    { ministerId: createdMinisters[2].id, positive: true, clientHash: 'demo_vote_12' },
-    { ministerId: createdMinisters[2].id, positive: false, clientHash: 'demo_vote_13' },
-    { ministerId: createdMinisters[2].id, positive: true, clientHash: 'demo_vote_14' },
-    { ministerId: createdMinisters[2].id, positive: false, clientHash: 'demo_vote_15' },
-    
-    // Education Minister votes
-    { ministerId: createdMinisters[6].id, positive: true, clientHash: 'demo_vote_16' },
-    { ministerId: createdMinisters[6].id, positive: true, clientHash: 'demo_vote_17' },
-    { ministerId: createdMinisters[6].id, positive: true, clientHash: 'demo_vote_18' },
-    { ministerId: createdMinisters[6].id, positive: true, clientHash: 'demo_vote_19' },
-    { ministerId: createdMinisters[6].id, positive: false, clientHash: 'demo_vote_20' },
-  ]
-
-  for (const vote of sampleVotes) {
-    await prisma.vote.create({ data: vote })
-  }
-
-  console.log(`✅ Seeded ${sampleVotes.length} sample votes`)
 
   // Create default admin user
   const adminEmail = 'eg@entechnologygh.com'
@@ -308,38 +213,7 @@ export async function main() {
     },
   })
 
-  // Seed sample actions if ministers exist
-  if (createdMinisters.length > 0) {
-    await prisma.action.createMany({
-      data: [
-        {
-          title: 'Launch Free SHS',
-          description: 'Implemented free Senior High School education nationwide.',
-          status: 'Completed',
-          date: new Date('2017-09-01'),
-          impact: 'High',
-          ministerId: createdMinisters[0].id,
-        },
-        {
-          title: 'COVID-19 Response',
-          description: 'Coordinated national COVID-19 response and relief.',
-          status: 'Completed',
-          date: new Date('2020-04-01'),
-          impact: 'High',
-          ministerId: createdMinisters[0].id,
-        },
-        {
-          title: 'Planting for Food and Jobs',
-          description: 'Rolled out agricultural support for farmers.',
-          status: 'Active',
-          date: new Date('2023-01-15'),
-          impact: 'Medium',
-          ministerId: createdMinisters[0].id,
-        },
-      ],
-    });
-    console.log('Seeded sample actions.');
-  }
+  console.log('✅ Created/verified admin user')
 
   console.log('🎉 Database seeding completed!')
 }

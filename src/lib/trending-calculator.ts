@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export interface TrendingCriteria {
+  minTotalVotes: number
   minVotes24h: number
   minVoteVelocity: number // votes per hour
   minSatisfactionChange: number // percentage change
@@ -23,6 +24,7 @@ export interface TrendingData {
 }
 
 export const DEFAULT_TRENDING_CRITERIA: TrendingCriteria = {
+  minTotalVotes: 100,
   minVotes24h: 10,
   minVoteVelocity: 2,
   minSatisfactionChange: 5,
@@ -37,22 +39,22 @@ export async function calculateTrendingMinisters(criteria: TrendingCriteria = DE
   // Get all ministers with their votes
   const ministers = await prisma.minister.findMany({
     include: {
-      votes: {
-        where: {
-          createdAt: {
-            gte: last48h
-          }
-        },
-        orderBy: {
-          createdAt: 'desc'
-        }
-      }
+      votes: true
     }
   })
 
   const trendingData: TrendingData[] = []
 
   for (const minister of ministers) {
+    // Check total votes first
+    const totalVotes = minister.votes.length
+    
+    // Skip if not enough total votes
+    if (totalVotes < criteria.minTotalVotes) {
+      continue
+    }
+    
+    // Filter votes by time windows
     const votes24h = minister.votes.filter(v => v.createdAt >= last24h)
     const votes48h = minister.votes.filter(v => v.createdAt >= last48h)
     
