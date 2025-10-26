@@ -60,6 +60,22 @@ export default function TrendingGrid() {
     }
 
     fetchTrendingMinisters()
+    
+    // Listen for vote updates
+    const handleVoteUpdate = () => {
+      console.log('TrendingGrid: Received voteSubmitted event, refreshing')
+      fetchTrendingMinisters()
+    }
+
+    window.addEventListener('voteSubmitted', handleVoteUpdate)
+    
+    // Also poll every 30 seconds for updates
+    const interval = setInterval(fetchTrendingMinisters, 30000)
+
+    return () => {
+      window.removeEventListener('voteSubmitted', handleVoteUpdate)
+      clearInterval(interval)
+    }
   }, [])
 
   console.log('Trending Ministers:', trendingMinisters)
