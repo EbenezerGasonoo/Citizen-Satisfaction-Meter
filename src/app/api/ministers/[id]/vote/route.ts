@@ -75,6 +75,7 @@ export async function POST(
       }
 
       // Create the vote
+      console.log('Creating vote with data:', { ministerId, positive, clientHash: clientHash.substring(0, 20) + '...' })
       const vote = await tx.vote.create({
         data: {
           ministerId,
@@ -82,6 +83,8 @@ export async function POST(
           clientHash,
         },
       })
+      
+      console.log('✅ Vote created in transaction:', vote.id)
 
       return vote
     })
@@ -89,6 +92,7 @@ export async function POST(
     const vote = result
     const processingTime = Date.now() - startTime
     console.log(`Vote processed in ${processingTime}ms for minister ${ministerId}`)
+    console.log(`✅ Vote created successfully with ID: ${vote.id}, clientHash: ${vote.clientHash.substring(0, 20)}...`)
 
     // TODO: Broadcast vote update via Ably
 
@@ -98,7 +102,12 @@ export async function POST(
       processingTime: `${processingTime}ms`
     })
   } catch (error) {
-    console.error('Error creating vote:', error)
+    console.error('❌ Error creating vote:', error)
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined
+    })
     
     // Handle specific transaction errors
     if (error instanceof Error) {
@@ -117,7 +126,7 @@ export async function POST(
     }
     
     return NextResponse.json(
-      { error: 'Failed to create vote' },
+      { error: 'Failed to create vote', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }
