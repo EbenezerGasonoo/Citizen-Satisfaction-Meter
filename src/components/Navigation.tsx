@@ -180,25 +180,6 @@ export default function Navigation() {
               Sign Out
             </motion.button>
           )}
-          
-          {/* Hidden Admin Access for Mobile - Only show when not authenticated */}
-          {!session && (
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: (publicNavigation.length + 1) * 0.05, duration: 0.2 }}
-              className="opacity-50 hover:opacity-100 transition-opacity duration-300"
-            >
-              <Link
-                href="/admin-access"
-                onClick={() => setIsOpen(false)}
-                className="flex w-full items-center gap-3 px-4 py-3.5 rounded-xl text-base font-medium text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-all duration-200 mt-2"
-              >
-                <Settings className="w-5 h-5" />
-                <span>Admin Access</span>
-              </Link>
-            </motion.div>
-          )}
         </div>
       </motion.div>
     </nav>
