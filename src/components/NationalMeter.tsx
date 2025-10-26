@@ -7,6 +7,26 @@ import { Users, TrendingUp, Award } from 'lucide-react'
 interface NationalScore {
   satisfactionPercentage: number
   totalVotes: number
+  positiveVotes: number
+  last24h: {
+    satisfactionPercentage: number
+    totalVotes: number
+    positiveVotes: number
+  }
+  last7d: {
+    satisfactionPercentage: number
+    totalVotes: number
+    positiveVotes: number
+  }
+  last30d: {
+    satisfactionPercentage: number
+    totalVotes: number
+    positiveVotes: number
+  }
+  trends: {
+    satisfactionChange24h: number
+    voteChange24h: number
+  }
 }
 
 export default function NationalMeter() {
@@ -338,7 +358,7 @@ export default function NationalMeter() {
         </motion.div>
 
         {/* Stats Cards */}
-        <div className="space-y-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Total Votes Card */}
           <motion.div
             className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-3xl p-8 border border-blue-200 dark:border-blue-800 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
@@ -348,52 +368,135 @@ export default function NationalMeter() {
             whileHover={{ scale: 1.02, y: -4 }}
             whileTap={{ scale: 0.98 }}
           >
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
+            <div className="flex flex-col justify-between h-full">
+              <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                  <span className="text-sm font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
+                  <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  <span className="text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
                     Total Votes
                   </span>
                 </div>
                 <motion.div 
-                  className="text-5xl font-black text-blue-900 dark:text-blue-100"
+                  className="text-3xl font-black text-blue-900 dark:text-blue-100 mb-2"
                   key={displayCount}
                 >
                   {(displayCount || score?.totalVotes || 0).toLocaleString()}
                 </motion.div>
-                <div className="text-sm text-blue-600 dark:text-blue-400 mt-2 font-medium">
-                  Citizens have participated
+                <div className="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                  Citizens participated
                 </div>
               </div>
-              <motion.div
-                className="p-4 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg group-hover:shadow-blue-500/50 transition-shadow"
-                whileHover={{ rotate: [0, -10, 10, -10, 0] }}
-                transition={{ duration: 0.5 }}
-              >
-                <TrendingUp className="w-10 h-10 text-white" />
-              </motion.div>
-            </div>
-
-            {/* Mini progress indicator */}
-            <div className="mt-4 pt-4 border-t border-blue-200 dark:border-blue-800">
-              <div className="flex items-center gap-2 text-xs text-blue-600 dark:text-blue-400">
-                <motion.div 
-                  className="w-2 h-2 bg-blue-500 rounded-full"
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-                <span className="font-semibold">Live updates</span>
+              
+              <div className="mt-4 flex items-center gap-2">
+                <motion.div
+                  className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-md group-hover:shadow-blue-500/50 transition-shadow"
+                  whileHover={{ rotate: [0, -10, 10, -10, 0] }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <TrendingUp className="w-5 h-5 text-white" />
+                </motion.div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 text-xs text-blue-600 dark:text-blue-400">
+                    <motion.div 
+                      className="w-2 h-2 bg-blue-500 rounded-full"
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+                    <span className="font-semibold">Live</span>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
 
-          {/* Performance Status Card */}
+          {/* 24h Satisfaction Card */}
+          <motion.div
+            className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 rounded-3xl p-8 border border-green-200 dark:border-green-800 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            whileHover={{ scale: 1.02, y: -4 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className="flex flex-col justify-between h-full">
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-xs font-bold text-green-700 dark:text-green-300 uppercase tracking-wider">
+                    24h Satisfaction
+                  </span>
+                </div>
+                <motion.div 
+                  className="text-3xl font-black text-green-900 dark:text-green-100 mb-2"
+                >
+                  {score?.last24h?.satisfactionPercentage || 0}%
+                </motion.div>
+                <div className="text-xs text-green-600 dark:text-green-400 font-medium">
+                  Last 24 hours
+                </div>
+              </div>
+              
+              <div className="mt-4 flex items-center gap-2">
+                <div className={`flex items-center gap-1 px-3 py-2 rounded-xl text-sm font-semibold ${
+                  (score?.trends?.satisfactionChange24h || 0) >= 0
+                    ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400'
+                    : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400'
+                }`}>
+                  {(score?.trends?.satisfactionChange24h || 0) >= 0 ? (
+                    <TrendingUp className="w-4 h-4" />
+                  ) : (
+                    <TrendingUp className="w-4 h-4 rotate-180" />
+                  )}
+                  <span>{Math.abs(score?.trends?.satisfactionChange24h || 0) > 0 ? '+' : ''}{(score?.trends?.satisfactionChange24h || 0) > 0 ? (score.trends.satisfactionChange24h).toFixed(0) : 0}</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* 7d Satisfaction Card */}
+          <motion.div
+            className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 rounded-3xl p-8 border border-purple-200 dark:border-purple-800 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            whileHover={{ scale: 1.02, y: -4 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className="flex flex-col justify-between h-full">
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-xs font-bold text-purple-700 dark:text-purple-300 uppercase tracking-wider">
+                    7d Satisfaction
+                  </span>
+                </div>
+                <motion.div 
+                  className="text-3xl font-black text-purple-900 dark:text-purple-100 mb-2"
+                >
+                  {score?.last7d?.satisfactionPercentage || 0}%
+                </motion.div>
+                <div className="text-xs text-purple-600 dark:text-purple-400 font-medium">
+                  Last 7 days
+                </div>
+              </div>
+              
+              <div className="mt-4 flex items-center gap-2">
+                <div className={`flex items-center gap-1 px-3 py-2 rounded-xl text-sm font-semibold ${
+                  'bg-gray-50 dark:bg-gray-900/20 text-gray-600 dark:text-gray-400'
+                }`}>
+                  <TrendingUp className="w-4 h-4" />
+                  <span>0</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+        
+        {/* Performance Status Card */}
+        <div className="mt-5">
           <motion.div
             className={`bg-gradient-to-br ${colors.bg} rounded-3xl p-8 border ${colors.border} shadow-lg ${colors.shadow} hover:shadow-2xl transition-all duration-300 cursor-pointer group`}
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
             whileHover={{ scale: 1.02, y: -4 }}
             whileTap={{ scale: 0.98 }}
           >
