@@ -144,7 +144,7 @@ export default function Navigation() {
         transition={{ duration: 0.3, ease: "easeInOut" }}
       >
         <div className="px-4 pt-2 pb-4 space-y-2 bg-gradient-to-b from-white/95 to-gray-50/95 dark:from-gray-900/95 dark:to-gray-800/95 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50">
-          {navigation.map((item, index) => {
+          {publicNavigation.map((item, index) => {
             const Icon = item.icon
             return (
               <motion.div
@@ -173,7 +173,7 @@ export default function Navigation() {
             <motion.button
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: navigation.length * 0.05, duration: 0.2 }}
+              transition={{ delay: publicNavigation.length * 0.05, duration: 0.2 }}
               onClick={() => { setIsOpen(false); signOut({ callbackUrl: '/' }) }}
               className="flex w-full items-center gap-3 px-4 py-3.5 rounded-xl text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 border-2 border-red-200 dark:border-red-700 hover:border-red-300 dark:hover:border-red-600 transition-all duration-200 mt-2 touch-manipulation"
             >
@@ -186,7 +186,7 @@ export default function Navigation() {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: (navigation.length + 1) * 0.05, duration: 0.2 }}
+              transition={{ delay: (publicNavigation.length + 1) * 0.05, duration: 0.2 }}
               className="opacity-50 hover:opacity-100 transition-opacity duration-300"
             >
               <Link
