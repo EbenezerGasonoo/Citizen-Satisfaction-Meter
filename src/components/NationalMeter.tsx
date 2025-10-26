@@ -202,13 +202,12 @@ export default function NationalMeter() {
       </motion.div>
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-          {/* Stats Cards - Left */}
-          <div className="order-2 lg:order-1 space-y-4">
-            {/* Total Votes Card */}
+      <div className="max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+          {/* Stats Card - Left */}
+          <div className="order-2 lg:order-1">
             <motion.div
-              className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-3xl p-6 border border-blue-200 dark:border-blue-800 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group h-full"
+              className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-3xl p-6 border border-blue-200 dark:border-blue-800 shadow-lg hover:shadow-xl transition-all duration-300 group"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -255,11 +254,150 @@ export default function NationalMeter() {
                 </div>
               </div>
             </motion.div>
+          </div>
 
-            {/* Performance Status Card */}
+          {/* Circular Meter - Center */}
+          <motion.div 
+            className="flex justify-center order-1 lg:order-2"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <div className="relative">
+              {/* Animated glow effect */}
+              <motion.div
+                className="absolute inset-0 rounded-full blur-2xl opacity-30"
+                style={{
+                  background: `radial-gradient(circle, ${colors.primary}, transparent 70%)`
+                }}
+                animate={{
+                  scale: [1, 1.1, 1],
+                  opacity: [0.2, 0.4, 0.2]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+
+              <div className="relative w-64 h-64 sm:w-72 sm:h-72">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 256 256">
+                  <defs>
+                    <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor={colors.primary} />
+                      <stop offset="50%" stopColor={colors.secondary} />
+                      <stop offset="100%" stopColor={colors.primary} />
+                    </linearGradient>
+                    <filter id="shadow">
+                      <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor={colors.primary} floodOpacity="0.5"/>
+                    </filter>
+                  </defs>
+                  
+                  {/* Background circle */}
+                  <circle
+                    cx="128"
+                    cy="128"
+                    r="110"
+                    stroke="currentColor"
+                    className="text-gray-200 dark:text-gray-700/50"
+                    strokeWidth="20"
+                    fill="none"
+                  />
+                  
+                  {/* Animated progress circle */}
+                  <motion.circle
+                    cx="128"
+                    cy="128"
+                    r="110"
+                    stroke="url(#progressGradient)"
+                    strokeWidth="20"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeDasharray={circumference}
+                    initial={{ strokeDashoffset: circumference }}
+                    animate={{ strokeDashoffset }}
+                    transition={{ 
+                      duration: 2,
+                      ease: [0.43, 0.13, 0.23, 0.96],
+                      delay: 0.5
+                    }}
+                    filter="url(#shadow)"
+                  />
+
+                  {/* Decorative dots along the circle */}
+                  {[...Array(12)].map((_, i) => {
+                    const angle = (i / 12) * 2 * Math.PI
+                    const x = 128 + 110 * Math.cos(angle)
+                    const y = 128 + 110 * Math.sin(angle)
+                    const isActive = (i / 12) <= ((score?.satisfactionPercentage || 0) / 100)
+                    
+                    return (
+                      <motion.circle
+                        key={i}
+                        cx={x}
+                        cy={y}
+                        r="3"
+                        fill={isActive ? colors.primary : 'currentColor'}
+                        className={isActive ? '' : 'text-gray-300 dark:text-gray-600'}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ 
+                          delay: 0.5 + (i * 0.05),
+                          type: "spring",
+                          stiffness: 200
+                        }}
+                      />
+                    )
+                  })}
+                </svg>
+                
+                {/* Center content */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <motion.div 
+                    className={`text-6xl sm:text-7xl font-black ${colors.text}`}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ 
+                      duration: 0.8,
+                      delay: 1,
+                      type: "spring",
+                      stiffness: 100
+                    }}
+                  >
+                    {score.satisfactionPercentage}%
+                  </motion.div>
+                  <motion.div 
+                    className="text-gray-600 dark:text-gray-400 mt-1 text-sm font-semibold"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.3 }}
+                  >
+                    Satisfaction Rate
+                  </motion.div>
+
+                  {/* Award badge for high scores */}
+                  {(score?.satisfactionPercentage || 0) >= 70 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ delay: 1.5, type: "spring" }}
+                      className={`mt-2 flex items-center gap-1 px-3 py-1 ${colors.badgeBg} rounded-full`}
+                    >
+                      <Award className={`w-4 h-4 ${colors.icon}`} />
+                      <span className={`text-xs font-bold ${colors.text}`}>Top Rated</span>
+                    </motion.div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Performance Status Card - Right */}
+          <div className="order-3">
             <motion.div
-              className={`bg-gradient-to-br ${colors.bg} rounded-3xl p-6 border ${colors.border} shadow-lg ${colors.shadow} hover:shadow-2xl transition-all duration-300 cursor-pointer group h-full`}
-              initial={{ opacity: 0, x: -50 }}
+              className={`bg-gradient-to-br ${colors.bg} rounded-3xl p-6 border ${colors.border} shadow-lg ${colors.shadow} hover:shadow-2xl transition-all duration-300 cursor-pointer group`}
+              initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
               whileHover={{ scale: 1.02, y: -4 }}
@@ -323,148 +461,6 @@ export default function NationalMeter() {
                 </div>
               </div>
             </motion.div>
-          </div>
-
-          {/* Circular Meter - Center */}
-          <motion.div 
-            className="flex justify-center order-1 lg:order-2"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <div className="relative">
-              {/* Animated glow effect */}
-              <motion.div
-                className="absolute inset-0 rounded-full blur-2xl opacity-30"
-                style={{
-                  background: `radial-gradient(circle, ${colors.primary}, transparent 70%)`
-                }}
-                animate={{
-                  scale: [1, 1.1, 1],
-                  opacity: [0.2, 0.4, 0.2]
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-
-            <div className="relative w-72 h-72 sm:w-80 sm:h-80">
-              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 256 256">
-                <defs>
-                  <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor={colors.primary} />
-                    <stop offset="50%" stopColor={colors.secondary} />
-                    <stop offset="100%" stopColor={colors.primary} />
-                  </linearGradient>
-                  <filter id="shadow">
-                    <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor={colors.primary} floodOpacity="0.5"/>
-                  </filter>
-                </defs>
-                
-                {/* Background circle */}
-                <circle
-                  cx="128"
-                  cy="128"
-                  r="110"
-                  stroke="currentColor"
-                  className="text-gray-200 dark:text-gray-700/50"
-                  strokeWidth="20"
-                  fill="none"
-                />
-                
-                {/* Animated progress circle */}
-                <motion.circle
-                  cx="128"
-                  cy="128"
-                  r="110"
-                  stroke="url(#progressGradient)"
-                  strokeWidth="20"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeDasharray={circumference}
-                  initial={{ strokeDashoffset: circumference }}
-                  animate={{ strokeDashoffset }}
-                  transition={{ 
-                    duration: 2,
-                    ease: [0.43, 0.13, 0.23, 0.96],
-                    delay: 0.5
-                  }}
-                  filter="url(#shadow)"
-                />
-
-                {/* Decorative dots along the circle */}
-                {[...Array(12)].map((_, i) => {
-                  const angle = (i / 12) * 2 * Math.PI
-                  const x = 128 + 110 * Math.cos(angle)
-                  const y = 128 + 110 * Math.sin(angle)
-                  const isActive = (i / 12) <= ((score?.satisfactionPercentage || 0) / 100)
-                  
-                  return (
-                    <motion.circle
-                      key={i}
-                      cx={x}
-                      cy={y}
-                      r="3"
-                      fill={isActive ? colors.primary : 'currentColor'}
-                      className={isActive ? '' : 'text-gray-300 dark:text-gray-600'}
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ 
-                        delay: 0.5 + (i * 0.05),
-                        type: "spring",
-                        stiffness: 200
-                      }}
-                    />
-                  )
-                })}
-              </svg>
-              
-              {/* Center content */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <motion.div 
-                  className={`text-7xl sm:text-8xl font-black ${colors.text}`}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ 
-                    duration: 0.8,
-                    delay: 1,
-                    type: "spring",
-                    stiffness: 100
-                  }}
-                >
-                  {score.satisfactionPercentage}%
-                </motion.div>
-                <motion.div 
-                  className="text-gray-600 dark:text-gray-400 mt-2 text-lg font-semibold"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.3 }}
-                >
-                  Satisfaction Rate
-                </motion.div>
-
-                {/* Award badge for high scores */}
-                {(score?.satisfactionPercentage || 0) >= 70 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ delay: 1.5, type: "spring" }}
-                    className={`mt-4 flex items-center gap-2 px-4 py-2 ${colors.badgeBg} rounded-full`}
-                  >
-                    <Award className={`w-5 h-5 ${colors.icon}`} />
-                    <span className={`text-sm font-bold ${colors.text}`}>Top Rated</span>
-                  </motion.div>
-                )}
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-          {/* Right side - empty for balance or future cards */}
-          <div className="order-3 hidden lg:block">
-            {/* Reserved for potential future stats or balance */}
           </div>
         </div>
       </div>
