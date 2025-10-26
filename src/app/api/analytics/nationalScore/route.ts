@@ -17,25 +17,33 @@ export async function GET() {
     const allVotes = await prisma.vote.findMany()
     console.log('All votes found:', allVotes.length)
     
+    // Log all client hashes for debugging
+    if (allVotes.length > 0) {
+      console.log('Sample client hashes:', allVotes.slice(0, 10).map(v => ({ 
+        id: v.id, 
+        clientHash: v.clientHash,
+        startsWithDemo: v.clientHash.startsWith('demo_vote')
+      })))
+    }
+    
     // Get only real votes (exclude sample/demo votes)
     const votes = allVotes.filter(vote => !vote.clientHash.startsWith('demo_vote'))
     console.log('Real votes found:', votes.length)
     console.log('Demo votes found:', allVotes.length - votes.length)
     
-    // Log some sample client hashes for debugging
-    if (allVotes.length > 0) {
-      console.log('Sample client hashes:', allVotes.slice(0, 3).map(v => ({ id: v.id, clientHash: v.clientHash.substring(0, 20) + '...' })))
-    }
+    // IMPORTANT: For now, include ALL votes to debug
+    console.log('⚠️ INCLUDING ALL VOTES FOR DEBUGGING')
+    const votesToUse = allVotes // Temporarily include all votes to see if any exist
     
-    const totalVotes = votes.length
-    const positiveVotes = votes.filter(vote => vote.positive).length
+    const totalVotes = votesToUse.length
+    const positiveVotes = votesToUse.filter(vote => vote.positive).length
     const satisfactionPercentage = totalVotes > 0 ? Math.round((positiveVotes / totalVotes) * 100) : 0
 
     // Calculate votes for different time periods
-    const votesLast24h = votes.filter(v => v.createdAt >= last24h)
-    const votesLast48h = votes.filter(v => v.createdAt >= last48h)
-    const votesLast7d = votes.filter(v => v.createdAt >= last7d)
-    const votesLast30d = votes.filter(v => v.createdAt >= last30d)
+    const votesLast24h = votesToUse.filter(v => v.createdAt >= last24h)
+    const votesLast48h = votesToUse.filter(v => v.createdAt >= last48h)
+    const votesLast7d = votesToUse.filter(v => v.createdAt >= last7d)
+    const votesLast30d = votesToUse.filter(v => v.createdAt >= last30d)
     
     const totalVotesLast24h = votesLast24h.length
     const totalVotesLast48h = votesLast48h.length
