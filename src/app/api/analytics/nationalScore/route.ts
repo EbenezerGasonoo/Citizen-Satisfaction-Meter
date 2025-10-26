@@ -5,6 +5,7 @@ export async function GET() {
   try {
     console.log('Fetching national score...')
     console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'Set' : 'Not set')
+    console.log('Environment:', process.env.NODE_ENV)
     
     const now = new Date()
     const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000)
@@ -63,7 +64,7 @@ export async function GET() {
       voteChange24h
     })
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       satisfactionPercentage,
       totalVotes,
       positiveVotes,
@@ -87,7 +88,14 @@ export async function GET() {
         satisfactionChange24h: satisfactionChange24h,
         voteChange24h: voteChange24h,
       }
-    })
+    }, { status: 200 })
+    
+    // Add cache control headers to prevent caching
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+    
+    return response
   } catch (error) {
     console.error('Error fetching national score:', error)
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'

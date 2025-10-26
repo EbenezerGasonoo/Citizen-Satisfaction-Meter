@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function hashClient(ip: string, userAgent: string, salt: string = 'citizen-safistication'): string {
+export function hashClient(ip: string, userAgent: string, salt: string = 'citizen-satisfaction'): string {
   const date = new Date().toISOString().split('T')[0] // YYYY-MM-DD format
   const data = `${ip}-${userAgent}-${date}-${salt}`
   return crypto.createHash('sha256').update(data).digest('hex')
