@@ -6,7 +6,7 @@
  */
 
 import { PrismaClient } from '@prisma/client'
-import { voteBackupManager } from './src/lib/vote-backup-manager'
+import { voteBackupManager } from '../src/lib/vote-backup-manager'
 import fs from 'fs'
 import path from 'path'
 

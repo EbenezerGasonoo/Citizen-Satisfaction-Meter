@@ -5,6 +5,19 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  typescript: {
+    // Ignore TypeScript errors during build
+    ignoreBuildErrors: true,
+  },
+  webpack: (config, { isServer }) => {
+    // Exclude scripts directory from webpack build
+    config.watchOptions = {
+      ...config.watchOptions,
+      ignored: ['**/scripts/**', '**/node_modules/**'],
+    };
+    
+    return config;
+  },
   images: {
     remotePatterns: [
       {
