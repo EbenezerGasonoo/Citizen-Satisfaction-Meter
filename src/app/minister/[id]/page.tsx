@@ -477,6 +477,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
         if (response.ok) {
           const data = await response.json()
           setMinister(data)
+          setImageError(false) // Reset image error when minister data updates
         }
       } catch (error) {
         console.error('Error fetching minister after vote:', error)
@@ -488,6 +489,13 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
       window.removeEventListener('voteSubmitted', handleVoteUpdate)
     }
   }, [params.id])
+  
+  // Reset image error when minister data changes
+  useEffect(() => {
+    if (minister) {
+      setImageError(false)
+    }
+  }, [minister?.photoUrl])
 
   // GSAP Animations
   useEffect(() => {
@@ -787,7 +795,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
               >
-                <div className="relative w-56 h-80 lg:w-72 lg:h-[420px] group flex-shrink-0">
+                <div className="relative w-56 h-80 lg:w-72 lg:h-[420px] group flex-shrink-0" style={{ minHeight: '320px' }}>
                   {/* Glow effect */}
                   <motion.div
                     className="absolute -inset-2 bg-gradient-to-r from-primary via-primary to-green-500 rounded-3xl blur-2xl opacity-60 group-hover:opacity-90 transition-opacity"
@@ -802,27 +810,29 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                   />
                   
                   {/* Glassy Image container */}
-                  <div className="relative w-full h-full rounded-3xl overflow-hidden bg-gradient-to-br from-white/40 via-white/30 to-white/20 dark:from-slate-800/40 dark:via-slate-800/30 dark:to-slate-800/20 p-2 backdrop-blur-xl border border-white/50 dark:border-slate-700/50 shadow-2xl">
-                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/20 to-transparent dark:from-slate-700/20 backdrop-blur-md z-0" />
+                  <div className="relative w-full h-full rounded-3xl overflow-hidden bg-gradient-to-br from-white/40 via-white/30 to-white/20 dark:from-slate-800/40 dark:via-slate-800/30 dark:to-slate-800/20 p-2 backdrop-blur-xl border border-white/50 dark:border-slate-700/50 shadow-2xl" style={{ minHeight: '100%' }}>
+                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/20 to-transparent dark:from-slate-700/20 backdrop-blur-md z-0 pointer-events-none" />
                     <div className="relative w-full h-full rounded-2xl overflow-hidden z-10 bg-slate-200 dark:bg-slate-700" style={{ minHeight: '100%' }}>
-                      {((minister.photoUrl && minister.photoUrl.trim() !== '') && !imageError) ? (
-                        <div className="relative w-full h-full rounded-2xl overflow-hidden">
-                          <Image
-                            src={minister.photoUrl}
-                            alt={minister.fullName}
-                            fill
-                            className="rounded-2xl object-cover object-top"
-                            sizes="(max-width: 768px) 224px, 288px"
-                            priority
-                            unoptimized={true}
-                            onError={() => {
-                              console.error('Image failed to load:', minister.photoUrl)
-                              setImageError(true)
-                            }}
-                          />
-                        </div>
+                      {minister.photoUrl && minister.photoUrl.trim() !== '' && !imageError ? (
+                        <Image
+                          src={minister.photoUrl}
+                          alt={minister.fullName}
+                          fill
+                          className="rounded-2xl object-cover object-top"
+                          sizes="(max-width: 768px) 224px, 288px"
+                          priority
+                          unoptimized={true}
+                          onError={(e) => {
+                            console.error('Image failed to load:', minister.photoUrl)
+                            setImageError(true)
+                          }}
+                          onLoad={() => {
+                            console.log('Image loaded successfully:', minister.photoUrl)
+                            setImageError(false)
+                          }}
+                        />
                       ) : (
-                        <div className="absolute inset-0 w-full h-full bg-slate-200 dark:bg-slate-700 rounded-2xl flex items-center justify-center">
+                        <div className="absolute inset-0 flex items-center justify-center bg-slate-200 dark:bg-slate-700 rounded-2xl">
                           <Users className="w-16 h-16 text-slate-400 dark:text-slate-500" />
                         </div>
                       )}
@@ -894,7 +904,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                     {minister.portfolio}
                   </motion.h2>
 
-                  {/* Bio */}
+                  {/* Bio - Always visible */}
                   <motion.div 
                     ref={bioRef}
                     className="mb-8 max-w-2xl"
@@ -902,15 +912,9 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.3 }}
                   >
-                    {minister.bio ? (
-                      <p className="text-base lg:text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
-                        {minister.bio}
-                      </p>
-                    ) : (
-                      <p className="text-base lg:text-lg text-slate-500 dark:text-slate-500 italic leading-relaxed">
-                        No biography available for this minister.
-                      </p>
-                    )}
+                    <p className="text-base lg:text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                      {minister.bio || 'No biography available for this minister.'}
+                    </p>
                   </motion.div>
                 </div>
 
