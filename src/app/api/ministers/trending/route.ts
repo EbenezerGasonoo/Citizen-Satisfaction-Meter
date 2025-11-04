@@ -45,6 +45,12 @@ export async function GET() {
             },
           },
         },
+        actions: {
+          orderBy: {
+            date: 'desc',
+          },
+          take: 1, // Get only the most recent action
+        },
       },
       orderBy: {
         fullName: 'asc',
@@ -61,6 +67,9 @@ export async function GET() {
       const trendingScore = autoDetected?.trendingScore || 0
       const trendingReason = autoDetected?.reason || 'Admin selected'
 
+      // Get the most recent action
+      const latestAction = minister.actions && minister.actions.length > 0 ? minister.actions[0] : null
+
       return {
         id: minister.id,
         fullName: minister.fullName,
@@ -72,7 +81,12 @@ export async function GET() {
         isTrending: true,
         trendingScore,
         trendingReason,
-        autoDetected: !!autoDetected
+        autoDetected: !!autoDetected,
+        latestAction: latestAction ? {
+          title: latestAction.title,
+          description: latestAction.description,
+          date: latestAction.date,
+        } : null
       }
     })
 

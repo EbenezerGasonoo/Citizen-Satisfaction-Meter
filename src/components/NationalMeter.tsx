@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { Users, TrendingUp, Award } from 'lucide-react'
+import { Users, TrendingUp, Activity, Award } from 'lucide-react'
 
 interface NationalScore {
   satisfactionPercentage: number
@@ -38,17 +38,13 @@ export default function NationalMeter() {
 
   const fetchScore = async () => {
     try {
-      console.log('NationalMeter: Fetching national score...')
       const response = await fetch('/api/analytics/nationalScore')
       if (response.ok) {
         const data = await response.json()
-        console.log('NationalMeter: Received data:', data) // Debug log
         setScore(data)
-      } else {
-        console.error('NationalMeter: Failed to fetch national score:', response.status, response.statusText)
       }
     } catch (error) {
-      console.error('NationalMeter: Error fetching national score:', error)
+      console.error('Error fetching national score:', error)
     } finally {
       setLoading(false)
     }
@@ -58,17 +54,12 @@ export default function NationalMeter() {
     fetchScore()
   }, [])
 
-  // Listen for vote updates
   useEffect(() => {
     const handleVoteUpdate = () => {
-      console.log('NationalMeter: Received voteSubmitted event, refreshing score')
       fetchScore()
     }
 
-    // Listen for custom vote events
     window.addEventListener('voteSubmitted', handleVoteUpdate)
-    
-    // Also poll every 30 seconds for updates
     const interval = setInterval(fetchScore, 30000)
 
     return () => {
@@ -77,10 +68,8 @@ export default function NationalMeter() {
     }
   }, [])
 
-  // Animate vote count
   useEffect(() => {
     if (score) {
-      // Set initial display count immediately
       setDisplayCount(score.totalVotes)
       
       const controls = animate(count, score.totalVotes, { 
@@ -102,365 +91,320 @@ export default function NationalMeter() {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-16">
-        <motion.div 
-          className="relative w-64 h-64"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
-          <div className="absolute inset-0 border-8 border-gray-200 dark:border-gray-700 rounded-full" />
-          <motion.div
-            className="absolute inset-0 border-8 border-transparent border-t-blue-500 rounded-full"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          />
-        </motion.div>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-slate-600 dark:text-slate-400">Loading national metrics...</p>
+        </div>
       </div>
     )
   }
 
   if (!score) {
     return (
-      <div className="text-center text-gray-500 dark:text-gray-400 py-12">
+      <div className="text-center text-slate-500 dark:text-slate-400 py-12">
         Unable to load national satisfaction data
       </div>
     )
   }
 
-  const circumference = 2 * Math.PI * 110
-  const strokeDashoffset = circumference - ((score?.satisfactionPercentage || 0) / 100) * circumference
-
-  // Ghanaian flag color scheme based on score
-  const getColors = () => {
-    if ((score?.satisfactionPercentage || 0) >= 70) {
+  const getStatusConfig = () => {
+    const percentage = score?.satisfactionPercentage || 0
+    if (percentage >= 70) {
       return {
-        primary: '#10b981', // Green
-        secondary: '#34d399',
-        gradient: 'from-green-500 via-green-400 to-green-500',
-        bg: 'from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950',
+        label: 'Excellent',
+        description: 'Strong citizen satisfaction across cabinet',
+        color: 'text-green-600 dark:text-green-400',
+        bg: 'bg-green-50 dark:bg-green-900/20',
         border: 'border-green-200 dark:border-green-800',
-        text: 'text-green-700 dark:text-green-300',
-        icon: 'text-green-600 dark:text-green-400',
-        badgeBg: 'bg-green-100 dark:bg-green-900/40',
-        shadow: 'shadow-green-500/20'
+        progress: 'bg-green-600',
+        badge: 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300'
       }
-    } else if ((score?.satisfactionPercentage || 0) >= 50) {
+    } else if (percentage >= 50) {
       return {
-        primary: '#f59e0b', // Yellow
-        secondary: '#fbbf24',
-        gradient: 'from-yellow-500 via-yellow-400 to-yellow-500',
-        bg: 'from-yellow-50 to-amber-50 dark:from-yellow-950 dark:to-amber-950',
+        label: 'Moderate',
+        description: 'Room for improvement in some areas',
+        color: 'text-yellow-600 dark:text-yellow-400',
+        bg: 'bg-yellow-50 dark:bg-yellow-900/20',
         border: 'border-yellow-200 dark:border-yellow-800',
-        text: 'text-yellow-700 dark:text-yellow-300',
-        icon: 'text-yellow-600 dark:text-yellow-400',
-        badgeBg: 'bg-yellow-100 dark:bg-yellow-900/40',
-        shadow: 'shadow-yellow-500/20'
+        progress: 'bg-yellow-600',
+        badge: 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300'
       }
     } else {
       return {
-        primary: '#ef4444', // Red
-        secondary: '#f87171',
-        gradient: 'from-red-500 via-red-400 to-red-500',
-        bg: 'from-red-50 to-rose-50 dark:from-red-950 dark:to-rose-950',
+        label: 'Needs Improvement',
+        description: 'Significant improvements required',
+        color: 'text-red-600 dark:text-red-400',
+        bg: 'bg-red-50 dark:bg-red-900/20',
         border: 'border-red-200 dark:border-red-800',
-        text: 'text-red-700 dark:text-red-300',
-        icon: 'text-red-600 dark:text-red-400',
-        badgeBg: 'bg-red-100 dark:bg-red-900/40',
-        shadow: 'shadow-red-500/20'
+        progress: 'bg-red-600',
+        badge: 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300'
       }
     }
   }
 
-  const colors = getColors()
-
-  const getStatusText = () => {
-    if ((score?.satisfactionPercentage || 0) >= 70) return 'Excellent Performance'
-    if ((score?.satisfactionPercentage || 0) >= 50) return 'Moderate Performance'
-    return 'Needs Improvement'
-  }
-
-  const getStatusDescription = () => {
-    if ((score?.satisfactionPercentage || 0) >= 70) return 'Ministers are performing exceptionally well'
-    if ((score?.satisfactionPercentage || 0) >= 50) return 'Performance shows room for improvement'
-    return 'Significant improvements needed in multiple areas'
-  }
+  const status = getStatusConfig()
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 lg:space-y-10">
       {/* Header */}
-      <motion.div 
-        className="text-center"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-3">
-          National Satisfaction Meter
+      <div className="text-center space-y-3">
+        <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 dark:text-slate-50">
+          National Satisfaction Index
         </h2>
-        <p className="text-lg text-gray-600 dark:text-gray-400">
-          Real-time performance ratings from citizens across Ghana
+        <p className="text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+          Aggregate performance metrics across all cabinet ministers
         </p>
-      </motion.div>
+      </div>
 
       {/* Main Content */}
-      <div className="max-w-5xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
-          {/* Stats Card - Left */}
-          <div className="order-2 lg:order-1">
-            <motion.div
-              className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-3xl p-6 border border-blue-200 dark:border-blue-800 shadow-lg hover:shadow-xl transition-all duration-300 group"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              whileHover={{ scale: 1.02, y: -4 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <div className="flex flex-col justify-between h-full">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+          {/* Left Stats Column */}
+          <div className="lg:col-span-4 space-y-4 lg:space-y-5">
+            {/* Total Votes Card */}
+            <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
+                  <Users className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+                </div>
                 <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                    <span className="text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
-                      Total Votes
-                    </span>
+                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                    Total Votes
                   </div>
-                  <motion.div 
-                    className="text-4xl font-black text-blue-900 dark:text-blue-100 mb-2"
-                    key={displayCount}
-                  >
+                  <div className="text-2xl font-bold text-slate-900 dark:text-slate-50">
                     {(displayCount || score?.totalVotes || 0).toLocaleString()}
-                  </motion.div>
-                  <div className="text-xs text-blue-600 dark:text-blue-400 font-medium">
-                    Citizens participated
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+                <span>Live updates</span>
+              </div>
+            </div>
+
+            {/* Positive Votes Card */}
+            <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-green-50 dark:bg-green-900/20 rounded-lg flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-green-600 dark:text-green-400" />
+                </div>
+                <div>
+                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                    Satisfied Votes
+                  </div>
+                  <div className="text-2xl font-bold text-slate-900 dark:text-slate-50">
+                    {score.positiveVotes.toLocaleString()}
+                  </div>
+                </div>
+              </div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">
+                {score.totalVotes > 0 
+                  ? `${Math.round((score.positiveVotes / score.totalVotes) * 100)}% of total`
+                  : 'No votes yet'
+                }
+              </div>
+            </div>
+
+            {/* Status Card */}
+            <div className={`bg-slate-50 dark:bg-slate-800/50 border ${status.border} rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow`}>
+              <div className="flex items-center gap-3 mb-4">
+                <div className={`w-10 h-10 ${status.bg} rounded-lg flex items-center justify-center`}>
+                  <Activity className={`w-5 h-5 ${status.color}`} />
+                </div>
+                <div>
+                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                    Status
+                  </div>
+                  <div className={`text-lg font-bold ${status.color}`}>
+                    {status.label}
+                  </div>
+                </div>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400">
+                {status.description}
+              </p>
+            </div>
+          </div>
+
+          {/* Center Semi-Circular Gradient Meter */}
+          <div className="lg:col-span-4 flex items-center justify-center">
+            <motion.div 
+              className="w-full max-w-lg"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 lg:p-10 shadow-lg border border-slate-200 dark:border-slate-800 h-full flex flex-col">
+                {/* Title */}
+                <motion.h3 
+                  className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-8 text-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  National Satisfaction Meter
+                </motion.h3>
+                
+                {/* Semi-Circular Gradient Meter */}
+                <div className="relative w-full max-w-lg mx-auto flex-1 flex flex-col" style={{ minHeight: '240px', height: '100%' }}>
+                  <svg viewBox="0 0 200 110" className="w-full h-full flex-1">
+                    <defs>
+                      {/* Gradient from red to orange to yellow */}
+                      <linearGradient id="satisfactionGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#ef4444" />
+                        <stop offset="40%" stopColor="#f97316" />
+                        <stop offset="100%" stopColor="#eab308" />
+                      </linearGradient>
+                    </defs>
+                    
+                    {/* Background arc (unfilled) - light gray */}
+                    <path
+                      d="M 20 100 A 80 80 0 0 1 180 100"
+                      fill="none"
+                      stroke="#e2e8f0"
+                      strokeWidth="24"
+                      strokeLinecap="round"
+                      className="dark:stroke-slate-800"
+                    />
+                    
+                    {/* Filled gradient arc - red to orange to yellow */}
+                    <motion.path
+                      d="M 20 100 A 80 80 0 0 1 180 100"
+                      fill="none"
+                      stroke="url(#satisfactionGradient)"
+                      strokeWidth="24"
+                      strokeLinecap="round"
+                      strokeDasharray={251.33}
+                      initial={{ strokeDashoffset: 251.33 }}
+                      animate={{ 
+                        strokeDashoffset: 251.33 - (251.33 * score.satisfactionPercentage / 100)
+                      }}
+                      transition={{ 
+                        duration: 2, 
+                        delay: 0.5,
+                        ease: [0.43, 0.13, 0.23, 0.96]
+                      }}
+                    />
+                  </svg>
+                  
+                  {/* Center Percentage Display */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ top: '32px' }}>
+                    <motion.div 
+                      className="flex items-baseline gap-1.5"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ delay: 1, type: "spring", stiffness: 200 }}
+                    >
+                      <span className="text-5xl lg:text-6xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
+                        {score.satisfactionPercentage}
+                      </span>
+                      <span className="text-3xl lg:text-4xl font-semibold text-slate-500 dark:text-slate-400">
+                        %
+                      </span>
+                    </motion.div>
                   </div>
                 </div>
                 
-                <div className="mt-4 flex items-center gap-2">
-                  <motion.div
-                    className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-md group-hover:shadow-blue-500/50 transition-shadow"
-                    whileHover={{ rotate: [0, -10, 10, -10, 0] }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <TrendingUp className="w-4 h-4 text-white" />
-                  </motion.div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 text-xs text-blue-600 dark:text-blue-400">
-                      <motion.div 
-                        className="w-2 h-2 bg-blue-500 rounded-full"
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      />
-                      <span className="font-semibold">Live</span>
-                    </div>
-                  </div>
-                </div>
+                {/* Descriptive Text */}
+                <motion.p 
+                  className="text-sm text-slate-700 dark:text-slate-300 mt-3 text-center max-w-md mx-auto leading-relaxed"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1.2 }}
+                >
+                  The amount of satisfaction across all cabinet ministers
+                </motion.p>
+                
+                {/* Status Badge */}
+                <motion.div 
+                  className={`mt-3 px-5 py-2.5 rounded-lg text-xs font-bold text-white text-center uppercase tracking-wider w-full max-w-xs mx-auto ${
+                    score.satisfactionPercentage >= 70 
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 shadow-lg shadow-green-500/30'
+                      : score.satisfactionPercentage >= 50 
+                      ? 'bg-gradient-to-r from-yellow-500 to-amber-500 shadow-lg shadow-yellow-500/30'
+                      : 'bg-gradient-to-r from-red-500 to-rose-500 shadow-lg shadow-red-500/30'
+                  }`}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.5 }}
+                >
+                  {score.satisfactionPercentage >= 70 
+                    ? 'EXCELLENT PERFORMANCE!' 
+                    : score.satisfactionPercentage >= 50 
+                    ? 'GOOD START!' 
+                    : 'NEEDS IMPROVEMENT'}
+                </motion.div>
               </div>
             </motion.div>
           </div>
 
-          {/* Circular Meter - Center */}
-          <motion.div 
-            className="flex justify-center order-1 lg:order-2"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <div className="relative">
-              {/* Animated glow effect */}
-              <motion.div
-                className="absolute inset-0 rounded-full blur-2xl opacity-30"
-                style={{
-                  background: `radial-gradient(circle, ${colors.primary}, transparent 70%)`
-                }}
-                animate={{
-                  scale: [1, 1.1, 1],
-                  opacity: [0.2, 0.4, 0.2]
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-
-              <div className="relative w-64 h-64 sm:w-72 sm:h-72">
-                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 256 256">
-                  <defs>
-                    <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor={colors.primary} />
-                      <stop offset="50%" stopColor={colors.secondary} />
-                      <stop offset="100%" stopColor={colors.primary} />
-                    </linearGradient>
-                    <filter id="shadow">
-                      <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor={colors.primary} floodOpacity="0.5"/>
-                    </filter>
-                  </defs>
-                  
-                  {/* Background circle */}
-                  <circle
-                    cx="128"
-                    cy="128"
-                    r="110"
-                    stroke="currentColor"
-                    className="text-gray-200 dark:text-gray-700/50"
-                    strokeWidth="20"
-                    fill="none"
-                  />
-                  
-                  {/* Animated progress circle */}
-                  <motion.circle
-                    cx="128"
-                    cy="128"
-                    r="110"
-                    stroke="url(#progressGradient)"
-                    strokeWidth="20"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeDasharray={circumference}
-                    initial={{ strokeDashoffset: circumference }}
-                    animate={{ strokeDashoffset }}
-                    transition={{ 
-                      duration: 2,
-                      ease: [0.43, 0.13, 0.23, 0.96],
-                      delay: 0.5
-                    }}
-                    filter="url(#shadow)"
-                  />
-
-                  {/* Decorative dots along the circle */}
-                  {[...Array(12)].map((_, i) => {
-                    const angle = (i / 12) * 2 * Math.PI
-                    const x = 128 + 110 * Math.cos(angle)
-                    const y = 128 + 110 * Math.sin(angle)
-                    const isActive = (i / 12) <= ((score?.satisfactionPercentage || 0) / 100)
-                    
-                    return (
-                      <motion.circle
-                        key={i}
-                        cx={x}
-                        cy={y}
-                        r="3"
-                        fill={isActive ? colors.primary : 'currentColor'}
-                        className={isActive ? '' : 'text-gray-300 dark:text-gray-600'}
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ 
-                          delay: 0.5 + (i * 0.05),
-                          type: "spring",
-                          stiffness: 200
-                        }}
-                      />
-                    )
-                  })}
-                </svg>
-                
-                {/* Center content */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <motion.div 
-                    className={`text-6xl sm:text-7xl font-black ${colors.text}`}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ 
-                      duration: 0.8,
-                      delay: 1,
-                      type: "spring",
-                      stiffness: 100
-                    }}
-                  >
-                    {score.satisfactionPercentage}%
-                  </motion.div>
-                  <motion.div 
-                    className="text-gray-600 dark:text-gray-400 mt-1 text-sm font-semibold"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.3 }}
-                  >
-                    Satisfaction Rate
-                  </motion.div>
-
-                  {/* Award badge for high scores */}
-                  {(score?.satisfactionPercentage || 0) >= 70 && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      transition={{ delay: 1.5, type: "spring" }}
-                      className={`mt-2 flex items-center gap-1 px-3 py-1 ${colors.badgeBg} rounded-full`}
-                    >
-                      <Award className={`w-4 h-4 ${colors.icon}`} />
-                      <span className={`text-xs font-bold ${colors.text}`}>Top Rated</span>
-                    </motion.div>
-                  )}
+          {/* Right Stats Column */}
+          <div className="lg:col-span-4 space-y-4 lg:space-y-5">
+            {/* 24h Change */}
+            <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">
+                Last 24 Hours
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-slate-600 dark:text-slate-400">Satisfaction</span>
+                  <span className={`text-sm font-semibold ${
+                    score.trends.satisfactionChange24h >= 0 ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {score.trends.satisfactionChange24h >= 0 ? '+' : ''}
+                    {score.trends.satisfactionChange24h.toFixed(1)}%
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-slate-600 dark:text-slate-400">New Votes</span>
+                  <span className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+                    {score.last24h.totalVotes.toLocaleString()}
+                  </span>
                 </div>
               </div>
             </div>
-          </motion.div>
 
-          {/* Performance Status Card - Right */}
-          <div className="order-3">
-            <motion.div
-              className={`bg-gradient-to-br ${colors.bg} rounded-3xl p-6 border ${colors.border} shadow-lg ${colors.shadow} hover:shadow-2xl transition-all duration-300 cursor-pointer group`}
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              whileHover={{ scale: 1.02, y: -4 }}
-              whileTap={{ scale: 0.98 }}
-            >
+            {/* 7 Day Stats */}
+            <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">
+                Last 7 Days
+              </div>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                    Performance
+                  <span className="text-sm text-slate-600 dark:text-slate-400">Satisfaction</span>
+                  <span className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+                    {score.last7d.satisfactionPercentage}%
                   </span>
-                  <motion.div
-                    className={`px-2 py-1 ${colors.badgeBg} rounded-full`}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 1, type: "spring" }}
-                  >
-                    <span className={`text-xs font-bold ${colors.icon}`}>
-                      {score.satisfactionPercentage >= 70 ? '🎉' : score.satisfactionPercentage >= 50 ? '⚡' : '⚠️'}
-                    </span>
-                  </motion.div>
                 </div>
-
-                <motion.div 
-                  className={`text-2xl font-black ${colors.text}`}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.8 }}
-                >
-                  {getStatusText()}
-                </motion.div>
-                
-                <div className="text-xs text-gray-600 dark:text-gray-400 font-medium">
-                  {getStatusDescription()}
-                </div>
-                
-                {/* Animated Progress Bar */}
-                <div className="space-y-2 pt-3 border-t border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-600 dark:text-gray-400">Score</span>
-                    <motion.span 
-                      className={colors.icon}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 1.2 }}
-                    >
-                      {score.satisfactionPercentage}%
-                    </motion.span>
-                  </div>
-                  <div className="relative h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                    <motion.div
-                      className={`absolute inset-y-0 left-0 bg-gradient-to-r ${colors.gradient} rounded-full`}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${score.satisfactionPercentage}%` }}
-                      transition={{ 
-                        duration: 2,
-                        ease: [0.43, 0.13, 0.23, 0.96],
-                        delay: 0.8
-                      }}
-                    />
-                  </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-slate-600 dark:text-slate-400">Total Votes</span>
+                  <span className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+                    {score.last7d.totalVotes.toLocaleString()}
+                  </span>
                 </div>
               </div>
-            </motion.div>
+            </div>
+
+            {/* 30 Day Stats */}
+            <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">
+                Last 30 Days
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-slate-600 dark:text-slate-400">Satisfaction</span>
+                  <span className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+                    {score.last30d.satisfactionPercentage}%
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-slate-600 dark:text-slate-400">Total Votes</span>
+                  <span className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+                    {score.last30d.totalVotes.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
