@@ -52,6 +52,8 @@ export async function GET(
       satisfactionRate,
       totalVotes,
       positiveVotes,
+      isTrending: minister.isTrending,
+      createdAt: minister.createdAt,
     })
   } catch (error) {
     console.error('Error fetching minister:', error)

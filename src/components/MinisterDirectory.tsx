@@ -88,26 +88,21 @@ export default function MinisterDirectory() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
-        <motion.h2 
-          className="text-2xl font-semibold mb-8 text-gray-800 dark:text-gray-200"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+        <h2 
+          className="text-2xl font-bold mb-8 text-slate-900 dark:text-slate-50"
         >
-          All Ministers
-        </motion.h2>
+          Minister Directory
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3, 4, 5, 6].map(i => (
-            <motion.div 
+            <div 
               key={i} 
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 animate-pulse"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 animate-pulse"
             >
-              <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-4" />
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2" />
-              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
-            </motion.div>
+              <div className="w-20 h-20 bg-slate-200 dark:bg-slate-700 rounded-lg mx-auto mb-4" />
+              <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded mb-2" />
+              <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-3/4 mx-auto" />
+            </div>
           ))}
         </div>
       </motion.div>
@@ -122,22 +117,14 @@ export default function MinisterDirectory() {
       transition={{ duration: 0.6 }}
     >
       <motion.div className="mb-8 sm:mb-10">
-        <motion.h2 
-          className="text-3xl sm:text-4xl font-bold mb-3 bg-gradient-to-r from-blue-600 via-teal-600 to-cyan-600 dark:from-blue-400 dark:via-teal-400 dark:to-cyan-400 bg-clip-text text-transparent"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
+        <h2 
+          className="text-3xl font-bold mb-3 text-slate-900 dark:text-slate-50"
         >
           All Ministers
-        </motion.h2>
-        <motion.p
-          className="text-sm sm:text-base text-gray-600 dark:text-gray-400"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          Browse and rate all cabinet ministers
-        </motion.p>
+        </h2>
+        <p className="text-sm text-slate-600 dark:text-slate-400">
+          Browse and evaluate all cabinet ministers
+        </p>
       </motion.div>
 
       {/* Search and Filter Controls - Enhanced */}
@@ -149,27 +136,27 @@ export default function MinisterDirectory() {
       >
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5 pointer-events-none" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 dark:text-slate-500 w-5 h-5 pointer-events-none" />
             <input
               type="text"
               placeholder="Search ministers by name or portfolio..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3.5 sm:py-4 border-2 border-gray-200 dark:border-gray-700 rounded-2xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-green-500 dark:focus:border-green-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 transition-all touch-manipulation text-base"
+              className="w-full pl-12 pr-4 py-3 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all touch-manipulation text-sm"
             />
           </div>
           <div className="relative sm:w-56">
-            <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5 pointer-events-none" />
+            <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 dark:text-slate-500 w-5 h-5 pointer-events-none" />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'name' | 'portfolio')}
-              className="w-full pl-12 pr-10 py-3.5 sm:py-4 border-2 border-gray-200 dark:border-gray-700 rounded-2xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-green-500 dark:focus:border-green-400 appearance-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 cursor-pointer transition-all touch-manipulation text-base font-medium"
+              className="w-full pl-12 pr-10 py-3 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary appearance-none bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 cursor-pointer transition-all touch-manipulation text-sm font-medium"
             >
               <option value="name">Sort by Name</option>
               <option value="portfolio">Sort by Portfolio</option>
             </select>
             <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-              <svg className="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </div>
@@ -180,7 +167,7 @@ export default function MinisterDirectory() {
       {/* Results Count */}
       {searchTerm && (
         <motion.div 
-          className="mb-6 text-base text-gray-600 dark:text-gray-400 font-medium"
+          className="mb-6 text-sm text-slate-600 dark:text-slate-400 font-medium"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
@@ -207,65 +194,55 @@ export default function MinisterDirectory() {
             whileTap={{ scale: 0.98 }}
           >
             <motion.div 
-              className="relative bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 h-full overflow-hidden group border border-gray-200 dark:border-gray-700"
+              className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-all duration-200 h-full flex flex-col group"
+              variants={cardVariants}
+              whileHover={{ y: -2 }}
             >
-              {/* Background decoration on hover */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-teal-500/5 dark:from-blue-500/10 dark:to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
               {/* Favorite Button */}
               <div className="absolute top-4 right-4 z-10">
-                <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full p-1.5 shadow-lg">
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full p-1.5 shadow-sm">
                   <FavoriteButton ministerId={parseInt(minister.id)} />
                 </div>
               </div>
 
-              <div className="relative">
+              <div className="relative flex flex-col flex-1">
                 {/* Profile Image */}
-                <Link href={`/minister/${minister.id}`} className="block touch-manipulation">
-                  <motion.div 
-                    className="relative w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-4"
-                    whileHover={{ scale: 1.1, rotate: 3 }}
-                    transition={{ duration: 0.3, type: "spring" }}
-                  >
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-teal-500 blur-md opacity-40" />
+                <Link href={`/minister/${minister.id}`} className="block touch-manipulation mb-4">
+                  <div className="relative w-20 h-20 mx-auto">
                     <img
                       src={minister.photoUrl}
                       alt={minister.fullName}
-                      className="relative object-cover w-full h-full rounded-full border-4 border-white dark:border-gray-800 shadow-xl"
+                      className="object-cover w-full h-full rounded-lg border border-slate-200 dark:border-slate-700"
                     />
-                  </motion.div>
+                  </div>
                 </Link>
 
                 {/* Minister Info */}
-                <Link href={`/minister/${minister.id}`} className="block touch-manipulation">
-                  <motion.h3 
-                    className="text-lg sm:text-xl font-bold mb-2 text-gray-900 dark:text-gray-100 hover:text-green-600 dark:hover:text-green-400 transition-colors line-clamp-2 min-h-[3.5rem]"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.2 }}
+                <Link href={`/minister/${minister.id}`} className="block touch-manipulation mb-2">
+                  <h3 
+                    className="text-lg font-semibold text-slate-900 dark:text-slate-50 hover:text-primary transition-colors line-clamp-2 text-center"
                   >
                     {minister.fullName}
-                  </motion.h3>
+                  </h3>
                 </Link>
 
-                <div className="mb-3 px-3 py-1.5 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-xl inline-block">
-                  <p className="text-sm font-semibold text-green-700 dark:text-green-400">
+                <div className="mb-3 px-3 py-1.5 bg-slate-50 dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700">
+                  <p className="text-xs font-medium text-slate-700 dark:text-slate-300 text-center">
                     {minister.portfolio}
                   </p>
                 </div>
 
-                <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 mb-4 min-h-[4rem]">
+                <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-3 mb-4 flex-1 text-center">
                   {minister.bio}
                 </p>
 
                 {/* View Profile Button */}
-                <Link href={`/minister/${minister.id}`} className="block touch-manipulation">
-                  <motion.button
-                    className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg shadow-green-500/20 hover:shadow-xl hover:shadow-green-500/30"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                <Link href={`/minister/${minister.id}`} className="block touch-manipulation mt-auto">
+                  <button
+                    className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md text-sm"
                   >
                     View Profile
-                  </motion.button>
+                  </button>
                 </Link>
               </div>
             </motion.div>
@@ -280,7 +257,7 @@ export default function MinisterDirectory() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <div className="text-gray-400 dark:text-gray-600 text-lg">
+          <div className="text-slate-500 dark:text-slate-400 text-base">
             No ministers found matching your search
           </div>
         </motion.div>
