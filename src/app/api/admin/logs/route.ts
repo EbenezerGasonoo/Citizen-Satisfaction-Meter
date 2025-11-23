@@ -5,6 +5,9 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions'
 import fs from 'fs'
 import path from 'path'
 
+// Force dynamic rendering - this route uses request.url and searchParams
+export const dynamic = 'force-dynamic'
+
 // Helper to check admin status
 async function isAdmin(req: NextRequest) {
   const session = await getServerSession(authOptions)

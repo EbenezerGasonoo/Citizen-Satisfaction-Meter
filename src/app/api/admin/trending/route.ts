@@ -8,6 +8,9 @@ import {
   type TrendingCriteria 
 } from '@/lib/trending-calculator'
 
+// Force dynamic rendering - this route uses request.url and searchParams
+export const dynamic = 'force-dynamic'
+
 // GET: Fetch trending candidates and current trending ministers
 export async function GET(request: NextRequest) {
   try {

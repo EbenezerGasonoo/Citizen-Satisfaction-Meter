@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { voteBackupManager } from '@/lib/vote-backup-manager'
 import { prisma } from '@/lib/prisma'
 
+// Force dynamic rendering - this route uses request.url
+export const dynamic = 'force-dynamic'
+
 // GET: Get backup status and available backups
 export async function GET(request: NextRequest) {
   try {
