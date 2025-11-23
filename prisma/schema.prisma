@@ -21,6 +21,7 @@ model Minister {
   favorites  Favorite[]
   policies   Policy[]
   votes      Vote[]
+  statements Statement[]
 }
 
 model Policy {
@@ -165,6 +166,17 @@ model Action {
   updatedAt   DateTime     @updatedAt
   minister    Minister     @relation(fields: [ministerId], references: [id], onDelete: Cascade)
   votes       ActionVote[]
+
+  @@index([ministerId])
+}
+
+model Statement {
+  id         Int      @id @default(autoincrement())
+  content    String
+  ministerId Int?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  minister   Minister? @relation(fields: [ministerId], references: [id], onDelete: Cascade)
 
   @@index([ministerId])
 }
