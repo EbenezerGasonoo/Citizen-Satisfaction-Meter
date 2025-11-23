@@ -489,13 +489,6 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
       window.removeEventListener('voteSubmitted', handleVoteUpdate)
     }
   }, [params.id])
-  
-  // Reset image error when minister data changes
-  useEffect(() => {
-    if (minister) {
-      setImageError(false)
-    }
-  }, [minister?.photoUrl])
 
   // GSAP Animations
   useEffect(() => {
@@ -815,6 +808,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                     <div className="relative w-full h-full rounded-2xl overflow-hidden z-10 bg-slate-200 dark:bg-slate-700" style={{ minHeight: '100%' }}>
                       {minister.photoUrl && minister.photoUrl.trim() !== '' && !imageError ? (
                         <Image
+                          key={minister.photoUrl}
                           src={minister.photoUrl}
                           alt={minister.fullName}
                           fill
