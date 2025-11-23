@@ -71,6 +71,11 @@ export async function GET() {
           gte: today,
           lt: tomorrow,
         },
+        clientHash: {
+          not: {
+            startsWith: 'demo_vote'
+          }
+        }
       },
     })
 
@@ -81,6 +86,11 @@ export async function GET() {
           lt: tomorrow,
         },
         positive: true,
+        clientHash: {
+          not: {
+            startsWith: 'demo_vote'
+          }
+        }
       },
     })
 
@@ -91,7 +101,9 @@ export async function GET() {
         COUNT(*) as vote_count,
         SUM(CASE WHEN positive THEN 1 ELSE 0 END) as positive_votes
       FROM "Vote"
-      WHERE "createdAt" >= ${today} AND "createdAt" < ${tomorrow}
+      WHERE "createdAt" >= ${today} 
+        AND "createdAt" < ${tomorrow}
+        AND "clientHash" NOT LIKE 'demo_vote%'
       GROUP BY "ministerId"
       ORDER BY vote_count DESC
     `

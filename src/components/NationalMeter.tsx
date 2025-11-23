@@ -56,11 +56,16 @@ export default function NationalMeter() {
 
   useEffect(() => {
     const handleVoteUpdate = () => {
+      console.log('NationalMeter: Vote submitted event received, refreshing score...')
       fetchScore()
     }
 
     window.addEventListener('voteSubmitted', handleVoteUpdate)
-    const interval = setInterval(fetchScore, 30000)
+    // Poll every 10 seconds for real-time updates (reduced from 30s for better responsiveness)
+    const interval = setInterval(() => {
+      console.log('NationalMeter: Polling for vote updates...')
+      fetchScore()
+    }, 10000)
 
     return () => {
       window.removeEventListener('voteSubmitted', handleVoteUpdate)

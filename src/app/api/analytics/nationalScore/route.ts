@@ -31,9 +31,8 @@ export async function GET() {
     console.log('Real votes found:', votes.length)
     console.log('Demo votes found:', allVotes.length - votes.length)
     
-    // IMPORTANT: For now, include ALL votes to debug
-    console.log('⚠️ INCLUDING ALL VOTES FOR DEBUGGING')
-    const votesToUse = allVotes // Temporarily include all votes to see if any exist
+    // Use only real votes (exclude demo votes)
+    const votesToUse = votes
     
     const totalVotes = votesToUse.length
     const positiveVotes = votesToUse.filter(vote => vote.positive).length

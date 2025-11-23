@@ -438,6 +438,10 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
   const [activeTab, setActiveTab] = useState<'overview' | 'actions' | 'policies' | 'analytics'>('overview')
   const [imageError, setImageError] = useState(false)
   
+  // Track if initial data has been loaded
+  const hasInitialData = useRef(false)
+  const isFetching = useRef(false)
+  
   // GSAP Refs
   const heroRef = useRef<HTMLDivElement>(null)
   const photoRef = useRef<HTMLDivElement>(null)
@@ -449,50 +453,165 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
   const tabsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    // Reset when params.id changes
+    hasInitialData.current = false
+    
+    if (!params.id) {
+      setMinister(null)
+      setLoading(false)
+      return
+    }
+    
+    let cancelled = false
+    
     const fetchMinister = async () => {
+      // Prevent duplicate fetches
+      if (isFetching.current) {
+        console.log('Fetch already in progress, skipping...')
+        return
+      }
+      
+      isFetching.current = true
+      setLoading(true)
       try {
+        console.log('Fetching minister data for ID:', params.id)
         const response = await fetch(`/api/ministers/${params.id}`)
+        if (cancelled) {
+          isFetching.current = false
+          return
+        }
+        
         if (!response.ok) {
-          setMinister(null)
+          console.error('Failed to fetch minister:', response.status, response.statusText)
+          if (!cancelled) {
+            setMinister(null)
+            setLoading(false)
+          }
+          isFetching.current = false
           return
         }
         const data = await response.json()
-        setMinister(data)
-        setImageError(false) // Reset image error when new minister data is loaded
+        if (cancelled) {
+          isFetching.current = false
+          return
+        }
+        
+        console.log('Received minister data:', data)
+        if (data && data.id) {
+          console.log('Setting minister data:', { id: data.id, name: data.fullName, photoUrl: data.photoUrl })
+          if (!cancelled) {
+            setMinister(data)
+            setImageError(false) // Reset image error when new minister data is loaded
+            hasInitialData.current = true
+          }
+        } else {
+          console.error('Invalid minister data received:', data)
+          if (!cancelled) {
+            setMinister(null)
+          }
+        }
       } catch (error) {
+        if (cancelled) {
+          isFetching.current = false
+          return
+        }
         console.error('Error fetching minister:', error)
-        setMinister(null)
+        if (!cancelled) {
+          setMinister(null)
+        }
       } finally {
-        setLoading(false)
+        if (!cancelled) {
+          setLoading(false)
+        }
+        isFetching.current = false
       }
     }
 
     fetchMinister()
+    
+    return () => {
+      cancelled = true
+      isFetching.current = false
+      hasInitialData.current = false
+    }
   }, [params.id])
 
   useEffect(() => {
+    if (!params.id) return
+    
     const handleVoteUpdate = async () => {
+      // Don't update if we don't have initial data yet
+      if (!hasInitialData.current) {
+        console.log('Skipping vote update - initial data not loaded yet')
+        return
+      }
+      
+      console.log('Handling vote update for minister:', params.id)
       try {
         const response = await fetch(`/api/ministers/${params.id}`)
         if (response.ok) {
           const data = await response.json()
-          setMinister(data)
-          setImageError(false) // Reset image error when minister data updates
+          // Only update if we got valid data
+          if (data && data.id) {
+            console.log('Updating minister data after vote:', { id: data.id, name: data.fullName })
+            setMinister(prev => {
+              // Preserve existing data if new data is invalid
+              if (!data || !data.id) {
+                console.warn('Invalid data in vote update, preserving existing data')
+                return prev
+              }
+              return data
+            })
+            setImageError(false) // Reset image error when minister data updates
+          } else {
+            console.error('Invalid minister data received after vote:', data)
+            // Don't clear existing data
+          }
+        } else {
+          console.error('Failed to fetch minister after vote:', response.status)
+          // Don't clear existing data if update fails
         }
       } catch (error) {
         console.error('Error fetching minister after vote:', error)
+        // Don't clear existing data if update fails
       }
     }
 
-    window.addEventListener('voteSubmitted', handleVoteUpdate)
+    // Add a small delay before listening to avoid catching stale events
+    const timeoutId = setTimeout(() => {
+      window.addEventListener('voteSubmitted', handleVoteUpdate)
+    }, 100)
+
     return () => {
+      clearTimeout(timeoutId)
       window.removeEventListener('voteSubmitted', handleVoteUpdate)
     }
   }, [params.id])
 
+  // Debug: Log minister state changes
+  useEffect(() => {
+    if (minister) {
+      console.log('Minister data updated:', {
+        id: minister.id,
+        name: minister.fullName,
+        photoUrl: minister.photoUrl,
+        hasPhotoUrl: !!minister.photoUrl && minister.photoUrl.trim() !== '',
+        imageError,
+        hasInitialData: hasInitialData.current
+      })
+    } else {
+      console.log('Minister data cleared', { hasInitialData: hasInitialData.current })
+    }
+  }, [minister, imageError])
+
   // GSAP Animations
   useEffect(() => {
-    if (!minister || loading) return
+    if (!minister || loading || !hasInitialData.current) {
+      console.log('GSAP: Skipping animation', { hasMinister: !!minister, loading, hasInitialData: hasInitialData.current })
+      return
+    }
+
+    console.log('GSAP: Starting animations for minister:', minister.id)
 
     // Register GSAP plugins
     try {
@@ -504,6 +623,8 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
     const ctx = gsap.context(() => {
       // Hero card entrance animation
       if (heroRef.current) {
+        // Ensure element is visible before animating
+        gsap.set(heroRef.current, { opacity: 1, visibility: 'visible' })
         gsap.from(heroRef.current, {
           opacity: 0,
           y: 50,
@@ -514,6 +635,8 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
 
       // Photo animation with scale and rotation
       if (photoRef.current) {
+        // Ensure element is visible before animating
+        gsap.set(photoRef.current, { opacity: 1, visibility: 'visible' })
         gsap.from(photoRef.current, {
           opacity: 0,
           scale: 0.8,
@@ -536,6 +659,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
 
       // Name animation with text reveal
       if (nameRef.current) {
+        gsap.set(nameRef.current, { opacity: 1, visibility: 'visible' })
         gsap.from(nameRef.current, {
           opacity: 0,
           x: -30,
@@ -547,6 +671,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
 
       // Portfolio animation
       if (portfolioRef.current) {
+        gsap.set(portfolioRef.current, { opacity: 1, visibility: 'visible' })
         gsap.from(portfolioRef.current, {
           opacity: 0,
           y: 20,
@@ -558,6 +683,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
 
       // Bio animation
       if (bioRef.current) {
+        gsap.set(bioRef.current, { opacity: 1, visibility: 'visible' })
         gsap.from(bioRef.current, {
           opacity: 0,
           y: 20,
@@ -569,6 +695,9 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
 
       // Action buttons animation
       if (buttonsRef.current) {
+        Array.from(buttonsRef.current.children).forEach((child) => {
+          gsap.set(child, { opacity: 1, visibility: 'visible' })
+        })
         gsap.from(buttonsRef.current.children, {
           opacity: 0,
           y: 20,
@@ -652,6 +781,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
     }, heroRef)
 
     return () => {
+      console.log('GSAP: Cleaning up animations')
       ctx.revert()
     }
   }, [minister, loading])
@@ -808,7 +938,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                     <div className="relative w-full h-full rounded-2xl overflow-hidden z-10 bg-slate-200 dark:bg-slate-700" style={{ minHeight: '100%' }}>
                       {minister.photoUrl && minister.photoUrl.trim() !== '' && !imageError ? (
                         <Image
-                          key={minister.photoUrl}
+                          key={`${minister.id}-${minister.photoUrl}`}
                           src={minister.photoUrl}
                           alt={minister.fullName}
                           fill
@@ -817,17 +947,23 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                           priority
                           unoptimized={true}
                           onError={(e) => {
-                            console.error('Image failed to load:', minister.photoUrl)
+                            console.error('Image failed to load:', minister.photoUrl, e)
                             setImageError(true)
                           }}
                           onLoad={() => {
                             console.log('Image loaded successfully:', minister.photoUrl)
-                            setImageError(false)
+                            // Only reset error if it was previously set
+                            setImageError(prev => prev ? false : prev)
                           }}
                         />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center bg-slate-200 dark:bg-slate-700 rounded-2xl">
                           <Users className="w-16 h-16 text-slate-400 dark:text-slate-500" />
+                          {minister.photoUrl && (
+                            <div className="absolute bottom-2 left-2 right-2 text-xs text-slate-500 text-center">
+                              {imageError ? 'Image failed to load' : 'Loading image...'}
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
