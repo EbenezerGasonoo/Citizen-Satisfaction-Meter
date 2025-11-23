@@ -2,9 +2,13 @@
 
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts'
 import { TrendingUp, TrendingDown, Users, Vote, Target, Calendar } from 'lucide-react'
 import PolicyAnalytics from '@/components/PolicyAnalytics'
+import GeographicHeatmap from '@/components/analytics/GeographicHeatmap'
+import ComparativeAnalytics from '@/components/analytics/ComparativeAnalytics'
+import PeakVotingTimes from '@/components/analytics/PeakVotingTimes'
+import DeviceStats from '@/components/analytics/DeviceStats'
 
 interface AnalyticsData {
   nationalScore: {
@@ -243,6 +247,44 @@ export default function AdminAnalyticsClient() {
                 <Bar dataKey="satisfactionRate" fill="#8884d8" />
               </BarChart>
             </ResponsiveContainer>
+          </motion.div>
+        </div>
+
+        {/* New Analytics Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65 }}
+          >
+            <GeographicHeatmap />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65 }}
+          >
+            <PeakVotingTimes />
+          </motion.div>
+        </div>
+
+        <div className="mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+          >
+            <ComparativeAnalytics />
+          </motion.div>
+        </div>
+
+        <div className="mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.75 }}
+          >
+            <DeviceStats />
           </motion.div>
         </div>
 

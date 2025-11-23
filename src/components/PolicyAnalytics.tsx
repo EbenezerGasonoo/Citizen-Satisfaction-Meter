@@ -2,13 +2,19 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { 
-  TrendingUp, 
-  DollarSign, 
-  Target, 
+import {
+  TrendingUp,
+  DollarSign,
+  Target,
   BarChart3,
-  Activity
+  Activity,
+  Map,
+  Smartphone
 } from 'lucide-react'
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, Legend
+} from 'recharts'
 
 interface PolicyAnalytics {
   totalPolicies: number
@@ -31,6 +37,14 @@ interface PolicyAnalytics {
     status: string
     count: number
   }[]
+  geographicBreakdown: {
+    region: string
+    count: number
+  }[]
+  deviceBreakdown: {
+    device: string
+    count: number
+  }[]
   topPolicies: {
     id: number
     title: string
@@ -45,6 +59,8 @@ interface PolicyAnalytics {
     timestamp: string
   }[]
 }
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82ca9d']
 
 export default function PolicyAnalytics() {
   const [analytics, setAnalytics] = useState<PolicyAnalytics | null>(null)
@@ -95,25 +111,6 @@ export default function PolicyAnalytics() {
       </div>
     )
   }
-
-  // const getStatusColor = (status: string) => {
-  //   switch (status) {
-  //     case 'Active': return 'text-green-600 dark:text-green-400'
-  //     case 'Completed': return 'text-blue-600 dark:text-blue-400'
-  //     case 'Planned': return 'text-yellow-600 dark:text-yellow-400'
-  //     case 'Suspended': return 'text-red-600 dark:text-red-400'
-  //     default: return 'text-gray-600 dark:text-gray-400'
-  //   }
-  // }
-
-  // const getImpactColor = (impact: string) => {
-  //   switch (impact) {
-  //     case 'High': return 'text-red-600 dark:text-red-400'
-  //     case 'Medium': return 'text-yellow-600 dark:text-yellow-400'
-  //     case 'Low': return 'text-green-600 dark:text-green-400'
-  //     default: return 'text-gray-600 dark:text-gray-400'
-  //   }
-  // }
 
   return (
     <div className="space-y-8">
@@ -212,6 +209,85 @@ export default function PolicyAnalytics() {
         </motion.div>
       </div>
 
+      {/* New Charts: Geographic & Device */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Geographic Heatmap */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-200 dark:border-gray-700"
+        >
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+            <Map className="w-5 h-5 mr-2 text-blue-500" />
+            Votes by Region
+          </h3>
+          <div className="h-[300px]">
+            {analytics.geographicBreakdown.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={analytics.geographicBreakdown} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis type="number" />
+                  <YAxis dataKey="region" type="category" width={100} />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#8884d8">
+                    {analytics.geographicBreakdown.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-gray-500">
+                No geographic data available
+              </div>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Device Stats */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-200 dark:border-gray-700"
+        >
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+            <Smartphone className="w-5 h-5 mr-2 text-green-500" />
+            Votes by Device
+          </h3>
+          <div className="h-[300px]">
+            {analytics.deviceBreakdown.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={analytics.deviceBreakdown}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    paddingAngle={5}
+                    dataKey="count"
+                    nameKey="device"
+                  >
+                    {analytics.deviceBreakdown.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-gray-500">
+                No device data available
+              </div>
+            )}
+          </div>
+        </motion.div>
+      </div>
+
       {/* Charts and Breakdowns */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Category Breakdown */}
@@ -258,10 +334,9 @@ export default function PolicyAnalytics() {
             {analytics.impactBreakdown.map((impact) => (
               <div key={impact.impact} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className={`w-3 h-3 rounded-full ${
-                    impact.impact === 'High' ? 'bg-red-500' :
-                    impact.impact === 'Medium' ? 'bg-yellow-500' : 'bg-green-500'
-                  }`}></div>
+                  <div className={`w-3 h-3 rounded-full ${impact.impact === 'High' ? 'bg-red-500' :
+                      impact.impact === 'Medium' ? 'bg-yellow-500' : 'bg-green-500'
+                    }`}></div>
                   <span className="text-sm text-gray-700 dark:text-gray-300">
                     {impact.impact}
                   </span>
@@ -369,4 +444,4 @@ export default function PolicyAnalytics() {
       </motion.div>
     </div>
   )
-} 
+}

@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
 import crypto from 'crypto'
-
-const prisma = new PrismaClient()
 
 function generateClientHash(request: NextRequest): string {
   const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
@@ -16,6 +14,16 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     const policyId = parseInt(params.id)
     const { positive } = await request.json()
     const clientHash = generateClientHash(request)
+
+    // Extract User Agent & Device Type
+    const userAgent = request.headers.get('user-agent') || 'unknown'
+    const deviceType = /mobile|android|iphone|ipad|phone/i.test(userAgent) ? 'Mobile' : 'Desktop'
+
+    // Extract Geo headers (Vercel specific)
+    const country = request.headers.get('x-vercel-ip-country')
+    const region = request.headers.get('x-vercel-ip-region')
+    const city = request.headers.get('x-vercel-ip-city')
+    const ipAddress = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
 
     // Check if already voted
     const existing = await prisma.policyVote.findUnique({
@@ -31,9 +39,19 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       return NextResponse.json({ error: 'Policy not found' }, { status: 404 })
     }
 
-    // Create vote
+    // Create vote with analytics data
     await prisma.policyVote.create({
-      data: { policyId, positive, clientHash }
+      data: {
+        policyId,
+        positive,
+        clientHash,
+        ipAddress,
+        country,
+        region,
+        city,
+        userAgent,
+        deviceType
+      }
     })
 
     // Return updated stats
@@ -47,4 +65,4 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     console.error('Error voting on policy:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
-} 
+}

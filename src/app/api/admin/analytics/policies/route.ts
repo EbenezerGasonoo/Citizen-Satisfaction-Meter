@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     // Calculate date range
     const now = new Date()
     let startDate: Date
-    
+
     switch (range) {
       case '7d':
         startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
@@ -60,11 +60,11 @@ export async function GET(request: NextRequest) {
     const completedPolicies = policies.filter((p: any) => p.status === 'Completed').length
     const totalBudget = policies.reduce((sum: number, p: any) => sum + (p.budget || 0), 0)
     const totalVotes = policies.reduce((sum: number, p: any) => sum + p.votes.length, 0)
-    
+
     // Calculate average satisfaction
     let totalSatisfaction = 0
     let policiesWithVotes = 0
-    
+
     policies.forEach((policy: any) => {
       if (policy.votes.length > 0) {
         const positiveVotes = policy.votes.filter((v: any) => v.positive).length
@@ -72,12 +72,12 @@ export async function GET(request: NextRequest) {
         policiesWithVotes++
       }
     })
-    
+
     const averageSatisfaction = policiesWithVotes > 0 ? Math.round(totalSatisfaction / policiesWithVotes) : 0
 
     // Category breakdown
     const categoryMap = new Map<string, { count: number; totalVotes: number; positiveVotes: number }>()
-    
+
     policies.forEach((policy: any) => {
       const existing = categoryMap.get(policy.category) || { count: 0, totalVotes: 0, positiveVotes: 0 }
       existing.count++
@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
 
     // Impact breakdown
     const impactMap = new Map<string, { count: number; totalVotes: number; positiveVotes: number }>()
-    
+
     policies.forEach((policy: any) => {
       const existing = impactMap.get(policy.impact) || { count: 0, totalVotes: 0, positiveVotes: 0 }
       existing.count++
@@ -120,12 +120,37 @@ export async function GET(request: NextRequest) {
       count
     }))
 
+    // Geographic Breakdown (by Region)
+    const regionMap = new Map<string, number>()
+    policies.forEach((policy: any) => {
+      policy.votes.forEach((vote: any) => {
+        if (vote.region) {
+          regionMap.set(vote.region, (regionMap.get(vote.region) || 0) + 1)
+        }
+      })
+    })
+    const geographicBreakdown = Array.from(regionMap.entries())
+      .map(([region, count]) => ({ region, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10)
+
+    // Device Breakdown
+    const deviceMap = new Map<string, number>()
+    policies.forEach((policy: any) => {
+      policy.votes.forEach((vote: any) => {
+        const type = vote.deviceType || 'Unknown'
+        deviceMap.set(type, (deviceMap.get(type) || 0) + 1)
+      })
+    })
+    const deviceBreakdown = Array.from(deviceMap.entries())
+      .map(([device, count]) => ({ device, count }))
+
     // Top performing policies
     const policiesWithSatisfaction = policies.map((policy: any) => {
       const totalVotes = policy.votes.length
       const positiveVotes = policy.votes.filter((v: any) => v.positive).length
       const satisfactionRate = totalVotes > 0 ? Math.round((positiveVotes / totalVotes) * 100) : 0
-      
+
       return {
         id: policy.id,
         title: policy.title,
@@ -155,6 +180,8 @@ export async function GET(request: NextRequest) {
       categoryBreakdown,
       impactBreakdown,
       statusBreakdown,
+      geographicBreakdown,
+      deviceBreakdown,
       topPolicies: policiesWithSatisfaction,
       recentActivity
     }
@@ -167,4 +194,4 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     )
   }
-} 
+}

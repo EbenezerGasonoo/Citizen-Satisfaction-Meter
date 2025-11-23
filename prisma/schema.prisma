@@ -45,12 +45,19 @@ model PolicyVote {
   policyId   Int
   positive   Boolean
   clientHash String
+  ipAddress  String?
+  country    String?
+  region     String?
+  city       String?
+  userAgent  String?
+  deviceType String?
   createdAt  DateTime @default(now())
   policy     Policy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
 
   @@unique([policyId, clientHash])
   @@index([policyId])
   @@index([clientHash])
+  @@index([deviceType])
 }
 
 model Vote {
@@ -62,12 +69,15 @@ model Vote {
   country    String?
   region     String?
   city       String?
+  userAgent  String?
+  deviceType String?
   createdAt  DateTime @default(now())
   minister   Minister @relation(fields: [ministerId], references: [id], onDelete: Cascade)
 
   @@index([ministerId])
   @@index([clientHash])
   @@index([createdAt])
+  @@index([deviceType])
 }
 
 model Favorite {

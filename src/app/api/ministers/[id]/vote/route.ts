@@ -11,9 +11,9 @@ export async function POST(
     console.log('Vote API called with minister ID:', params.id)
     const { positive } = await request.json()
     const ministerId = parseInt(params.id)
-    
+
     console.log('Parsed minister ID:', ministerId, 'Positive:', positive)
-    
+
     if (isNaN(ministerId)) {
       console.log('Invalid minister ID:', params.id)
       return NextResponse.json(
@@ -26,18 +26,25 @@ export async function POST(
     console.log('Testing database connection...')
     const ministerCount = await prisma.minister.count()
     console.log('Total ministers in database:', ministerCount)
-    
+
     // Get client information
     const ip = getClientIP(request)
     const userAgent = request.headers.get('user-agent') || ''
     const clientHash = hashClient(ip, userAgent)
-    
+
+    // Get geo info from headers (Vercel)
+    const geo = {
+      country: request.headers.get('x-vercel-ip-country') || null,
+      region: request.headers.get('x-vercel-ip-region') || null,
+      city: request.headers.get('x-vercel-ip-city') || null
+    }
+
     console.log('Client info - IP:', ip, 'UserAgent:', userAgent.substring(0, 50), 'Hash:', clientHash.substring(0, 20) + '...')
 
     // Check if minister exists and if user already voted today in one query
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    
+
     const tomorrow = new Date(today)
     tomorrow.setDate(tomorrow.getDate() + 1)
 
@@ -74,16 +81,26 @@ export async function POST(
         throw new Error('Already voted today')
       }
 
+      // Determine device type
+      const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent)
+      const deviceType = isMobile ? 'Mobile' : 'Desktop'
+
       // Create the vote
-      console.log('Creating vote with data:', { ministerId, positive, clientHash: clientHash.substring(0, 20) + '...' })
+      console.log('Creating vote with data:', { ministerId, positive, clientHash: clientHash.substring(0, 20) + '...', ipAddress: ip, country: geo.country, region: geo.region, city: geo.city, userAgent: userAgent.substring(0, 50), deviceType })
       const vote = await tx.vote.create({
         data: {
           ministerId,
           positive,
           clientHash,
+          ipAddress: ip,
+          country: geo.country,
+          region: geo.region,
+          city: geo.city,
+          userAgent,
+          deviceType,
         },
       })
-      
+
       console.log('✅ Vote created in transaction:', vote.id)
 
       return vote
@@ -108,7 +125,7 @@ export async function POST(
       stack: error instanceof Error ? error.stack : undefined,
       name: error instanceof Error ? error.name : undefined
     })
-    
+
     // Handle specific transaction errors
     if (error instanceof Error) {
       if (error.message === 'Minister not found') {
@@ -124,7 +141,7 @@ export async function POST(
         )
       }
     }
-    
+
     return NextResponse.json(
       { error: 'Failed to create vote', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
