@@ -423,96 +423,79 @@ const getSocialMediaLinks = (fullName: string, portfolio: string) => {
   let website = null
 
   if (portfolioLower.includes('president') && !portfolioLower.includes('vice')) {
-    twitter = 'https://twitter.com/NAkufoAddo'
     facebook = 'https://facebook.com/PresidencyGhana'
     website = 'https://presidency.gov.gh'
   } else if (portfolioLower.includes('vice president')) {
-    twitter = 'https://twitter.com/VPBawumia'
     facebook = 'https://facebook.com/VicePresidentGhana'
     website = 'https://veep.gov.gh'
   } else if (portfolioLower.includes('finance') || portfolioLower.includes('economic')) {
-    twitter = 'https://twitter.com/FinanceGhana'
+    twitter = 'https://twitter.com/mofepgh'
     facebook = 'https://facebook.com/MinistryofFinanceGhana'
     website = 'https://mofep.gov.gh'
   } else if (portfolioLower.includes('education')) {
-    twitter = 'https://twitter.com/GhanaEducation'
-    facebook = 'https://facebook.com/MinistryofEducationGhana'
+    twitter = 'https://twitter.com/officialmoegov'
+    // Facebook available on curriculumresources.edu.gh
     website = 'https://moe.gov.gh'
   } else if (portfolioLower.includes('health')) {
-    twitter = 'https://twitter.com/GHSOfficial'
-    facebook = 'https://facebook.com/GhanaHealthService'
+    // Social links available on moh.gov.gh
     website = 'https://moh.gov.gh'
   } else if (portfolioLower.includes('foreign')) {
-    twitter = 'https://twitter.com/GhanaForeignMin'
-    facebook = 'https://facebook.com/MinistryofForeignAffairsGhana'
+    // Social links available on mfa.gov.gh
+    facebook = 'https://facebook.com/MinistryOfForeignAffairsGhana'
     website = 'https://mfa.gov.gh'
   } else if (portfolioLower.includes('interior')) {
-    twitter = 'https://twitter.com/GhanaPoliceService'
-    facebook = 'https://facebook.com/GhanaPoliceService'
+    twitter = 'https://twitter.com/mintergh'
+    facebook = 'https://facebook.com/MinistryoftheInteriorGhana'
     website = 'https://mint.gov.gh'
   } else if (portfolioLower.includes('justice') || portfolioLower.includes('attorney')) {
-    twitter = 'https://twitter.com/AGDeptGhana'
-    facebook = 'https://facebook.com/AttorneyGeneralGhana'
-    website = 'https://mojag.gov.gh'
+    // Social media links available on mojagd.gov.gh and ghana.gov.gh
+    website = 'https://mojagd.gov.gh'
   } else if (portfolioLower.includes('energy')) {
-    twitter = 'https://twitter.com/EnergyMinGhana'
+    twitter = 'https://twitter.com/energy_min'
     facebook = 'https://facebook.com/MinistryofEnergyGhana'
     website = 'https://energymin.gov.gh'
   } else if (portfolioLower.includes('transport')) {
-    twitter = 'https://twitter.com/GhanaTransport'
-    facebook = 'https://facebook.com/MinistryofTransportGhana'
+    // Social media section exists on mot.gov.gh but handles not prominently displayed
     website = 'https://mot.gov.gh'
   } else if (portfolioLower.includes('roads') || portfolioLower.includes('highways')) {
-    twitter = 'https://twitter.com/GhanaRoads'
-    facebook = 'https://facebook.com/MinistryofRoadsGhana'
+    // No prominent social media found
     website = 'https://mrh.gov.gh'
   } else if (portfolioLower.includes('communication') || portfolioLower.includes('digitisation')) {
-    twitter = 'https://twitter.com/MinComGhana'
-    facebook = 'https://facebook.com/MinistryofCommunicationsGhana'
+    // Facebook and Twitter accounts available via ghana.gov.gh
     website = 'https://moc.gov.gh'
   } else if (portfolioLower.includes('food') || portfolioLower.includes('agriculture')) {
-    twitter = 'https://twitter.com/MoFAGhana_'
-    facebook = 'https://facebook.com/MoFAGhana'
+    twitter = 'https://twitter.com/mofaghana'
     website = 'https://mofa.gov.gh'
   } else if (portfolioLower.includes('fisheries') || portfolioLower.includes('aquaculture')) {
-    twitter = 'https://twitter.com/FisheriesGhana'
-    facebook = 'https://facebook.com/MinistryofFisheriesGhana'
+    // Facebook and Twitter accounts available via ghana.gov.gh
     website = 'https://mofad.gov.gh'
   } else if (portfolioLower.includes('trade') || portfolioLower.includes('industry')) {
-    twitter = 'https://twitter.com/GhanaTrade'
-    facebook = 'https://facebook.com/MinistryofTradeGhana'
+    twitter = 'https://twitter.com/motighana'
     website = 'https://moti.gov.gh'
   } else if (portfolioLower.includes('lands') || portfolioLower.includes('natural resources')) {
-    twitter = 'https://twitter.com/LandsGhana'
-    facebook = 'https://facebook.com/MinistryofLandsGhana'
+    twitter = 'https://twitter.com/mlnrgovgh'
     website = 'https://mlnr.gov.gh'
   } else if (portfolioLower.includes('local government') || portfolioLower.includes('chieftaincy')) {
-    twitter = 'https://twitter.com/LocalGovGhana'
-    facebook = 'https://facebook.com/MinistryofLocalGovernmentGhana'
+    twitter = 'https://twitter.com/mlgrdgov'
+    // Facebook feed embedded on mlgrd.gov.gh
     website = 'https://mlgrd.gov.gh'
   } else if (portfolioLower.includes('tourism') || portfolioLower.includes('culture') || portfolioLower.includes('creative arts')) {
-    twitter = 'https://twitter.com/TourismGhana'
-    facebook = 'https://facebook.com/GhanaTourismAuthority'
+    // Facebook and X links available on motcca.gov.gh contact page
     website = 'https://motcca.gov.gh'
   } else if (portfolioLower.includes('labour') || portfolioLower.includes('employment')) {
-    twitter = 'https://twitter.com/LabourGhana'
-    facebook = 'https://facebook.com/MinistryofLabourGhana'
+    facebook = 'https://facebook.com/melr.gov'
     website = 'https://melr.gov.gh'
   } else if (portfolioLower.includes('works') || portfolioLower.includes('housing') || portfolioLower.includes('water')) {
-    twitter = 'https://twitter.com/WorksGhana'
-    facebook = 'https://facebook.com/MinistryofWorksGhana'
-    website = 'https://mwh.gov.gh'
-  } else if (portfolioLower.includes('youth') || portfolioLower.includes('empowerment')) {
-    twitter = 'https://twitter.com/YouthGhana'
-    facebook = 'https://facebook.com/MinistryofYouthGhana'
-    website = 'https://mys.gov.gh'
+    // Facebook, Twitter, and Instagram available via ghana.gov.gh and mwhwr.gov.gh
+    website = 'https://mwhwr.gov.gh'
+  } else if (portfolioLower.includes('youth') && portfolioLower.includes('empowerment')) {
+    facebook = 'https://facebook.com/moys.gov.gh'
+    website = 'https://nya.gov.gh'
   } else if (portfolioLower.includes('sports') || portfolioLower.includes('recreation')) {
-    twitter = 'https://twitter.com/SportsGhana'
-    facebook = 'https://facebook.com/MinistryofSportsGhana'
-    website = 'https://mys.gov.gh'
+    facebook = 'https://facebook.com/moys.gov.gh'
+    website = 'https://mosr.gov.gh'
   } else if (portfolioLower.includes('gender') || portfolioLower.includes('children') || portfolioLower.includes('social protection')) {
-    twitter = 'https://twitter.com/GenderGhana'
-    facebook = 'https://facebook.com/MinistryofGenderGhana'
+    // Facebook posts displayed on mogcsp.gov.gh
     website = 'https://mogcsp.gov.gh'
   }
 
