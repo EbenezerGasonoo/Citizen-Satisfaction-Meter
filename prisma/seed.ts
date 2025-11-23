@@ -179,26 +179,33 @@ const ministers = [
 ]
 
 export async function main() {
-  console.log('🌱 Starting database seed...')
+  console.log('🌱 Starting SAFE database seed (Votes Preserved)...')
 
-  // Clear existing data (order matters due to foreign key constraints)
-  await prisma.actionVote.deleteMany();
-  await prisma.policyVote.deleteMany();
-  await prisma.vote.deleteMany();
-  await prisma.favorite.deleteMany();
-  await prisma.comment.deleteMany();
-  await prisma.policy.deleteMany();
-  await prisma.action.deleteMany();
-  await prisma.minister.deleteMany();
-
-  // Create ministers
+  // 1. Update or Create Ministers (Preserving IDs and Votes)
+  console.log('🔄 Syncing ministers...')
   for (const minister of ministers) {
-    await prisma.minister.create({ data: minister })
+    // Check if minister exists by name
+    const existing = await prisma.minister.findFirst({
+      where: { fullName: minister.fullName }
+    })
+
+    if (existing) {
+      // Update existing minister (keeps ID and relations)
+      await prisma.minister.update({
+        where: { id: existing.id },
+        data: minister,
+      })
+    } else {
+      // Create new minister
+      console.log(`   Creating new minister: ${minister.fullName}`)
+      await prisma.minister.create({
+        data: minister,
+      })
+    }
   }
+  console.log(`✅ Synced ${ministers.length} ministers`)
 
-  console.log(`✅ Seeded ${ministers.length} ministers`)
-
-  // Create default admin user
+  // 2. Ensure Admin User Exists
   const adminEmail = 'eg@entechnologygh.com'
   const adminPassword = 'G@$onoog33ky'
   const hashedPassword = await bcrypt.hash(adminPassword, 10)
@@ -212,62 +219,9 @@ export async function main() {
       name: 'Ebenezer Gasonoo',
     },
   })
-
   console.log('✅ Created/verified admin user')
 
-  // Seed sample votes for testing
-  const allMinisters = await prisma.minister.findMany()
-  if (allMinisters.length > 0) {
-    console.log('📊 Seeding sample votes...')
-    
-    const sampleVotes = []
-    const now = new Date()
-    
-    // Create votes for each minister with varied satisfaction
-    for (let i = 0; i < allMinisters.length; i++) {
-      const minister = allMinisters[i]
-      const voteCount = Math.floor(Math.random() * 50) + 10 // 10-60 votes per minister
-      const positiveRatio = 0.3 + Math.random() * 0.5 // 30-80% positive
-      const positiveCount = Math.floor(voteCount * positiveRatio)
-      
-      // Create votes spread over the last 30 days
-      for (let j = 0; j < voteCount; j++) {
-        const daysAgo = Math.floor(Math.random() * 30)
-        const voteDate = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000)
-        const isPositive = j < positiveCount
-        
-        // Create real votes (not demo votes) so they show up in the dashboard
-        // Using a hash that doesn't start with 'demo_vote'
-        const crypto = require('crypto')
-        const hashInput = `${minister.id}_${j}_${Date.now()}_${Math.random()}`
-        const clientHash = crypto.createHash('sha256').update(hashInput).digest('hex').substring(0, 40)
-        
-        sampleVotes.push({
-          ministerId: minister.id,
-          positive: isPositive,
-          clientHash: clientHash,
-          createdAt: voteDate,
-        })
-      }
-    }
-    
-    // Insert votes in batches to avoid overwhelming the database
-    const batchSize = 100
-    for (let i = 0; i < sampleVotes.length; i += batchSize) {
-      const batch = sampleVotes.slice(i, i + batchSize)
-      await prisma.vote.createMany({
-        data: batch,
-        skipDuplicates: true,
-      })
-      console.log(`  ✅ Created ${Math.min(i + batchSize, sampleVotes.length)}/${sampleVotes.length} votes...`)
-    }
-    
-    console.log(`✅ Seeded ${sampleVotes.length} sample votes across ${allMinisters.length} ministers`)
-  } else {
-    console.log('⚠️  No ministers found, skipping vote seeding')
-  }
-
-  console.log('🎉 Database seeding completed!')
+  console.log('🔒 Safe seed completed. Real votes preserved.')
 }
 
 main()
