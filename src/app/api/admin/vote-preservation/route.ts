@@ -13,7 +13,15 @@ export async function GET(request: NextRequest) {
 
     if (action === 'status') {
       // Get vote integrity status
-      const integrity = await voteBackupManager.verifyVoteIntegrity()
+      const integrityResult = await voteBackupManager.verifyVoteIntegrity()
+
+      const integrity = {
+        isValid: integrityResult.isValid,
+        totalVotes: integrityResult.statistics.totalVotes,
+        corruptedVotes: integrityResult.issues.length,
+        lastCheck: new Date().toISOString()
+      }
+
       return NextResponse.json({ integrity })
     }
 

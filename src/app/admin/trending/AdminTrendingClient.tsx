@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Users, 
-  Clock, 
+import {
+  TrendingUp,
+  TrendingDown,
+  Users,
+  Clock,
   Target,
   RefreshCw,
   Settings,
@@ -77,7 +77,7 @@ export default function AdminTrendingClient() {
       const [candidatesRes, ministersRes, analyticsRes] = await Promise.all([
         fetch('/api/admin/trending'),
         fetch('/api/ministers/trending'),
-        fetch('/api/admin/trending?analytics=true')
+        fetch('/api/admin/trending?action=analytics')
       ])
 
       if (candidatesRes.ok) {
@@ -266,7 +266,7 @@ export default function AdminTrendingClient() {
                 <div className="ml-4">
                   <p className="text-sm text-gray-500">Velocity</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {analytics.voteVelocity}%
+                    {analytics.voteVelocity.toFixed(1)}%
                   </p>
                 </div>
               </div>
@@ -365,11 +365,10 @@ export default function AdminTrendingClient() {
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    minister.trend === 'up' 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-red-100 text-red-800'
-                  }`}>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${minister.trend === 'up'
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-red-100 text-red-800'
+                    }`}>
                     {minister.trend === 'up' ? '↗' : '↘'} {minister.voteChange}
                   </span>
                   <span className="text-sm text-gray-500">{minister.satisfactionRate}%</span>
@@ -385,7 +384,7 @@ export default function AdminTrendingClient() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-semibold mb-4">Trending Settings</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">

@@ -48,16 +48,16 @@ export async function calculateTrendingMinisters(criteria: TrendingCriteria = DE
   for (const minister of ministers) {
     // Check total votes first
     const totalVotes = minister.votes.length
-    
+
     // Skip if not enough total votes
     if (totalVotes < criteria.minTotalVotes) {
       continue
     }
-    
+
     // Filter votes by time windows
     const votes24h = minister.votes.filter(v => v.createdAt >= last24h)
     const votes48h = minister.votes.filter(v => v.createdAt >= last48h)
-    
+
     const totalVotes24h = votes24h.length
     const positiveVotes24h = votes24h.filter(v => v.positive).length
     const satisfactionRate24h = totalVotes24h > 0 ? (positiveVotes24h / totalVotes24h) * 100 : 0
@@ -148,9 +148,11 @@ export async function getTrendingAnalytics() {
   const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000)
   const lastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
 
-  const totalVotes24h = await prisma.vote.count({
+  const votes24h = await prisma.vote.findMany({
     where: { createdAt: { gte: last24h } }
   })
+
+  const totalVotes24h = votes24h.length
 
   const totalVotesWeek = await prisma.vote.count({
     where: { createdAt: { gte: lastWeek } }
@@ -160,11 +162,38 @@ export async function getTrendingAnalytics() {
     where: { isTrending: true }
   })
 
+  // Calculate hourly votes
+  const hourlyVotesMap = new Map<string, number>()
+  for (let i = 0; i < 24; i++) {
+    const d = new Date(now.getTime() - i * 60 * 60 * 1000)
+    const hour = d.getHours().toString().padStart(2, '0') + ':00'
+    hourlyVotesMap.set(hour, 0)
+  }
+
+  votes24h.forEach(vote => {
+    const hour = vote.createdAt.getHours().toString().padStart(2, '0') + ':00'
+    if (hourlyVotesMap.has(hour)) {
+      hourlyVotesMap.set(hour, (hourlyVotesMap.get(hour) || 0) + 1)
+    }
+  })
+
+  const hourlyVotes = Array.from(hourlyVotesMap.entries())
+    .map(([hour, count]) => ({ hour, count }))
+    .reverse()
+
+  // Get top trending
+  const trendingCandidates = await calculateTrendingMinisters()
+  const topTrending = trendingCandidates
+    .slice(0, 5)
+    .map(c => ({ name: c.fullName, score: c.trendingScore }))
+
   return {
     totalVotes24h,
     totalVotesWeek,
     trendingMinisters,
     voteVelocity: totalVotes24h / 24,
-    weeklyVelocity: totalVotesWeek / (7 * 24)
+    weeklyVelocity: totalVotesWeek / (7 * 24),
+    hourlyVotes,
+    topTrending
   }
 }

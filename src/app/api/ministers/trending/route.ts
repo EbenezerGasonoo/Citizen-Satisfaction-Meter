@@ -6,7 +6,7 @@ export async function GET() {
   try {
     // Get automatically calculated trending ministers
     const trendingCandidates = await calculateTrendingMinisters()
-    
+
     // Get ministers marked as trending by admins
     const adminTrendingMinisters = await prisma.minister.findMany({
       where: {
