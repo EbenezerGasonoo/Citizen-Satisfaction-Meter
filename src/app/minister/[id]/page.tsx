@@ -10,11 +10,12 @@ import ActionSection from '@/components/ActionSection'
 import { motion, AnimatePresence } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { 
-  ArrowLeft, TrendingUp, TrendingDown, Award, BarChart3, 
-  Calendar, Clock, Users, Activity, 
+import { XLogo } from '@/components/icons/XLogo'
+import {
+  ArrowLeft, TrendingUp, TrendingDown, Award, BarChart3,
+  Calendar, Clock, Users, Activity,
   Target, TrendingUp as TrendingIcon, Star, Briefcase,
-  FileText, Zap, Shield, Globe, MapPin, Twitter,
+  FileText, Zap, Shield, Globe, MapPin,
   Facebook, Instagram, Linkedin, Mail, Building2
 } from 'lucide-react'
 
@@ -34,7 +35,7 @@ interface MinisterDetail {
 // Portfolio to Department Responsibilities mapping
 const getPortfolioResponsibilities = (portfolio: string) => {
   const portfolioLower = portfolio.toLowerCase()
-  
+
   if (portfolioLower.includes('finance') || portfolioLower.includes('economic')) {
     return {
       department: 'Ministry of Finance & Economic Planning',
@@ -51,7 +52,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['GDP Growth', 'Budget Deficit', 'Inflation Rate', 'Public Debt'],
     }
   }
-  
+
   if (portfolioLower.includes('education')) {
     return {
       department: 'Ministry of Education',
@@ -68,7 +69,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Literacy Rate', 'School Enrollment', 'Teacher-Student Ratio', 'Education Budget'],
     }
   }
-  
+
   if (portfolioLower.includes('health')) {
     return {
       department: 'Ministry of Health',
@@ -85,7 +86,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Life Expectancy', 'Infant Mortality', 'Health Coverage', 'Hospital Bed Capacity'],
     }
   }
-  
+
   if (portfolioLower.includes('foreign') || portfolioLower.includes('international')) {
     return {
       department: 'Ministry of Foreign Affairs & Regional Integration',
@@ -102,7 +103,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Bilateral Agreements', 'Trade Partnerships', 'International Aid', 'Diplomatic Missions'],
     }
   }
-  
+
   if (portfolioLower.includes('interior')) {
     return {
       department: 'Ministry of the Interior',
@@ -119,7 +120,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Crime Rate', 'Police Response Time', 'Immigration Processing', 'Border Security'],
     }
   }
-  
+
   if (portfolioLower.includes('justice') || portfolioLower.includes('attorney')) {
     return {
       department: 'Ministry of Justice & Attorney General\'s Department',
@@ -136,7 +137,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Cases Handled', 'Legal Reforms', 'Prosecution Rate', 'Legal Aid Beneficiaries'],
     }
   }
-  
+
   if (portfolioLower.includes('energy')) {
     return {
       department: 'Ministry of Energy',
@@ -153,7 +154,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Power Generation', 'Energy Access', 'Renewable Energy %', 'Energy Efficiency'],
     }
   }
-  
+
   if (portfolioLower.includes('transport')) {
     return {
       department: 'Ministry of Transport',
@@ -170,7 +171,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Road Safety', 'Transport Infrastructure', 'Passenger Volume', 'Transport Efficiency'],
     }
   }
-  
+
   if (portfolioLower.includes('roads') || portfolioLower.includes('highways')) {
     return {
       department: 'Ministry of Roads & Highways',
@@ -187,7 +188,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Road Network Length', 'Road Condition Index', 'Road Safety', 'Construction Projects'],
     }
   }
-  
+
   if (portfolioLower.includes('food') || portfolioLower.includes('agriculture')) {
     return {
       department: 'Ministry of Food & Agriculture',
@@ -204,7 +205,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Food Production', 'Food Security', 'Farmer Support', 'Agricultural Exports'],
     }
   }
-  
+
   if (portfolioLower.includes('trade') || portfolioLower.includes('industry')) {
     return {
       department: 'Ministry of Trade & Industry',
@@ -221,7 +222,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Trade Volume', 'Industrial Growth', 'SME Support', 'Export Performance'],
     }
   }
-  
+
   if (portfolioLower.includes('communications') || portfolioLower.includes('digitization')) {
     return {
       department: 'Ministry of Communications, Digitisation & Innovation',
@@ -238,7 +239,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Digital Penetration', 'ICT Infrastructure', 'E-Government Services', 'Digital Literacy'],
     }
   }
-  
+
   if (portfolioLower.includes('local government') || portfolioLower.includes('chieftaincy')) {
     return {
       department: 'Ministry of Local Government, Chieftaincy & Religious Affairs',
@@ -255,7 +256,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Local Governance', 'Decentralization', 'MMDA Performance', 'Community Development'],
     }
   }
-  
+
   if (portfolioLower.includes('tourism') || portfolioLower.includes('culture')) {
     return {
       department: 'Ministry of Tourism, Culture & Creative Arts',
@@ -272,7 +273,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Tourist Arrivals', 'Tourism Revenue', 'Cultural Events', 'Heritage Sites'],
     }
   }
-  
+
   if (portfolioLower.includes('youth') || portfolioLower.includes('empowerment')) {
     return {
       department: 'Ministry of Youth Development & Empowerment',
@@ -289,7 +290,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Youth Employment', 'Skills Training', 'Youth Programs', 'Entrepreneurship Support'],
     }
   }
-  
+
   if (portfolioLower.includes('sports') || portfolioLower.includes('recreation')) {
     return {
       department: 'Ministry of Sports & Recreation',
@@ -306,7 +307,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Sports Infrastructure', 'Athlete Performance', 'Sports Events', 'Recreation Access'],
     }
   }
-  
+
   if (portfolioLower.includes('gender') || portfolioLower.includes('children') || portfolioLower.includes('social protection')) {
     return {
       department: 'Ministry of Gender, Children & Social Protection',
@@ -323,7 +324,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Gender Equality', 'Child Protection', 'Social Programs', 'Women Empowerment'],
     }
   }
-  
+
   if (portfolioLower.includes('lands') || portfolioLower.includes('natural resources')) {
     return {
       department: 'Ministry of Lands & Natural Resources',
@@ -340,7 +341,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Land Administration', 'Mining Revenue', 'Forest Cover', 'Resource Management'],
     }
   }
-  
+
   if (portfolioLower.includes('works') || portfolioLower.includes('housing') || portfolioLower.includes('water')) {
     return {
       department: 'Ministry of Works, Housing & Water Resources',
@@ -357,7 +358,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Housing Units', 'Water Access', 'Infrastructure Projects', 'Sanitation Coverage'],
     }
   }
-  
+
   if (portfolioLower.includes('labour') || portfolioLower.includes('employment') || portfolioLower.includes('jobs')) {
     return {
       department: 'Ministry of Labour, Jobs & Employment',
@@ -374,7 +375,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Employment Rate', 'Job Creation', 'Labor Disputes', 'Skills Training'],
     }
   }
-  
+
   if (portfolioLower.includes('fisheries') || portfolioLower.includes('aquaculture')) {
     return {
       department: 'Ministry of Fisheries & Aquaculture',
@@ -391,7 +392,7 @@ const getPortfolioResponsibilities = (portfolio: string) => {
       keyMetrics: ['Fish Production', 'Fisheries Sustainability', 'Fishermen Support', 'Aquaculture Growth'],
     }
   }
-  
+
   // Default for other portfolios
   return {
     department: portfolio,
@@ -411,16 +412,116 @@ const getPortfolioResponsibilities = (portfolio: string) => {
 
 // Helper to get social media links (can be enhanced with database later)
 const getSocialMediaLinks = (fullName: string, portfolio: string) => {
-  // This would ideally come from database, but for now return common patterns
-  // In a real implementation, these would be stored in the database
-  const nameSlug = fullName.toLowerCase().replace(/\s+/g, '')
-  
+  // Return ministry social media accounts based on portfolio
+  const portfolioLower = portfolio.toLowerCase()
+
+  // Default ministry social accounts
+  let twitter = null
+  let facebook = null
+  let instagram = null
+  let linkedin = null
+  let website = null
+
+  if (portfolioLower.includes('president') && !portfolioLower.includes('vice')) {
+    twitter = 'https://twitter.com/NAkufoAddo'
+    facebook = 'https://facebook.com/PresidencyGhana'
+    website = 'https://presidency.gov.gh'
+  } else if (portfolioLower.includes('vice president')) {
+    twitter = 'https://twitter.com/VPBawumia'
+    facebook = 'https://facebook.com/VicePresidentGhana'
+    website = 'https://veep.gov.gh'
+  } else if (portfolioLower.includes('finance') || portfolioLower.includes('economic')) {
+    twitter = 'https://twitter.com/FinanceGhana'
+    facebook = 'https://facebook.com/MinistryofFinanceGhana'
+    website = 'https://mofep.gov.gh'
+  } else if (portfolioLower.includes('education')) {
+    twitter = 'https://twitter.com/GhanaEducation'
+    facebook = 'https://facebook.com/MinistryofEducationGhana'
+    website = 'https://moe.gov.gh'
+  } else if (portfolioLower.includes('health')) {
+    twitter = 'https://twitter.com/GHSOfficial'
+    facebook = 'https://facebook.com/GhanaHealthService'
+    website = 'https://moh.gov.gh'
+  } else if (portfolioLower.includes('foreign')) {
+    twitter = 'https://twitter.com/GhanaForeignMin'
+    facebook = 'https://facebook.com/MinistryofForeignAffairsGhana'
+    website = 'https://mfa.gov.gh'
+  } else if (portfolioLower.includes('interior')) {
+    twitter = 'https://twitter.com/GhanaPoliceService'
+    facebook = 'https://facebook.com/GhanaPoliceService'
+    website = 'https://mint.gov.gh'
+  } else if (portfolioLower.includes('justice') || portfolioLower.includes('attorney')) {
+    twitter = 'https://twitter.com/AGDeptGhana'
+    facebook = 'https://facebook.com/AttorneyGeneralGhana'
+    website = 'https://mojag.gov.gh'
+  } else if (portfolioLower.includes('energy')) {
+    twitter = 'https://twitter.com/EnergyMinGhana'
+    facebook = 'https://facebook.com/MinistryofEnergyGhana'
+    website = 'https://energymin.gov.gh'
+  } else if (portfolioLower.includes('transport')) {
+    twitter = 'https://twitter.com/GhanaTransport'
+    facebook = 'https://facebook.com/MinistryofTransportGhana'
+    website = 'https://mot.gov.gh'
+  } else if (portfolioLower.includes('roads') || portfolioLower.includes('highways')) {
+    twitter = 'https://twitter.com/GhanaRoads'
+    facebook = 'https://facebook.com/MinistryofRoadsGhana'
+    website = 'https://mrh.gov.gh'
+  } else if (portfolioLower.includes('communication') || portfolioLower.includes('digitisation')) {
+    twitter = 'https://twitter.com/MinComGhana'
+    facebook = 'https://facebook.com/MinistryofCommunicationsGhana'
+    website = 'https://moc.gov.gh'
+  } else if (portfolioLower.includes('food') || portfolioLower.includes('agriculture')) {
+    twitter = 'https://twitter.com/MoFAGhana_'
+    facebook = 'https://facebook.com/MoFAGhana'
+    website = 'https://mofa.gov.gh'
+  } else if (portfolioLower.includes('fisheries') || portfolioLower.includes('aquaculture')) {
+    twitter = 'https://twitter.com/FisheriesGhana'
+    facebook = 'https://facebook.com/MinistryofFisheriesGhana'
+    website = 'https://mofad.gov.gh'
+  } else if (portfolioLower.includes('trade') || portfolioLower.includes('industry')) {
+    twitter = 'https://twitter.com/GhanaTrade'
+    facebook = 'https://facebook.com/MinistryofTradeGhana'
+    website = 'https://moti.gov.gh'
+  } else if (portfolioLower.includes('lands') || portfolioLower.includes('natural resources')) {
+    twitter = 'https://twitter.com/LandsGhana'
+    facebook = 'https://facebook.com/MinistryofLandsGhana'
+    website = 'https://mlnr.gov.gh'
+  } else if (portfolioLower.includes('local government') || portfolioLower.includes('chieftaincy')) {
+    twitter = 'https://twitter.com/LocalGovGhana'
+    facebook = 'https://facebook.com/MinistryofLocalGovernmentGhana'
+    website = 'https://mlgrd.gov.gh'
+  } else if (portfolioLower.includes('tourism') || portfolioLower.includes('culture') || portfolioLower.includes('creative arts')) {
+    twitter = 'https://twitter.com/TourismGhana'
+    facebook = 'https://facebook.com/GhanaTourismAuthority'
+    website = 'https://motcca.gov.gh'
+  } else if (portfolioLower.includes('labour') || portfolioLower.includes('employment')) {
+    twitter = 'https://twitter.com/LabourGhana'
+    facebook = 'https://facebook.com/MinistryofLabourGhana'
+    website = 'https://melr.gov.gh'
+  } else if (portfolioLower.includes('works') || portfolioLower.includes('housing') || portfolioLower.includes('water')) {
+    twitter = 'https://twitter.com/WorksGhana'
+    facebook = 'https://facebook.com/MinistryofWorksGhana'
+    website = 'https://mwh.gov.gh'
+  } else if (portfolioLower.includes('youth') || portfolioLower.includes('empowerment')) {
+    twitter = 'https://twitter.com/YouthGhana'
+    facebook = 'https://facebook.com/MinistryofYouthGhana'
+    website = 'https://mys.gov.gh'
+  } else if (portfolioLower.includes('sports') || portfolioLower.includes('recreation')) {
+    twitter = 'https://twitter.com/SportsGhana'
+    facebook = 'https://facebook.com/MinistryofSportsGhana'
+    website = 'https://mys.gov.gh'
+  } else if (portfolioLower.includes('gender') || portfolioLower.includes('children') || portfolioLower.includes('social protection')) {
+    twitter = 'https://twitter.com/GenderGhana'
+    facebook = 'https://facebook.com/MinistryofGenderGhana'
+    website = 'https://mogcsp.gov.gh'
+  }
+
   return {
-    twitter: null, // Would be: `https://twitter.com/${nameSlug}` if available
-    facebook: null, // Would be: `https://facebook.com/${nameSlug}` if available
-    instagram: null, // Would be: `https://instagram.com/${nameSlug}` if available
-    linkedin: null, // Would be: `https://linkedin.com/in/${nameSlug}` if available
-    email: null, // Would be: `contact@ministry.gov.gh` if available
+    twitter,
+    facebook,
+    instagram,
+    linkedin,
+    website
   }
 }
 
@@ -437,11 +538,11 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
   const [voteTrends, setVoteTrends] = useState<VoteTrend[]>([])
   const [activeTab, setActiveTab] = useState<'overview' | 'actions' | 'policies' | 'analytics'>('overview')
   const [imageError, setImageError] = useState(false)
-  
+
   // Track if initial data has been loaded
   const hasInitialData = useRef(false)
   const isFetching = useRef(false)
-  
+
   // GSAP Refs
   const heroRef = useRef<HTMLDivElement>(null)
   const photoRef = useRef<HTMLDivElement>(null)
@@ -455,22 +556,22 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     // Reset when params.id changes
     hasInitialData.current = false
-    
+
     if (!params.id) {
       setMinister(null)
       setLoading(false)
       return
     }
-    
+
     let cancelled = false
-    
+
     const fetchMinister = async () => {
       // Prevent duplicate fetches
       if (isFetching.current) {
         console.log('Fetch already in progress, skipping...')
         return
       }
-      
+
       isFetching.current = true
       setLoading(true)
       try {
@@ -480,7 +581,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
           isFetching.current = false
           return
         }
-        
+
         if (!response.ok) {
           console.error('Failed to fetch minister:', response.status, response.statusText)
           if (!cancelled) {
@@ -495,7 +596,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
           isFetching.current = false
           return
         }
-        
+
         console.log('Received minister data:', data)
         if (data && data.id) {
           console.log('Setting minister data:', { id: data.id, name: data.fullName, photoUrl: data.photoUrl })
@@ -528,7 +629,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
     }
 
     fetchMinister()
-    
+
     return () => {
       cancelled = true
       isFetching.current = false
@@ -538,14 +639,14 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     if (!params.id) return
-    
+
     const handleVoteUpdate = async () => {
       // Don't update if we don't have initial data yet
       if (!hasInitialData.current) {
         console.log('Skipping vote update - initial data not loaded yet')
         return
       }
-      
+
       console.log('Handling vote update for minister:', params.id)
       try {
         const response = await fetch(`/api/ministers/${params.id}`)
@@ -711,7 +812,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
       // Stats counter animation
       if (statsRef.current) {
         const stats = statsRef.current.children
-        
+
         gsap.from(stats, {
           opacity: 0,
           scale: 0.8,
@@ -736,7 +837,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
               duration: 1.5,
               delay: 0.9 + index * 0.15,
               ease: 'power2.out',
-              onUpdate: function() {
+              onUpdate: function () {
                 if (index === 2) {
                   numberElement.textContent = `${Math.round(this.targets()[0].value)}%`
                 } else {
@@ -823,17 +924,17 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
   }
 
   const negativeVotes = minister.totalVotes - minister.positiveVotes
-  const satisfactionColor = minister.satisfactionRate >= 70 
-    ? 'text-green-600 dark:text-green-400' 
-    : minister.satisfactionRate >= 50 
-    ? 'text-yellow-600 dark:text-yellow-400' 
-    : 'text-red-600 dark:text-red-400'
+  const satisfactionColor = minister.satisfactionRate >= 70
+    ? 'text-green-600 dark:text-green-400'
+    : minister.satisfactionRate >= 50
+      ? 'text-yellow-600 dark:text-yellow-400'
+      : 'text-red-600 dark:text-red-400'
 
-  const statusBadge = minister.satisfactionRate >= 70 
+  const statusBadge = minister.satisfactionRate >= 70
     ? { label: 'Excellent', color: 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800' }
-    : minister.satisfactionRate >= 50 
-    ? { label: 'Moderate', color: 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800' }
-    : { label: 'Needs Improvement', color: 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800' }
+    : minister.satisfactionRate >= 50
+      ? { label: 'Moderate', color: 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800' }
+      : { label: 'Needs Improvement', color: 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800' }
 
   const portfolioInfo = getPortfolioResponsibilities(minister.portfolio)
   const socialLinks = getSocialMediaLinks(minister.fullName, minister.portfolio)
@@ -870,7 +971,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
           }}
         />
       </div>
-      
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 relative z-10">
         <div className="max-w-7xl mx-auto">
           {/* Back Button */}
@@ -889,7 +990,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
           </motion.div>
 
           {/* Hero Section - Ultra Modern Card */}
-          <div 
+          <div
             ref={heroRef}
             className="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl rounded-3xl shadow-2xl mb-8 lg:mb-10 overflow-hidden border border-white/20 dark:border-slate-800/50"
             style={{
@@ -911,7 +1012,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
 
             <div className="relative flex flex-col lg:flex-row gap-10 lg:gap-12 p-8 lg:p-12">
               {/* Profile Picture - Enhanced with Glow */}
-              <motion.div 
+              <motion.div
                 ref={photoRef}
                 className="flex-shrink-0 mx-auto lg:mx-0"
                 initial={{ opacity: 0, x: -30 }}
@@ -931,7 +1032,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                       ease: "easeInOut",
                     }}
                   />
-                  
+
                   {/* Glassy Image container */}
                   <div className="relative w-full h-full rounded-3xl overflow-hidden bg-gradient-to-br from-white/40 via-white/30 to-white/20 dark:from-slate-800/40 dark:via-slate-800/30 dark:to-slate-800/20 p-2 backdrop-blur-xl border border-white/50 dark:border-slate-700/50 shadow-2xl" style={{ minHeight: '100%' }}>
                     <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/20 to-transparent dark:from-slate-700/20 backdrop-blur-md z-0 pointer-events-none" />
@@ -971,7 +1072,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
 
                   {/* Badge overlay - top right */}
                   {minister.isTrending && (
-                    <motion.div 
+                    <motion.div
                       className="absolute -top-4 -right-4 z-20"
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -990,14 +1091,14 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
               <div className="flex-1 flex flex-col min-w-0 justify-between">
                 <div>
                   {/* Name and Status Badges */}
-                  <motion.div 
+                  <motion.div
                     className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.1 }}
                   >
                     <div className="flex-1">
-                      <h1 
+                      <h1
                         ref={nameRef}
                         className="text-3xl lg:text-5xl xl:text-6xl font-extrabold text-slate-900 dark:text-white leading-tight mb-3"
                       >
@@ -1006,7 +1107,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                       </h1>
                       <div className="flex items-center gap-2 flex-wrap">
                         {minister.isTrending && (
-                          <motion.div 
+                          <motion.div
                             className="bg-primary text-white px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md"
                             initial={{ opacity: 0, scale: 0 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -1022,9 +1123,9 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                       </div>
                     </div>
                   </motion.div>
-                  
+
                   {/* Portfolio/Title */}
-                  <motion.h2 
+                  <motion.h2
                     ref={portfolioRef}
                     className="text-xl lg:text-2xl xl:text-3xl text-slate-700 dark:text-slate-300 font-semibold mb-4"
                     initial={{ opacity: 0, y: 20 }}
@@ -1035,7 +1136,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                   </motion.h2>
 
                   {/* Bio - Always visible */}
-                  <motion.div 
+                  <motion.div
                     ref={bioRef}
                     className="mb-8 max-w-2xl"
                     initial={{ opacity: 0, y: 20 }}
@@ -1049,7 +1150,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                 </div>
 
                 {/* Action Buttons - Modern Style */}
-                <motion.div 
+                <motion.div
                   ref={buttonsRef}
                   className="flex items-center gap-4 mb-8 lg:mb-10"
                   initial={{ opacity: 0, y: 20 }}
@@ -1061,14 +1162,14 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                 </motion.div>
 
                 {/* Stats - Modern Grid */}
-                <motion.div 
+                <motion.div
                   ref={statsRef}
                   className="grid grid-cols-3 gap-4 lg:gap-6 xl:gap-8 pt-6 border-t-2 border-slate-200/60 dark:border-slate-800/60"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.5 }}
                 >
-                  <motion.div 
+                  <motion.div
                     className="flex flex-col items-center text-center"
                     whileHover={{ scale: 1.05 }}
                     transition={{ type: "spring", stiffness: 300 }}
@@ -1083,7 +1184,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                       Total Votes
                     </div>
                   </motion.div>
-                  <motion.div 
+                  <motion.div
                     className="flex flex-col items-center text-center"
                     whileHover={{ scale: 1.05 }}
                     transition={{ type: "spring", stiffness: 300 }}
@@ -1098,7 +1199,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                       Positive
                     </div>
                   </motion.div>
-                  <motion.div 
+                  <motion.div
                     className="flex flex-col items-center text-center"
                     whileHover={{ scale: 1.05 }}
                     transition={{ type: "spring", stiffness: 300 }}
@@ -1119,7 +1220,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
           </div>
 
           {/* Department & Responsibilities Section */}
-          <div 
+          <div
             className="gsap-section bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-slate-800/50 rounded-2xl p-6 lg:p-8 xl:p-10 shadow-2xl mb-8"
             style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)' }}
           >
@@ -1189,7 +1290,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
           </div>
 
           {/* Social Media & Contact Section */}
-          <div 
+          <div
             className="gsap-section bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-slate-800/50 rounded-2xl p-6 lg:p-8 xl:p-10 shadow-2xl mb-8"
             style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)' }}
           >
@@ -1207,17 +1308,15 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {[
-                { icon: Twitter, label: 'Twitter', url: socialLinks.twitter, color: 'text-blue-400' },
+                { icon: XLogo, label: 'X', url: socialLinks.twitter, color: 'text-slate-900 dark:text-white' },
                 { icon: Facebook, label: 'Facebook', url: socialLinks.facebook, color: 'text-blue-600' },
-                { icon: Instagram, label: 'Instagram', url: socialLinks.instagram, color: 'text-pink-500' },
-                { icon: Linkedin, label: 'LinkedIn', url: socialLinks.linkedin, color: 'text-blue-700' },
-                { icon: Mail, label: 'Email', url: socialLinks.email, color: 'text-slate-600' },
+                { icon: Globe, label: 'Website', url: socialLinks.website, color: 'text-green-600' },
               ].map((social, index) => {
                 const Icon = social.icon
                 const hasLink = social.url !== null
-                
+
                 return (
                   <motion.div
                     key={social.label}
@@ -1274,7 +1373,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
           </div>
 
           {/* Tab Navigation - Glass Style */}
-          <div 
+          <div
             className="gsap-section bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-slate-800/50 rounded-2xl p-3 lg:p-4 mb-8 shadow-2xl"
             style={{
               boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
@@ -1293,11 +1392,10 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as any)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
-                      isActive
-                        ? 'bg-primary text-white shadow-sm'
-                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
-                    }`}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${isActive
+                      ? 'bg-primary text-white shadow-sm'
+                      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      }`}
                   >
                     <Icon className="w-4 h-4" />
                     <span>{tab.label}</span>
@@ -1318,7 +1416,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                 className="space-y-8"
               >
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-8">
-                  <motion.div 
+                  <motion.div
                     className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-200 dark:border-slate-700"
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -1336,7 +1434,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                     <div className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">
                       Total Votes
                     </div>
-                    <motion.div 
+                    <motion.div
                       className="text-4xl font-bold text-slate-900 dark:text-slate-50"
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
@@ -1346,7 +1444,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                     </motion.div>
                   </motion.div>
 
-                  <motion.div 
+                  <motion.div
                     className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-200 dark:border-slate-700"
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -1360,7 +1458,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                     <div className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">
                       Satisfied Votes
                     </div>
-                    <motion.div 
+                    <motion.div
                       className="text-4xl font-bold text-green-600 dark:text-green-400"
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
@@ -1373,7 +1471,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                     </div>
                   </motion.div>
 
-                  <motion.div 
+                  <motion.div
                     className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 shadow-2xl border border-slate-700 overflow-hidden relative"
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -1382,7 +1480,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                     <div className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                       Satisfaction Meter
                     </div>
-                    
+
                     <div className="flex flex-col items-center py-4">
                       <div className="relative w-full h-32">
                         <svg viewBox="0 0 200 100" className="w-full h-full">
@@ -1390,7 +1488,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                             const angle = -90 + (i * 180 / 29)
                             const pct = ((i + 1) / 30) * 100
                             const isActive = pct <= minister.satisfactionRate
-                            
+
                             let color = '#334155'
                             if (isActive) {
                               if (pct <= 20) color = '#ef4444'
@@ -1399,10 +1497,10 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                               else if (pct <= 80) color = '#84cc16'
                               else color = '#22c55e'
                             }
-                            
+
                             const x = 100
                             const y = 95
-                            
+
                             return (
                               <motion.rect
                                 key={i}
@@ -1414,8 +1512,8 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                                 fill={color}
                                 initial={{ scaleY: 0, opacity: 0 }}
                                 animate={{ scaleY: 1, opacity: 1 }}
-                                transition={{ 
-                                  delay: 0.5 + (i * 0.03), 
+                                transition={{
+                                  delay: 0.5 + (i * 0.03),
                                   duration: 0.3,
                                   ease: "easeOut"
                                 }}
@@ -1425,8 +1523,8 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                             )
                           })}
                         </svg>
-                        
-                        <motion.div 
+
+                        <motion.div
                           className="absolute inset-0 flex items-end justify-center pb-4"
                           initial={{ scale: 0, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
@@ -1437,23 +1535,21 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                           </div>
                         </motion.div>
                       </div>
-                      
-                      <motion.div 
-                        className={`px-4 py-1.5 rounded-full text-xs font-semibold backdrop-blur-sm ${
-                          minister.satisfactionRate >= 70 ? 'bg-green-500/20 text-green-300 border border-green-500/30'
+
+                      <motion.div
+                        className={`px-4 py-1.5 rounded-full text-xs font-semibold backdrop-blur-sm ${minister.satisfactionRate >= 70 ? 'bg-green-500/20 text-green-300 border border-green-500/30'
                           : minister.satisfactionRate >= 50 ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30'
-                          : 'bg-red-500/20 text-red-300 border border-red-500/30'
-                        }`}
+                            : 'bg-red-500/20 text-red-300 border border-red-500/30'
+                          }`}
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ delay: 1.8, type: "spring" }}
                       >
                         <span className="flex items-center gap-2">
-                          <span className={`w-2 h-2 rounded-full ${
-                            minister.satisfactionRate >= 70 ? 'bg-green-400'
+                          <span className={`w-2 h-2 rounded-full ${minister.satisfactionRate >= 70 ? 'bg-green-400'
                             : minister.satisfactionRate >= 50 ? 'bg-yellow-400'
-                            : 'bg-red-400'
-                          }`} />
+                              : 'bg-red-400'
+                            }`} />
                           {minister.satisfactionRate >= 70 ? 'Excellent' : minister.satisfactionRate >= 50 ? 'Moderate' : 'Poor'}
                         </span>
                       </motion.div>
