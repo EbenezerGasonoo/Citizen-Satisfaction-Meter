@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { TrendingUp, TrendingDown, ArrowRight } from 'lucide-react'
+import { TrendingUp, TrendingDown, ArrowRight, Calendar } from 'lucide-react'
 
 interface TrendingMinister {
   id: number
@@ -65,7 +65,7 @@ export default function TrendingGrid() {
     }
 
     fetchTrendingMinisters()
-    
+
     // Listen for vote updates
     const handleVoteUpdate = () => {
       console.log('TrendingGrid: Received voteSubmitted event, refreshing')
@@ -73,7 +73,7 @@ export default function TrendingGrid() {
     }
 
     window.addEventListener('voteSubmitted', handleVoteUpdate)
-    
+
     // Also poll every 30 seconds for updates
     const interval = setInterval(fetchTrendingMinisters, 30000)
 
@@ -83,16 +83,14 @@ export default function TrendingGrid() {
     }
   }, [])
 
-  console.log('Trending Ministers:', trendingMinisters)
-
   if (loading) {
     return (
-      <motion.div 
+      <motion.div
         className="text-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
-        <motion.h2 
+        <motion.h2
           className="text-2xl font-semibold mb-8 text-gray-800 dark:text-gray-200"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -101,8 +99,8 @@ export default function TrendingGrid() {
         </motion.h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[1, 2, 3].map(i => (
-            <motion.div 
-              key={i} 
+            <motion.div
+              key={i}
               className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 animate-pulse"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -119,129 +117,88 @@ export default function TrendingGrid() {
   }
 
   return (
-      <motion.div 
-        className="w-full"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+    <motion.div
+      className="w-full"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
       >
-        <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
         {trendingMinisters.map((minister, index) => (
           <motion.div
             key={minister.id}
             variants={cardVariants}
-            whileHover={{ 
-              y: -8, 
-              transition: { duration: 0.3, type: "spring", stiffness: 300 }
+            whileHover={{
+              y: -5,
+              transition: { duration: 0.2 }
             }}
             whileTap={{ scale: 0.98 }}
           >
             <Link href={`/minister/${minister.id}`} className="block h-full touch-manipulation">
-              <motion.div 
-                className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-lg cursor-pointer hover:shadow-2xl transition-all duration-300 border border-slate-200 dark:border-slate-800 h-full overflow-hidden group"
+              <motion.div
+                className="relative bg-white dark:bg-slate-900 rounded-xl shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-800 h-full overflow-hidden group"
               >
-                {/* Large Portrait Image - takes up most of the card */}
-                <div className="relative w-full h-[280px] lg:h-[320px] overflow-hidden">
+                {/* Image Container */}
+                <div className="relative w-full aspect-[4/5] overflow-hidden">
                   <Image
                     src={minister.photoUrl}
                     alt={minister.fullName}
                     fill
-                    className="object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                    className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
-                  {/* Dark overlay gradient at bottom for text readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                </div>
 
-                {/* Text Overlay at Bottom */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <div className="flex items-start gap-4 mb-4">
-                    {/* Date on the left - stacked vertically */}
-                    {minister.latestAction && (
-                      <div className="flex-shrink-0">
-                        <motion.div 
-                          className="text-5xl font-bold leading-none"
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.3 + index * 0.1 }}
-                        >
-                          {new Date(minister.latestAction.date).getDate()}
-                        </motion.div>
-                        <motion.div 
-                          className="text-4xl font-bold leading-none mt-1"
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.35 + index * 0.1 }}
-                        >
-                          {String(new Date(minister.latestAction.date).getMonth() + 1).padStart(2, '0')}
-                        </motion.div>
+                  {/* Subtle Gradient Overlay - Only at bottom */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-90" />
+
+                  {/* Date Badge - Floating Top Left */}
+                  {minister.latestAction && (
+                    <div className="absolute top-3 left-3 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2 flex flex-col items-center justify-center text-white shadow-lg">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-white/80">
+                        {new Date(minister.latestAction.date).toLocaleString('default', { month: 'short' })}
+                      </span>
+                      <span className="text-lg font-bold leading-none">
+                        {new Date(minister.latestAction.date).getDate()}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Content at Bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 + index * 0.1 }}
+                    >
+                      {/* Portfolio */}
+                      <div className="text-[10px] font-bold tracking-[0.15em] text-amber-400 uppercase mb-1.5">
+                        {minister.portfolio}
                       </div>
-                    )}
-                    
-                    {/* Description and Time on the right */}
-                    <div className="flex-1 min-w-0">
-                      {minister.latestAction ? (
-                        <>
-                          <motion.h3 
-                            className="text-sm font-bold uppercase tracking-wide leading-tight mb-2 line-clamp-2"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4 + index * 0.1 }}
-                          >
+
+                      {/* Name */}
+                      <h3 className="text-xl font-bold text-white leading-tight mb-3 drop-shadow-md">
+                        {minister.fullName}
+                      </h3>
+
+                      {/* Latest Action - Minimalist */}
+                      {minister.latestAction && (
+                        <div className="flex flex-col gap-1.5 text-xs text-gray-200 bg-white/10 rounded-lg p-3 border border-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors">
+                          <div className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shrink-0" />
+                            <span className="text-[10px] uppercase font-bold text-white/70 tracking-wider">Latest Action/Policy</span>
+                          </div>
+                          <span className="font-medium line-clamp-2 leading-relaxed opacity-95">
                             {minister.latestAction.title}
-                          </motion.h3>
-                          <motion.div 
-                            className="text-base font-semibold"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.45 + index * 0.1 }}
-                          >
-                            {new Date(minister.latestAction.date).toLocaleTimeString('en-GB', { 
-                              hour: '2-digit', 
-                              minute: '2-digit',
-                              hour12: false 
-                            })}
-                          </motion.div>
-                        </>
-                      ) : (
-                        <>
-                          <motion.h3 
-                            className="text-sm font-bold uppercase tracking-wide leading-tight mb-2 line-clamp-2"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4 + index * 0.1 }}
-                          >
-                            {minister.portfolio.toUpperCase()}
-                          </motion.h3>
-                          <motion.div 
-                            className="text-base font-semibold"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.45 + index * 0.1 }}
-                          >
-                            {minister.fullName}
-                          </motion.div>
-                        </>
+                          </span>
+                        </div>
                       )}
-                    </div>
+                    </motion.div>
                   </div>
-                  
-                  {/* View Profile Button */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 + index * 0.1 }}
-                  >
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-md hover:bg-white/30 rounded-lg font-semibold text-sm transition-all duration-300 group-hover:bg-white/30 border border-white/30">
-                      <span>View Profile</span>
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-                    </div>
-                  </motion.div>
                 </div>
               </motion.div>
             </Link>
@@ -263,4 +220,4 @@ export default function TrendingGrid() {
       )}
     </motion.div>
   )
-} 
+}
