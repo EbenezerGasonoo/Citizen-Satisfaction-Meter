@@ -41,7 +41,7 @@ export default function Home() {
         animate="visible"
       >
         {/* Professional Hero Section */}
-        <motion.section 
+        <motion.section
           className="relative bg-gradient-to-b from-white via-slate-50 to-slate-100 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900 border-b border-slate-200 dark:border-slate-800"
           variants={sectionVariants}
         >
@@ -61,7 +61,7 @@ export default function Home() {
               </motion.div>
 
               {/* Main Heading */}
-              <motion.h1 
+              <motion.h1
                 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-slate-900 dark:text-slate-50 leading-tight"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -73,39 +73,39 @@ export default function Home() {
               </motion.h1>
 
               {/* Subtitle */}
-              <motion.p 
+              <motion.p
                 className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed mb-12"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                Monitor, evaluate, and engage with the performance of Ghana's cabinet ministers. 
+                Monitor, evaluate, and engage with the performance of Ghana's cabinet ministers.
                 Real-time citizen satisfaction metrics for transparent governance.
               </motion.p>
 
               {/* Key Metrics Row */}
-              <motion.div 
+              <motion.div
                 className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
                 {[
-                  { 
-                    icon: Users, 
-                    label: 'Active Ministers', 
+                  {
+                    icon: Users,
+                    label: 'Active Ministers',
                     value: '25',
                     description: 'Cabinet Members'
                   },
-                  { 
-                    icon: BarChart3, 
-                    label: 'Real-time Data', 
+                  {
+                    icon: BarChart3,
+                    label: 'Real-time Data',
                     value: 'Live',
                     description: 'Updated Continuously'
                   },
-                  { 
-                    icon: TrendingUp, 
-                    label: 'Citizen Engagement', 
+                  {
+                    icon: TrendingUp,
+                    label: 'Citizen Engagement',
                     value: '24/7',
                     description: 'Always Available'
                   }
@@ -140,7 +140,7 @@ export default function Home() {
         {/* Main Content Sections */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 space-y-12 lg:space-y-16">
           {/* National Satisfaction Meter */}
-          <motion.section 
+          <motion.section
             id="national-meter"
             className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 lg:p-10 shadow-lg"
             variants={sectionVariants}
@@ -149,7 +149,7 @@ export default function Home() {
           </motion.section>
 
           {/* Trending Ministers */}
-          <motion.section 
+          <motion.section
             id="trending"
             className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 lg:p-10 shadow-lg"
             variants={sectionVariants}
@@ -166,7 +166,7 @@ export default function Home() {
           </motion.section>
 
           {/* Minister Directory */}
-          <motion.section 
+          <motion.section
             id="ministers"
             className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 lg:p-10 shadow-lg"
             variants={sectionVariants}

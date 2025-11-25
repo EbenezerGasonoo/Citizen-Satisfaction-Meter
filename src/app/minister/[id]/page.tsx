@@ -3,7 +3,12 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import VoteButtons from '@/components/VoteButtons'
+import VoteButtons from '@/components/VoteButtons';
+// Import Head for client-side meta tags
+import Head from 'next/head';
+
+// Removed server-side metadata generation; will set meta tags dynamically in the component using fetched data.
+
 import FavoriteButton from '@/components/FavoriteButton'
 import PolicySection from '@/components/PolicySection'
 import ActionSection from '@/components/ActionSection'
@@ -924,6 +929,77 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-50 to-primary/5 dark:from-slate-950 dark:via-slate-900 dark:to-primary/10 relative overflow-hidden">
+      <Head>
+        <title>{`${minister.fullName} – ${Math.round(minister.satisfactionRate)}% Satisfaction | Citizen Satisfaction Meter`}</title>
+        <meta name="description" content={`${minister.fullName}, serving as ${minister.portfolio}, has a citizen satisfaction score of ${Math.round(minister.satisfactionRate)}%. View detailed performance, policies, and actions.`} />
+        <meta name="keywords" content={`${minister.fullName}, ${minister.portfolio}, Ghana minister, minister performance, satisfaction rating, government accountability`} />
+
+        {/* Open Graph */}
+        <meta property="og:title" content={`${minister.fullName} – ${Math.round(minister.satisfactionRate)}% Satisfaction`} />
+        <meta property="og:description" content={`${minister.fullName}, serving as ${minister.portfolio}, has a citizen satisfaction score of ${Math.round(minister.satisfactionRate)}%.`} />
+        <meta property="og:image" content={minister.photoUrl || '/og-image.jpg'} />
+        <meta property="og:url" content={`https://citizensatisfactionmeter.com/minister/${minister.id}`} />
+        <meta property="og:type" content="profile" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${minister.fullName} – ${Math.round(minister.satisfactionRate)}% Satisfaction`} />
+        <meta name="twitter:description" content={`${minister.fullName}, serving as ${minister.portfolio}, has a citizen satisfaction score of ${Math.round(minister.satisfactionRate)}%.`} />
+        <meta name="twitter:image" content={minister.photoUrl || '/twitter-image.jpg'} />
+
+        {/* JSON-LD Person Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Person',
+            name: minister.fullName,
+            jobTitle: minister.portfolio,
+            image: minister.photoUrl,
+            url: `https://citizensatisfactionmeter.com/minister/${minister.id}`,
+            description: minister.bio,
+            worksFor: {
+              '@type': 'Organization',
+              name: 'Government of Ghana'
+            },
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: (minister.satisfactionRate / 100 * 5).toFixed(1),
+              bestRating: '5',
+              worstRating: '1',
+              ratingCount: minister.totalVotes
+            }
+          })}
+        </script>
+
+        {/* JSON-LD BreadcrumbList Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Home',
+                item: 'https://citizensatisfactionmeter.com'
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Ministers',
+                item: 'https://citizensatisfactionmeter.com/#ministers'
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: minister.fullName,
+                item: `https://citizensatisfactionmeter.com/minister/${minister.id}`
+              }
+            ]
+          })}
+        </script>
+      </Head>
+
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div

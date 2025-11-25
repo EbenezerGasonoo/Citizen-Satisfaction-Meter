@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code',
+    google: 'WyOS11PDSXy_XtaTEamjvsYZ0Mv1GJEXRsntLzA4H4Y',
     // yandex: 'your-yandex-verification-code',
     // bing: 'your-bing-verification-code',
   },
@@ -96,9 +96,29 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+        {/* Preload Inter font for better performance */}
+        <link
+          rel="preload"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          as="style"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        />
+
         <link rel="manifest" href="/manifest.json" />
-        
+
         {/* JSON-LD Structured Data */}
+        {/* SEO Meta Tags */}
+        <meta name="author" content="Citizen Satisfaction Meter" />
+        <meta name="publisher" content="Citizen Satisfaction Meter" />
+        <link rel="canonical" href="https://citizensatisfactionmeter.com/" />
+        <meta name="robots" content="index, follow" />
+        <meta name="google-site-verification" content="WyOS11PDSXy_XtaTEamjvsYZ0Mv1GJEXRsntLzA4H4Y" />
+        <meta name="twitter:site" content="@CitizenSatGH" />
+        <meta name="twitter:creator" content="@CitizenSatGH" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -166,8 +186,8 @@ export default function RootLayout({
                 {/* Action Buttons - Enhanced Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                   {/* Suggestion Button */}
-                  <a 
-                    href="/suggest" 
+                  <a
+                    href="/suggest"
                     className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-6 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all font-bold text-base touch-manipulation"
                   >
                     <span className="text-xl group-hover:scale-110 transition-transform">💡</span>
@@ -175,8 +195,8 @@ export default function RootLayout({
                   </a>
 
                   {/* Bug Report Button */}
-                  <a 
-                    href="/suggest?type=bug" 
+                  <a
+                    href="/suggest?type=bug"
                     className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white px-6 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all font-bold text-base touch-manipulation"
                   >
                     <span className="text-xl group-hover:scale-110 transition-transform">🐛</span>
@@ -184,8 +204,8 @@ export default function RootLayout({
                   </a>
 
                   {/* Nominate Minister Button */}
-                  <a 
-                    href="/suggest?type=nominate" 
+                  <a
+                    href="/suggest?type=nominate"
                     className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all font-bold text-base touch-manipulation"
                   >
                     <span className="text-xl group-hover:scale-110 transition-transform">🎯</span>
