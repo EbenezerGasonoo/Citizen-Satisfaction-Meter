@@ -38,10 +38,14 @@ export default function NationalMeter() {
 
   const fetchScore = async () => {
     try {
-      const response = await fetch('/api/analytics/nationalScore')
+      // Add cache-busting query parameter to force fresh data
+      const response = await fetch(`/api/analytics/nationalScore?t=${Date.now()}`)
       if (response.ok) {
         const data = await response.json()
+        console.log('NationalMeter: Score data received:', data)
         setScore(data)
+      } else {
+        console.error('NationalMeter: Failed to fetch score, status:', response.status)
       }
     } catch (error) {
       console.error('Error fetching national score:', error)
@@ -76,12 +80,12 @@ export default function NationalMeter() {
   useEffect(() => {
     if (score) {
       setDisplayCount(score.totalVotes)
-      
-      const controls = animate(count, score.totalVotes, { 
+
+      const controls = animate(count, score.totalVotes, {
         duration: 2,
         ease: "easeOut"
       })
-      
+
       const unsubscribe = rounded.on('change', (latest) => {
         setDisplayCount(latest)
       })
@@ -203,7 +207,7 @@ export default function NationalMeter() {
                 </div>
               </div>
               <div className="text-xs text-slate-500 dark:text-slate-400">
-                {score.totalVotes > 0 
+                {score.totalVotes > 0
                   ? `${Math.round((score.positiveVotes / score.totalVotes) * 100)}% of total`
                   : 'No votes yet'
                 }
@@ -233,7 +237,7 @@ export default function NationalMeter() {
 
           {/* Center Semi-Circular Gradient Meter */}
           <div className="lg:col-span-4 flex items-center justify-center">
-            <motion.div 
+            <motion.div
               className="w-full max-w-lg"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -241,7 +245,7 @@ export default function NationalMeter() {
             >
               <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 lg:p-10 shadow-lg border border-slate-200 dark:border-slate-800 h-full flex flex-col">
                 {/* Title */}
-                <motion.h3 
+                <motion.h3
                   className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-8 text-center"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -249,7 +253,7 @@ export default function NationalMeter() {
                 >
                   National Satisfaction Meter
                 </motion.h3>
-                
+
                 {/* Semi-Circular Gradient Meter */}
                 <div className="relative w-full max-w-lg mx-auto flex-1 flex flex-col" style={{ minHeight: '240px', height: '100%' }}>
                   <svg viewBox="0 0 200 110" className="w-full h-full flex-1">
@@ -261,7 +265,7 @@ export default function NationalMeter() {
                         <stop offset="100%" stopColor="#eab308" />
                       </linearGradient>
                     </defs>
-                    
+
                     {/* Background arc (unfilled) - light gray */}
                     <path
                       d="M 20 100 A 80 80 0 0 1 180 100"
@@ -271,7 +275,7 @@ export default function NationalMeter() {
                       strokeLinecap="round"
                       className="dark:stroke-slate-800"
                     />
-                    
+
                     {/* Filled gradient arc - red to orange to yellow */}
                     <motion.path
                       d="M 20 100 A 80 80 0 0 1 180 100"
@@ -281,20 +285,20 @@ export default function NationalMeter() {
                       strokeLinecap="round"
                       strokeDasharray={251.33}
                       initial={{ strokeDashoffset: 251.33 }}
-                      animate={{ 
+                      animate={{
                         strokeDashoffset: 251.33 - (251.33 * score.satisfactionPercentage / 100)
                       }}
-                      transition={{ 
-                        duration: 2, 
+                      transition={{
+                        duration: 2,
                         delay: 0.5,
                         ease: [0.43, 0.13, 0.23, 0.96]
                       }}
                     />
                   </svg>
-                  
+
                   {/* Center Percentage Display */}
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ top: '32px' }}>
-                    <motion.div 
+                    <motion.div
                       className="flex items-baseline gap-1.5"
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
@@ -309,9 +313,9 @@ export default function NationalMeter() {
                     </motion.div>
                   </div>
                 </div>
-                
+
                 {/* Descriptive Text */}
-                <motion.p 
+                <motion.p
                   className="text-sm text-slate-700 dark:text-slate-300 mt-3 text-center max-w-md mx-auto leading-relaxed"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -319,25 +323,24 @@ export default function NationalMeter() {
                 >
                   The amount of satisfaction across all cabinet ministers
                 </motion.p>
-                
+
                 {/* Status Badge */}
-                <motion.div 
-                  className={`mt-3 px-5 py-2.5 rounded-lg text-xs font-bold text-white text-center uppercase tracking-wider w-full max-w-xs mx-auto ${
-                    score.satisfactionPercentage >= 70 
+                <motion.div
+                  className={`mt-3 px-5 py-2.5 rounded-lg text-xs font-bold text-white text-center uppercase tracking-wider w-full max-w-xs mx-auto ${score.satisfactionPercentage >= 70
                       ? 'bg-gradient-to-r from-green-500 to-emerald-500 shadow-lg shadow-green-500/30'
-                      : score.satisfactionPercentage >= 50 
-                      ? 'bg-gradient-to-r from-yellow-500 to-amber-500 shadow-lg shadow-yellow-500/30'
-                      : 'bg-gradient-to-r from-red-500 to-rose-500 shadow-lg shadow-red-500/30'
-                  }`}
+                      : score.satisfactionPercentage >= 50
+                        ? 'bg-gradient-to-r from-yellow-500 to-amber-500 shadow-lg shadow-yellow-500/30'
+                        : 'bg-gradient-to-r from-red-500 to-rose-500 shadow-lg shadow-red-500/30'
+                    }`}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.5 }}
                 >
-                  {score.satisfactionPercentage >= 70 
-                    ? 'EXCELLENT PERFORMANCE!' 
-                    : score.satisfactionPercentage >= 50 
-                    ? 'GOOD START!' 
-                    : 'NEEDS IMPROVEMENT'}
+                  {score.satisfactionPercentage >= 70
+                    ? 'EXCELLENT PERFORMANCE!'
+                    : score.satisfactionPercentage >= 50
+                      ? 'GOOD START!'
+                      : 'NEEDS IMPROVEMENT'}
                 </motion.div>
               </div>
             </motion.div>
@@ -353,9 +356,8 @@ export default function NationalMeter() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-slate-600 dark:text-slate-400">Satisfaction</span>
-                  <span className={`text-sm font-semibold ${
-                    score.trends.satisfactionChange24h >= 0 ? 'text-green-600' : 'text-red-600'
-                  }`}>
+                  <span className={`text-sm font-semibold ${score.trends.satisfactionChange24h >= 0 ? 'text-green-600' : 'text-red-600'
+                    }`}>
                     {score.trends.satisfactionChange24h >= 0 ? '+' : ''}
                     {score.trends.satisfactionChange24h.toFixed(1)}%
                   </span>

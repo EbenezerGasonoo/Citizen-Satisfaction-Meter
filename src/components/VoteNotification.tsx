@@ -23,10 +23,10 @@ export default function VoteNotification() {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768) // 768px is typical tablet breakpoint
     }
-    
+
     checkMobile()
     window.addEventListener('resize', checkMobile)
-    
+
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
@@ -40,7 +40,7 @@ export default function VoteNotification() {
     const checkVoteCount = async () => {
       try {
         console.log('VoteNotification: Fetching vote count...')
-        const response = await fetch('/api/analytics/nationalScore')
+        const response = await fetch(`/api/analytics/nationalScore?t=${Date.now()}`)
         if (response.ok) {
           const data = await response.json()
           console.log('VoteNotification: Received vote count data:', data)
@@ -55,12 +55,12 @@ export default function VoteNotification() {
     const handleVoteSubmitted = async (event: Event) => {
       try {
         console.log('VoteNotification: Received voteSubmitted event')
-        
+
         // Get the most recent vote from the event data or fetch it
         const response = await fetch('/api/analytics/recent-votes?limit=1')
         if (response.ok) {
           const recentVotes = await response.json()
-          
+
           if (recentVotes.length > 0) {
             const vote = recentVotes[0]
             const notification: VoteNotification = {
@@ -70,7 +70,7 @@ export default function VoteNotification() {
               positive: vote.positive,
               timestamp: new Date(vote.createdAt)
             }
-            
+
             setNotifications(prev => {
               // Avoid duplicates by checking if we already have this vote
               if (prev.some(n => n.id === notification.id)) {
@@ -85,7 +85,7 @@ export default function VoteNotification() {
             }, 3000)
           }
         }
-        
+
         // Update vote count
         console.log('VoteNotification: Updating vote count...')
         await checkVoteCount()
@@ -126,18 +126,16 @@ export default function VoteNotification() {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 300, scale: 0.8 }}
             transition={{ duration: 0.3 }}
-            className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg border-l-4 p-3 max-w-xs border ${
-              notification.positive 
-                ? 'border-l-green-500 border-green-100 dark:border-green-800' 
+            className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg border-l-4 p-3 max-w-xs border ${notification.positive
+                ? 'border-l-green-500 border-green-100 dark:border-green-800'
                 : 'border-l-red-500 border-red-100 dark:border-red-800'
-            }`}
+              }`}
           >
             <div className="flex items-center space-x-2">
-              <div className={`p-1.5 rounded-full ${
-                notification.positive 
-                  ? 'bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800' 
+              <div className={`p-1.5 rounded-full ${notification.positive
+                  ? 'bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800'
                   : 'bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900 dark:to-red-800'
-              }`}>
+                }`}>
                 {notification.positive ? (
                   <ThumbsUp className="w-3 h-3 text-green-600 dark:text-green-400" />
                 ) : (
@@ -160,11 +158,10 @@ export default function VoteNotification() {
               </button>
             </div>
             <div className="mt-1 flex items-center justify-between">
-              <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                notification.positive 
-                  ? 'text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/30' 
+              <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${notification.positive
+                  ? 'text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/30'
                   : 'text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/30'
-              }`}>
+                }`}>
                 {notification.positive ? '✓' : '✗'}
               </span>
               <span className="text-xs text-yellow-600 dark:text-yellow-400 font-bold">🇬🇭 Live</span>
@@ -179,9 +176,8 @@ export default function VoteNotification() {
         animate={{ opacity: 1 }}
         className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400"
       >
-        <div className={`w-2 h-2 rounded-full ${
-          isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'
-        }`} />
+        <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'
+          }`} />
         <span className="text-xs font-medium">
           {isConnected ? `🇬🇭 Live Updates (${totalVotes} votes)` : 'Connecting...'}
         </span>

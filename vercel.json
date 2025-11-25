@@ -4,7 +4,9 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "regions": ["iad1"],
+  "regions": [
+    "iad1"
+  ],
   "functions": {
     "pages/api/**/*.ts": {
       "maxDuration": 10
@@ -36,10 +38,9 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "s-maxage=0, stale-while-revalidate=59"
+          "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
         }
       ]
     }
   ]
 }
-
