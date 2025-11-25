@@ -6,20 +6,7 @@ const prisma = new PrismaClient()
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://citizenmeter.vercel.app'
 
-  // Fetch all ministers for dynamic routes
-  let ministers: { id: number; updatedAt: Date }[] = []
-  try {
-    ministers = await prisma.minister.findMany({
-      select: {
-        id: true,
-        updatedAt: true,
-      },
-    })
-  } catch (error) {
-    console.error('Error fetching ministers for sitemap:', error)
-  }
-
-  // Static routes
+  // Static routes (always available)
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
@@ -41,14 +28,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // Dynamic minister routes
-  const ministerRoutes: MetadataRoute.Sitemap = ministers.map((minister) => ({
-    url: `${baseUrl}/minister/${minister.id}`,
-    lastModified: minister.updatedAt,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  }))
+  // Fetch all ministers for dynamic routes
+  let ministerRoutes: MetadataRoute.Sitemap = []
+
+  try {
+    const ministers = await prisma.minister.findMany({
+      select: {
+        id: true,
+        updatedAt: true,
+      },
+    })
+
+    ministerRoutes = ministers.map((minister) => ({
+      url: `${baseUrl}/minister/${minister.id}`,
+      lastModified: minister.updatedAt,
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    }))
+  } catch (error) {
+    console.error('Error fetching ministers for sitemap:', error)
+    // Return static routes even if database fails
+  } finally {
+    await prisma.$disconnect()
+  }
 
   return [...staticRoutes, ...ministerRoutes]
 }
-
