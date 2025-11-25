@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const positiveVotes = minister.votes.filter((v) => v.positive).length
     const satisfactionRate = totalVotes > 0 ? Math.round((positiveVotes / totalVotes) * 100) : 0
 
-    const description = minister.bio 
+    const description = minister.bio
       ? `${minister.fullName}, ${minister.portfolio}. ${minister.bio.substring(0, 150)}... | Current satisfaction: ${satisfactionRate}% from ${totalVotes} votes.`
       : `Rate and track the performance of ${minister.fullName}, ${minister.portfolio}. Current satisfaction: ${satisfactionRate}% from ${totalVotes} votes.`
 
@@ -57,7 +57,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       openGraph: {
         title: `${minister.fullName} - ${minister.portfolio}`,
         description,
-        url: `https://citizensatisfactionmeter.com/minister/${minister.id}`,
+        url: `https://citizenmeter.vercel.app/minister/${minister.id}`,
         siteName: 'Citizen Satisfaction Meter',
         locale: 'en_GH',
         type: 'profile',
