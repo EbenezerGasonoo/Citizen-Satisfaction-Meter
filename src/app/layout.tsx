@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     'political transparency',
     'government performance metrics'
   ],
-  authors: [{ name: 'Citizen Satisfaction Meter', url: 'https://citizensatisfactionmeter.com' }],
+  authors: [{ name: 'Citizen Satisfaction Meter', url: 'https://citizenmeter.vercel.app' }],
   creator: 'Citizen Satisfaction Meter',
   publisher: 'Citizen Satisfaction Meter',
   formatDetection: {
@@ -35,14 +35,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://citizensatisfactionmeter.com'),
+  metadataBase: new URL('https://citizenmeter.vercel.app'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: 'Citizen Satisfaction Meter - Rate Ghanaian Ministers',
     description: 'Track and rate the performance of Ghanaian cabinet ministers with real-time satisfaction metrics. Transparent democratic accountability.',
-    url: 'https://citizensatisfactionmeter.com',
+    url: 'https://citizenmeter.vercel.app',
     siteName: 'Citizen Satisfaction Meter',
     locale: 'en_GH',
     type: 'website',
@@ -114,7 +114,7 @@ export default function RootLayout({
         {/* SEO Meta Tags */}
         <meta name="author" content="Citizen Satisfaction Meter" />
         <meta name="publisher" content="Citizen Satisfaction Meter" />
-        <link rel="canonical" href="https://citizensatisfactionmeter.com/" />
+        <link rel="canonical" href="https://citizenmeter.vercel.app/" />
         <meta name="robots" content="index, follow" />
         <meta name="google-site-verification" content="WyOS11PDSXy_XtaTEamjvsYZ0Mv1GJEXRsntLzA4H4Y" />
         <meta name="twitter:site" content="@CitizenSatGH" />
@@ -128,7 +128,7 @@ export default function RootLayout({
               name: 'Citizen Satisfaction Meter',
               applicationCategory: 'GovernmentApplication',
               description: 'Track and rate the performance of Ghanaian cabinet ministers with real-time satisfaction metrics',
-              url: 'https://citizensatisfactionmeter.com',
+              url: 'https://citizenmeter.vercel.app',
               operatingSystem: 'Any',
               offers: {
                 '@type': 'Offer',
@@ -162,14 +162,14 @@ export default function RootLayout({
               author: {
                 '@type': 'Organization',
                 name: 'Citizen Satisfaction Meter',
-                url: 'https://citizensatisfactionmeter.com'
+                url: 'https://citizenmeter.vercel.app'
               },
               publisher: {
                 '@type': 'Organization',
                 name: 'Citizen Satisfaction Meter',
                 logo: {
                   '@type': 'ImageObject',
-                  url: 'https://citizensatisfactionmeter.com/logo.png'
+                  url: 'https://citizenmeter.vercel.app/logo.png'
                 }
               }
             })

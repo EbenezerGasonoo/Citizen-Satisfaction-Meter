@@ -938,7 +938,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
         <meta property="og:title" content={`${minister.fullName} – ${Math.round(minister.satisfactionRate)}% Satisfaction`} />
         <meta property="og:description" content={`${minister.fullName}, serving as ${minister.portfolio}, has a citizen satisfaction score of ${Math.round(minister.satisfactionRate)}%.`} />
         <meta property="og:image" content={minister.photoUrl || '/og-image.jpg'} />
-        <meta property="og:url" content={`https://citizensatisfactionmeter.com/minister/${minister.id}`} />
+        <meta property="og:url" content={`https://citizenmeter.vercel.app/minister/${minister.id}`} />
         <meta property="og:type" content="profile" />
 
         {/* Twitter Card */}
@@ -955,7 +955,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
             name: minister.fullName,
             jobTitle: minister.portfolio,
             image: minister.photoUrl,
-            url: `https://citizensatisfactionmeter.com/minister/${minister.id}`,
+            url: `https://citizenmeter.vercel.app/minister/${minister.id}`,
             description: minister.bio,
             worksFor: {
               '@type': 'Organization',
@@ -981,19 +981,19 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                 '@type': 'ListItem',
                 position: 1,
                 name: 'Home',
-                item: 'https://citizensatisfactionmeter.com'
+                item: 'https://citizenmeter.vercel.app'
               },
               {
                 '@type': 'ListItem',
                 position: 2,
                 name: 'Ministers',
-                item: 'https://citizensatisfactionmeter.com/#ministers'
+                item: 'https://citizenmeter.vercel.app/#ministers'
               },
               {
                 '@type': 'ListItem',
                 position: 3,
                 name: minister.fullName,
-                item: `https://citizensatisfactionmeter.com/minister/${minister.id}`
+                item: `https://citizenmeter.vercel.app/minister/${minister.id}`
               }
             ]
           })}

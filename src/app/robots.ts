@@ -21,8 +21,8 @@ export default function robots(): MetadataRoute.Robots {
         crawlDelay: 1,
       },
     ],
-    sitemap: 'https://citizensatisfactionmeter.com/sitemap.xml',
-    host: 'https://citizensatisfactionmeter.com',
+    sitemap: 'https://citizenmeter.vercel.app/sitemap.xml',
+    host: 'https://citizenmeter.vercel.app',
   }
 }
 
