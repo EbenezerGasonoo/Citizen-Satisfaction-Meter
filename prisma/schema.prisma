@@ -11,6 +11,7 @@ model Minister {
   id         Int        @id @default(autoincrement())
   fullName   String
   portfolio  String
+  sector     String?
   photoUrl   String
   bio        String?
   createdAt  DateTime   @default(now())
@@ -95,9 +96,12 @@ model Favorite {
 model Comment {
   id         Int      @id @default(autoincrement())
   ministerId Int
-  content    String
-  clientHash String
-  createdAt  DateTime @default(now())
+  content        String
+  clientHash     String
+  sentiment      String?  // positive, negative, neutral
+  sentimentScore Float?   // -1.0 to 1.0
+  topics         String?  // JSON array of detected tags
+  createdAt      DateTime @default(now())
   minister   Minister @relation(fields: [ministerId], references: [id], onDelete: Cascade)
 
   @@index([ministerId])
@@ -216,6 +220,7 @@ model StagedMinister {
   id            Int      @id @default(autoincrement())
   fullName      String
   portfolio     String
+  sector        String?
   bio           String?
   photoUrl      String?
   sourceUrl     String?

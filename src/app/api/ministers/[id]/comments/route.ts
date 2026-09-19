@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
+import { SentimentAnalyzer } from '@/lib/v2/sentiment-analyzer'
 import crypto from 'crypto'
 
-const prisma = new PrismaClient()
+export const dynamic = 'force-dynamic'
+
+const sentimentAnalyzer = new SentimentAnalyzer()
 
 function generateClientHash(request: NextRequest): string {
   const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
@@ -21,14 +24,23 @@ export async function GET(
 ) {
   try {
     const ministerId = parseInt(params.id)
+    if (isNaN(ministerId)) {
+      return NextResponse.json({ error: 'Invalid minister ID' }, { status: 400 })
+    }
 
     const comments = await prisma.comment.findMany({
       where: { ministerId },
       orderBy: { createdAt: 'desc' },
-      take: 50, // Limit to 50 most recent comments
+      take: 50,
     })
 
-    return NextResponse.json({ comments })
+    // Calculate aggregated sentiment metrics
+    const analytics = sentimentAnalyzer.calculateAggregatedSentiment(comments)
+
+    return NextResponse.json({
+      comments,
+      analytics
+    })
   } catch (error) {
     console.error('Error fetching comments:', error)
     return NextResponse.json(
@@ -44,8 +56,12 @@ export async function POST(
 ) {
   try {
     const ministerId = parseInt(params.id)
+    if (isNaN(ministerId)) {
+      return NextResponse.json({ error: 'Invalid minister ID' }, { status: 400 })
+    }
+
     const clientHash = generateClientHash(request)
-    const { content } = await request.json()
+    const { content } = await request.json().catch(() => ({}))
 
     if (!content || typeof content !== 'string' || content.trim().length === 0) {
       return NextResponse.json(
@@ -63,7 +79,8 @@ export async function POST(
 
     // Check if minister exists
     const minister = await prisma.minister.findUnique({
-      where: { id: ministerId }
+      where: { id: ministerId },
+      select: { id: true }
     })
 
     if (!minister) {
@@ -73,16 +90,26 @@ export async function POST(
       )
     }
 
-    // Create comment
+    // Run AI Sentiment Analysis
+    const analysis = sentimentAnalyzer.analyzeComment(content)
+
+    // Save comment with sentiment scoring & detected topics
     const comment = await prisma.comment.create({
       data: {
         ministerId,
         content: content.trim(),
-        clientHash
+        clientHash,
+        sentiment: analysis.sentiment,
+        sentimentScore: analysis.sentimentScore,
+        topics: analysis.topics.length > 0 ? JSON.stringify(analysis.topics) : null
       }
     })
 
-    return NextResponse.json({ comment })
+    return NextResponse.json({
+      success: true,
+      comment,
+      analysis
+    })
   } catch (error) {
     console.error('Error creating comment:', error)
     return NextResponse.json(
@@ -90,4 +117,4 @@ export async function POST(
       { status: 500 }
     )
   }
-} 
+}

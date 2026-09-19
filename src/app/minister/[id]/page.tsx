@@ -12,6 +12,7 @@ import Head from 'next/head';
 import FavoriteButton from '@/components/FavoriteButton'
 import PolicySection from '@/components/PolicySection'
 import ActionSection from '@/components/ActionSection'
+import CitizenFeedbackSection from '@/components/CitizenFeedbackSection'
 import { motion, AnimatePresence } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -1774,6 +1775,14 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Citizen Feedback & AI Sentiment Pulse */}
+          <div className="mt-12">
+            <CitizenFeedbackSection
+              ministerId={minister.id}
+              ministerName={minister.fullName}
+            />
+          </div>
         </div>
       </div>
     </main>

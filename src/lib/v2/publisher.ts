@@ -88,6 +88,7 @@ export class V2Publisher {
               where: { id: existing.id },
               data: {
                 portfolio: staged.portfolio || existing.portfolio,
+                sector: staged.sector || existing.sector || null,
                 photoUrl: staged.photoUrl || existing.photoUrl,
                 bio: options?.preserveExistingBio && existing.bio ? existing.bio : (staged.bio || existing.bio)
               }
@@ -102,6 +103,7 @@ export class V2Publisher {
               data: {
                 fullName: staged.fullName,
                 portfolio: staged.portfolio,
+                sector: staged.sector || null,
                 bio: staged.bio || null,
                 photoUrl: staged.photoUrl || '/uploads/default-minister.jpg',
                 isTrending: false
