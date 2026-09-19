@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import React from 'react'
 import { prisma } from '@/lib/prisma'
 import AdminDashboardClient from './AdminDashboardClient'
+import { getCabinetSocialOverview } from '@/lib/v2/social-media-reader'
 
 export const dynamic = 'force-dynamic'
 
@@ -137,6 +138,9 @@ export default async function AdminPage() {
     activePolicies
   }
 
+  // Calculate social media telemetry for X.com and Facebook.com
+  const socialOverview = getCabinetSocialOverview(ministers)
+
   // Serialize dates for client boundary
   const recentVotes = recentVotesRaw.map((v) => ({
     id: v.id,
@@ -162,6 +166,7 @@ export default async function AdminPage() {
           scrutinyMinisters={scrutinyMinisters}
           recentVotes={recentVotes}
           recentSubmissions={recentSubmissions}
+          socialOverview={socialOverview}
           adminEmail={session.user?.email}
         />
       </div>

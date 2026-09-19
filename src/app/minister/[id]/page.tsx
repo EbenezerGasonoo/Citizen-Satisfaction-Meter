@@ -13,6 +13,7 @@ import FavoriteButton from '@/components/FavoriteButton'
 import PolicySection from '@/components/PolicySection'
 import ActionSection from '@/components/ActionSection'
 import CitizenFeedbackSection from '@/components/CitizenFeedbackSection'
+import SocialMediaPulse from '@/components/SocialMediaPulse'
 import { motion, AnimatePresence } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -22,7 +23,7 @@ import {
   Calendar, Clock, Users, Activity,
   Target, TrendingUp as TrendingIcon, Star, Briefcase,
   FileText, Zap, Shield, Globe, MapPin,
-  Facebook, Instagram, Linkedin, Mail, Building2
+  Facebook, Instagram, Linkedin, Mail, Building2, Share2
 } from 'lucide-react'
 
 interface MinisterDetail {
@@ -525,7 +526,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
   const [minister, setMinister] = useState<MinisterDetail | null>(null)
   const [loading, setLoading] = useState(true)
   const [voteTrends, setVoteTrends] = useState<VoteTrend[]>([])
-  const [activeTab, setActiveTab] = useState<'overview' | 'actions' | 'policies' | 'analytics'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'actions' | 'policies' | 'social' | 'analytics'>('overview')
   const [imageError, setImageError] = useState(false)
 
   // Track if initial data has been loaded
@@ -1444,6 +1445,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                 { id: 'overview', label: 'Overview', icon: BarChart3 },
                 { id: 'actions', label: 'Actions', icon: Zap },
                 { id: 'policies', label: 'Policies', icon: FileText },
+                { id: 'social', label: 'Social Pulse (𝕏 & FB)', icon: Share2 },
                 { id: 'analytics', label: 'Analytics', icon: Activity },
               ].map((tab) => {
                 const Icon = tab.icon
@@ -1651,6 +1653,28 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                     <PolicySection ministerId={minister.id} />
                   </div>
                 </div>
+
+                {/* Social Media Readings Preview */}
+                <div className="mt-8 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-slate-800/50 rounded-2xl p-6 shadow-2xl" style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)' }}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-50 flex items-center gap-2">
+                      <Share2 className="w-5 h-5 text-primary" />
+                      Social Media Readings (X.com & Facebook.com)
+                    </h3>
+                    <button
+                      onClick={() => setActiveTab('social')}
+                      className="text-sm text-primary hover:underline font-medium"
+                    >
+                      View Full Social Pulse →
+                    </button>
+                  </div>
+                  <SocialMediaPulse
+                    ministerId={minister.id}
+                    ministerName={minister.fullName}
+                    portfolio={minister.portfolio}
+                    satisfactionRate={minister.satisfactionRate}
+                  />
+                </div>
               </motion.div>
             )}
 
@@ -1690,6 +1714,31 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                     Policies and their impact on citizens
                   </p>
                   <PolicySection ministerId={minister.id} />
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === 'social' && (
+              <motion.div
+                key="social"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <div className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-slate-800/50 rounded-2xl p-6 lg:p-8 shadow-2xl" style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)' }}>
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-2 flex items-center gap-2">
+                    <Share2 className="w-6 h-6 text-primary" />
+                    Social Media Readings: X.com & Facebook.com
+                  </h2>
+                  <p className="text-slate-600 dark:text-slate-400 mb-6">
+                    Real-time citizen sentiment, viral discussion topics, and engagement velocity across X (Twitter) and Facebook for {minister.fullName}
+                  </p>
+                  <SocialMediaPulse
+                    ministerId={minister.id}
+                    ministerName={minister.fullName}
+                    portfolio={minister.portfolio}
+                    satisfactionRate={minister.satisfactionRate}
+                  />
                 </div>
               </motion.div>
             )}
