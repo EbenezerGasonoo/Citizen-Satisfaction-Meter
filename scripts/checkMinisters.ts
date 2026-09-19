@@ -35,19 +35,34 @@ async function main() {
     }
   }
 
-  // Check duplicate photo URLs
+  // Check duplicate photo URLs & file existence on disk
+  const fs = await import('fs');
+  const path = await import('path');
   let hasDuplicatePhotos = false;
+  let missingFiles = 0;
+
   for (const [photo, count] of photoCounts.entries()) {
     if (count > 1) {
       console.warn(`⚠️ DUPLICATE PHOTO URL FOUND: "${photo}" used by ${count} ministers!`);
       hasDuplicatePhotos = true;
     }
+    const localDiskPath = path.join(process.cwd(), 'public', photo);
+    if (!fs.existsSync(localDiskPath)) {
+      console.error(`❌ PHOTO MISSING ON DISK: "${localDiskPath}"`);
+      missingFiles++;
+    } else {
+      const sz = fs.statSync(localDiskPath).size;
+      if (sz < 1000) {
+        console.error(`❌ PHOTO FILE TOO SMALL (${sz} bytes): "${localDiskPath}"`);
+        missingFiles++;
+      }
+    }
   }
 
-  if (!hasDuplicateNames && !hasDuplicatePhotos) {
-    console.log('✅ AUDIT PASSED: 0 duplicate minister names, 0 duplicate photo URLs across all 25 ministers.');
+  if (!hasDuplicateNames && !hasDuplicatePhotos && missingFiles === 0) {
+    console.log('✅ AUDIT PASSED: 0 duplicate minister names, 0 duplicate photo URLs, and 25 verified photos on disk.');
   } else {
-    console.error('❌ AUDIT FAILED: Duplicates detected!');
+    console.error(`❌ AUDIT FAILED: Duplicate names: ${hasDuplicateNames}, Duplicate photos: ${hasDuplicatePhotos}, Missing files: ${missingFiles}`);
   }
 
   await prisma.$disconnect();
