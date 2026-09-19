@@ -114,7 +114,7 @@ export class PresidencyHarvester {
       const photoUrl = imgMatch ? imgMatch[1].trim() : '';
 
       // Extract Bio
-      const bioMatch = itemChunk.match(/<div class="content-condensed">\s*<p>(.*?)<\/p>/is);
+      const bioMatch = itemChunk.match(/<div class="content-condensed">\s*<p>([\s\S]*?)<\/p>/i);
       let bio = '';
       if (bioMatch) {
         bio = bioMatch[1]

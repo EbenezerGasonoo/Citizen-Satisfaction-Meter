@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import '@testing-library/jest-dom'
 import VoteButtons from '../VoteButtons'
 
 // Mock fetch
@@ -12,8 +13,8 @@ describe('VoteButtons', () => {
   it('renders vote buttons', () => {
     render(<VoteButtons ministerId={1} />)
     
-    expect(screen.getByText('Satisfied')).toBeInTheDocument()
-    expect(screen.getByText('Not Satisfied')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /^🇬🇭 Satisfied$/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Not Satisfied/i })).toBeInTheDocument()
   })
 
   it('handles satisfied vote', async () => {
@@ -25,7 +26,7 @@ describe('VoteButtons', () => {
 
     render(<VoteButtons ministerId={1} />)
     
-    const satisfiedButton = screen.getByText('Satisfied')
+    const satisfiedButton = screen.getByRole('button', { name: /^🇬🇭 Satisfied$/i })
     fireEvent.click(satisfiedButton)
 
     await waitFor(() => {
@@ -48,7 +49,7 @@ describe('VoteButtons', () => {
 
     render(<VoteButtons ministerId={1} />)
     
-    const notSatisfiedButton = screen.getByText('Not Satisfied')
+    const notSatisfiedButton = screen.getByRole('button', { name: /Not Satisfied/i })
     fireEvent.click(notSatisfiedButton)
 
     await waitFor(() => {
@@ -71,12 +72,12 @@ describe('VoteButtons', () => {
 
     render(<VoteButtons ministerId={1} />)
     
-    const satisfiedButton = screen.getByText('Satisfied')
+    const satisfiedButton = screen.getByRole('button', { name: /^🇬🇭 Satisfied$/i })
     fireEvent.click(satisfiedButton)
 
     await waitFor(() => {
-      expect(satisfiedButton).toHaveClass('bg-green-100')
-      expect(screen.getByText('Not Satisfied')).toBeDisabled()
+      expect(satisfiedButton).toBeDisabled()
+      expect(screen.getByRole('button', { name: /Not Satisfied/i })).toBeDisabled()
     })
   })
 }) 

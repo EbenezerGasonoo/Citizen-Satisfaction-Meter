@@ -199,7 +199,7 @@ export default function AdminAnalyticsClient() {
                 <Calendar className="w-6 h-6 text-orange-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm text-gray-500">Today's Votes</p>
+                <p className="text-sm text-gray-500">Today&apos;s Votes</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {data.dailyVotes[data.dailyVotes.length - 1]?.votes || 0}
                 </p>

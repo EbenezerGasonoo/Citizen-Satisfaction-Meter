@@ -425,8 +425,8 @@ const getSocialMediaLinks = (fullName: string, portfolio: string) => {
   // Default ministry social accounts
   let twitter = null
   let facebook = null
-  let instagram = null
-  let linkedin = null
+  const instagram = null
+  const linkedin = null
   let website = null
 
   if (portfolioLower.includes('president') && !portfolioLower.includes('vice')) {
@@ -904,7 +904,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
       <main className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-2">Minister Not Found</h1>
-          <p className="text-slate-600 dark:text-slate-400 mb-4">The minister you're looking for doesn't exist.</p>
+          <p className="text-slate-600 dark:text-slate-400 mb-4">The minister you&apos;re looking for doesn&apos;t exist.</p>
           <Link href="/" className="btn-primary inline-block">
             Back to Home
           </Link>

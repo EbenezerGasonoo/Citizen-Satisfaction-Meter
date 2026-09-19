@@ -368,7 +368,7 @@ export function getMinisterSocialReadings(
     ministerName,
     portfolio,
     xStats,
-    facebookStats,
+    facebookStats: fbStats,
     overallSentiment,
     recentPosts: [...xPosts, ...fbPosts],
     xSearchUrl,

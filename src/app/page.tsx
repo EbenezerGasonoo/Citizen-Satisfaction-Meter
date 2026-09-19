@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Suspense } from 'react'
 import NationalMeter from '@/components/NationalMeter'
 import TrendingGrid from '@/components/TrendingGrid'
 import MinisterDirectory from '@/components/MinisterDirectory'
@@ -79,7 +78,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                Monitor, evaluate, and engage with the performance of Ghana's cabinet ministers.
+                Monitor, evaluate, and engage with the performance of Ghana&apos;s cabinet ministers.
                 Real-time citizen satisfaction metrics for transparent governance.
               </motion.p>
 
@@ -94,7 +93,7 @@ export default function Home() {
                   {
                     icon: Users,
                     label: 'Active Ministers',
-                    value: '25',
+                    value: '24',
                     description: 'Cabinet Members'
                   },
                   {

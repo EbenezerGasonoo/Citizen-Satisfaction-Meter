@@ -73,7 +73,7 @@ export class AIService {
     }
 
     // Strip citations like [1], [2], [citation needed]
-    let cleaned = rawText.replace(/\[\d+\]/g, '').replace(/\[citation needed\]/gi, '');
+    const cleaned = rawText.replace(/\[\d+\]/g, '').replace(/\[citation needed\]/gi, '');
 
     // Split into sentences
     const sentences = cleaned

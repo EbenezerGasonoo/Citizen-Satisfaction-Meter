@@ -1,7 +1,7 @@
-import { WebDAVClient } from 'webdav'
+import { createClient, WebDAVClient, FileStat } from 'webdav'
 import fs from 'fs'
 import path from 'path'
-import { voteBackupManager } from '../src/lib/vote-backup-manager'
+import { voteBackupManager } from './vote-backup-manager'
 
 interface NextcloudConfig {
   serverUrl: string
@@ -16,8 +16,7 @@ export class NextcloudBackupManager {
 
   constructor(config: NextcloudConfig) {
     this.config = config
-    this.client = new WebDAVClient({
-      serverURL: config.serverUrl,
+    this.client = createClient(config.serverUrl, {
       username: config.username,
       password: config.password,
     })
@@ -56,10 +55,10 @@ export class NextcloudBackupManager {
       console.log(`☁️ Downloading backup from Nextcloud: ${remoteFilePath}`)
       
       // Download from Nextcloud
-      const fileBuffer = await this.client.getFileContents(remoteFilePath)
+      const fileBuffer = (await this.client.getFileContents(remoteFilePath)) as Buffer
       
       // Write to local file
-      fs.writeFileSync(localFilePath, fileBuffer)
+      fs.writeFileSync(localFilePath, Buffer.from(fileBuffer))
       
       console.log(`✅ Backup downloaded from Nextcloud: ${localFilePath}`)
       
@@ -77,10 +76,11 @@ export class NextcloudBackupManager {
       console.log('📁 Listing backups on Nextcloud...')
       
       const contents = await this.client.getDirectoryContents(this.config.remotePath)
+      const items = (Array.isArray(contents) ? contents : ((contents as any).data || [])) as FileStat[]
       
-      const backups = contents
-        .filter(item => item.type === 'file' && item.basename.startsWith('votes-backup-'))
-        .map(item => item.filename)
+      const backups = items
+        .filter((item: FileStat) => item.type === 'file' && item.basename.startsWith('votes-backup-'))
+        .map((item: FileStat) => item.filename)
         .sort()
       
       console.log(`📊 Found ${backups.length} backups on Nextcloud`)

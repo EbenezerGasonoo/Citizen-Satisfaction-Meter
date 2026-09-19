@@ -208,7 +208,7 @@ export default function BulkRemoveDialog({
               {/* Confirmation */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  To confirm, type "REMOVE ALL":
+                  To confirm, type &quot;REMOVE ALL&quot;:
                 </label>
                 <input
                   type="text"

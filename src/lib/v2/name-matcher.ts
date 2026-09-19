@@ -12,7 +12,7 @@ export function normalizeMinisterName(name: string): string[] {
   if (!name) return [];
 
   // Convert to lowercase, remove punctuation except hyphens in compound names
-  let cleaned = name.toLowerCase().replace(/[,()]/g, ' ');
+  const cleaned = name.toLowerCase().replace(/[,()]/g, ' ');
 
   // Split into tokens
   let tokens = cleaned.split(/\s+/).filter(t => t.length > 0);

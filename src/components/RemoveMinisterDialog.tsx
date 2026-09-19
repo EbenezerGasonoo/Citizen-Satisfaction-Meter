@@ -159,7 +159,7 @@ export default function RemoveMinisterDialog({
                     <li>• All favorites of this minister</li>
                     <li>• All policies by this minister</li>
                     <li>• All actions by this minister</li>
-                    <li>• The minister's profile and data</li>
+                    <li>• The minister&apos;s profile and data</li>
                   </ul>
                 </div>
               </div>
@@ -167,7 +167,7 @@ export default function RemoveMinisterDialog({
               {/* Confirmation */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  To confirm, type the minister's full name:
+                  To confirm, type the minister&apos;s full name:
                 </label>
                 <input
                   type="text"
