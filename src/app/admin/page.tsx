@@ -27,6 +27,29 @@ export default async function AdminPage() {
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* V2 AI Automated Pipeline */}
+          <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-slate-800 dark:to-slate-800/80 rounded-lg shadow-md p-6 border-2 border-emerald-500/30 dark:border-emerald-500/20">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-emerald-950 dark:text-emerald-300 flex items-center gap-2">
+                <span>🤖</span> V2 Harvester & Staging
+              </h2>
+              <span className="px-2 py-0.5 bg-emerald-600 text-white text-xs font-bold rounded-full">
+                V2 AI
+              </span>
+            </div>
+            <p className="text-xs text-slate-600 dark:text-slate-400 mb-4">
+              Automated Wikipedia data scraper, portrait downloading pipeline, and quality review dashboard.
+            </p>
+            <div className="space-y-3">
+              <Link
+                href="/admin/v2-review"
+                className="block w-full text-center bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-medium py-2 px-4 rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all shadow-sm"
+              >
+                Review & Publish Staged Ministers
+              </Link>
+            </div>
+          </div>
+
           {/* Minister Management */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
