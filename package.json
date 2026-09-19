@@ -28,6 +28,8 @@
     "v2:download-photos": "tsx scripts/v2/download-photos.ts",
     "v2:enrich": "tsx scripts/v2/enrich-ministers.ts",
     "v2:publish": "tsx scripts/v2/publish-ministers.ts",
+    "v2:cleanup-duplicates": "tsx scripts/v2/cleanup-duplicates.ts",
+    "v2:sync-presidency": "tsx scripts/v2/sync-presidency.ts",
     "v2:pipeline": "tsx scripts/v2/collect-ministers.ts && tsx scripts/v2/download-photos.ts && tsx scripts/v2/enrich-ministers.ts"
   },
   "prisma": {
