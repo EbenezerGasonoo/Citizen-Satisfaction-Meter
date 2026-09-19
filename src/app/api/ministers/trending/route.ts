@@ -2,72 +2,57 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { calculateTrendingMinisters } from '@/lib/trending-calculator'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
+    const now = new Date()
+    const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+
     // Get automatically calculated trending ministers
     const trendingCandidates = await calculateTrendingMinisters()
 
-    // Get ministers marked as trending by admins
+    // Get ministers manually marked as trending by admins
     const adminTrendingMinisters = await prisma.minister.findMany({
       where: {
         isTrending: true,
       },
-      include: {
-        votes: {
-          where: {
-            createdAt: {
-              gte: new Date(Date.now() - 24 * 60 * 60 * 1000), // Last 24 hours
-            },
-          },
-        },
-      },
-      orderBy: {
-        fullName: 'asc', // Alphabetical order
-      },
+      select: { id: true }
     })
 
-    // Combine both sources and remove duplicates
-    const allTrendingIds = new Set([
+    // Combine candidate IDs
+    const candidateMap = new Map(trendingCandidates.map(c => [c.ministerId, c]))
+    const allTrendingIds = Array.from(new Set([
       ...trendingCandidates.map(c => c.ministerId),
       ...adminTrendingMinisters.map(m => m.id)
-    ])
+    ]))
 
-    // Get final list of trending ministers
-    const finalTrendingMinisters = await prisma.minister.findMany({
+    // Get final list of ministers with all votes & latest action
+    const ministers = await prisma.minister.findMany({
       where: {
-        id: { in: Array.from(allTrendingIds) }
+        id: { in: allTrendingIds }
       },
       include: {
-        votes: {
-          where: {
-            createdAt: {
-              gte: new Date(Date.now() - 24 * 60 * 60 * 1000), // Last 24 hours
-            },
-          },
-        },
+        votes: true,
         actions: {
-          orderBy: {
-            date: 'desc',
-          },
-          take: 1, // Get only the most recent action
-        },
-      },
-      orderBy: {
-        fullName: 'asc',
-      },
+          orderBy: { date: 'desc' },
+          take: 1
+        }
+      }
     })
 
-    const formattedTrendingMinisters = finalTrendingMinisters.map((minister: any) => {
+    const formatted = ministers.map((minister) => {
+      const candidate = candidateMap.get(minister.id)
       const totalVotes = minister.votes.length
-      const positiveVotes = minister.votes.filter((vote: any) => vote.positive).length
-      const satisfactionRate = totalVotes > 0 ? Math.round((positiveVotes / totalVotes) * 100) : 50 // Default to 50% if no votes
+      const positiveVotes = minister.votes.filter(v => v.positive).length
+      const negativeVotes = totalVotes - positiveVotes
+      const votes24h = minister.votes.filter(v => v.createdAt >= last24h).length
+      const satisfactionRate = totalVotes > 0 ? Math.round((positiveVotes / totalVotes) * 100) : 50
 
-      // Check if this minister was auto-detected as trending
-      const autoDetected = trendingCandidates.find(c => c.ministerId === minister.id)
-      const trendingScore = autoDetected?.trendingScore || 0
-      const trendingReason = autoDetected?.reason || 'Admin selected'
+      const trendingScore = candidate?.trendingScore || (minister.isTrending ? 25 : 10)
+      const trendingReason = candidate?.reason || (minister.isTrending ? '📌 Featured by Moderation' : 'Active Engagement')
+      const badgeType = candidate?.badgeType || (minister.isTrending ? 'admin_pick' : 'surging')
 
-      // Get the most recent action
       const latestAction = minister.actions && minister.actions.length > 0 ? minister.actions[0] : null
 
       return {
@@ -76,29 +61,38 @@ export async function GET() {
         portfolio: minister.portfolio,
         photoUrl: minister.photoUrl,
         satisfactionRate,
-        voteChange: totalVotes,
-        trend: satisfactionRate > 50 ? 'up' as const : 'down' as const,
+        totalVotes,
+        positiveVotes,
+        negativeVotes,
+        votes24h,
+        trend: satisfactionRate >= 50 ? ('up' as const) : ('down' as const),
         isTrending: true,
         trendingScore,
         trendingReason,
-        autoDetected: !!autoDetected,
+        badgeType,
         latestAction: latestAction ? {
           title: latestAction.title,
           description: latestAction.description,
-          date: latestAction.date,
+          date: latestAction.date
         } : null
       }
     })
 
-    // Sort by trending score (auto-detected first), then by satisfaction rate
-    formattedTrendingMinisters.sort((a, b) => {
-      if (a.autoDetected && !b.autoDetected) return -1
-      if (!a.autoDetected && b.autoDetected) return 1
-      if (a.trendingScore !== b.trendingScore) return b.trendingScore - a.trendingScore
-      return b.satisfactionRate - a.satisfactionRate
+    // Sort by trendingScore descending, then by total votes descending
+    formatted.sort((a, b) => {
+      if (b.trendingScore !== a.trendingScore) {
+        return b.trendingScore - a.trendingScore
+      }
+      return b.totalVotes - a.totalVotes
     })
 
-    return NextResponse.json(formattedTrendingMinisters)
+    // Attach rank
+    const ranked = formatted.map((item, index) => ({
+      ...item,
+      trendingRank: index + 1
+    }))
+
+    return NextResponse.json(ranked)
   } catch (error) {
     console.error('Error fetching trending ministers:', error)
     return NextResponse.json(
@@ -106,4 +100,4 @@ export async function GET() {
       { status: 500 }
     )
   }
-} 
+}
