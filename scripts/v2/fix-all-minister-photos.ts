@@ -39,8 +39,7 @@ const assignments: PhotoAssignment[] = [
   { id: 21, expectedName: 'George Opare Addo',             sourceFile: 'official_george_opare_addo.jpg',     canonicalFile: 'george_opare_addo.jpg' },
   { id: 22, expectedName: 'Kofi Iddie Adams (MP)',         sourceFile: 'kofi_iddie_adams_mp.jpg',            canonicalFile: 'kofi_iddie_adams.jpg' },
   { id: 23, expectedName: 'Agnes Naa Momo Lartey (MP)',    sourceFile: 'agnes_naa_momo_lartey.jpg',          canonicalFile: 'agnes_naa_momo_lartey.jpg' },
-  { id: 25, expectedName: 'Edward Omane Boamah',           sourceFile: 'official_edward_omane_boamah.jpg',   canonicalFile: 'edward_omane_boamah.jpg' },
-  { id: 27, expectedName: 'Ibrahim Murtala Muhammed',      sourceFile: 'ibrahim_murtala_muhammed_mp.jpg',    canonicalFile: 'ibrahim_murtala_muhammed.jpg' },
+  { id: 27, expectedName: 'Dr Zanetor Agyeman-Rawlings (MP)', sourceFile: 'zanetor_agyeman_rawlings.jpg',    canonicalFile: 'zanetor_agyeman_rawlings.jpg' },
 ];
 
 async function main() {

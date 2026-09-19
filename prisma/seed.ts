@@ -150,9 +150,9 @@ const ministers = [
   },
   {
     fullName: 'Kenneth Gilbert Adjei',
-    portfolio: 'Minister for Works, Housing & Water Resources',
+    portfolio: 'Minister for Defence',
     photoUrl: '/uploads/kenneth_gilbert_adjei.jpeg',
-    bio: 'Kenneth Gilbert Adjei is a Ghanaian politician and public servant with experience in infrastructure development and housing policy.',
+    bio: 'Kenneth Gilbert Adjei is a Ghanaian politician and financial analyst who was appointed and sworn in as Minister for Defence by President John Dramani Mahama. He previously served as Deputy Minister for Defence and has extensive experience in defense procurement, security operations, and national strategic planning.',
     isTrending: false,
   },
   {
@@ -165,15 +165,22 @@ const ministers = [
   {
     fullName: 'Kofi Iddie Adams (MP)',
     portfolio: 'Minister for Sports & Recreation',
-    photoUrl: '/uploads/kofi_iddie_adams_mp.jpg',
+    photoUrl: '/uploads/kofi_iddie_adams.jpg',
     bio: 'Kofi Iddie Adams is a Ghanaian politician and Member of Parliament for Buem constituency. He has been involved in sports development and youth empowerment initiatives.',
     isTrending: false,
   },
   {
     fullName: 'Agnes Naa Momo Lartey (MP)',
     portfolio: 'Minister for Gender, Children & Social Protection',
-    photoUrl: '/uploads/agnes_naa_momo_lartey_mp.webp',
+    photoUrl: '/uploads/agnes_naa_momo_lartey.jpg',
     bio: 'Agnes Naa Momo Lartey is a Ghanaian politician and Member of Parliament. She has been involved in gender equality and social protection policy development.',
+    isTrending: false,
+  },
+  {
+    fullName: 'Dr Zanetor Agyeman-Rawlings (MP)',
+    portfolio: 'Minister for Environment, Science, Technology and Innovation',
+    photoUrl: '/uploads/zanetor_agyeman_rawlings.jpg',
+    bio: 'Dr. Zanetor Agyeman-Rawlings is a Ghanaian medical doctor and politician representing the Klottey-Korle Constituency in Parliament. She serves as the Minister for Environment, Science, Technology and Innovation. She earned her medical degree from the Royal College of Surgeons in Ireland and holds certifications in defense management and conflict and crisis management from the Ghana Armed Forces Command and Staff College.',
     isTrending: false,
   },
 ]
