@@ -159,17 +159,20 @@ model VerificationToken {
 }
 
 model Action {
-  id          Int          @id @default(autoincrement())
-  title       String
-  description String
-  status      String
-  date        DateTime
-  impact      String
-  ministerId  Int
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  minister    Minister     @relation(fields: [ministerId], references: [id], onDelete: Cascade)
-  votes       ActionVote[]
+  id              Int          @id @default(autoincrement())
+  title           String
+  description     String
+  status          String
+  date            DateTime
+  impact          String
+  sourceUrl       String?
+  sourcePublisher String?
+  civicContext    String?
+  ministerId      Int
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  minister        Minister     @relation(fields: [ministerId], references: [id], onDelete: Cascade)
+  votes           ActionVote[]
 
   @@index([ministerId])
 }

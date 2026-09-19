@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
+import { ExternalLink, Newspaper } from 'lucide-react';
 
 interface Action {
   id: number;
@@ -10,6 +11,9 @@ interface Action {
   status: string;
   date: string;
   impact: string;
+  sourceUrl?: string | null;
+  sourcePublisher?: string | null;
+  civicContext?: string | null;
   totalVotes?: number;
   positiveVotes?: number;
   satisfactionRate?: number;
@@ -149,9 +153,46 @@ export default function ActionSection({ ministerId }: { ministerId: number }) {
                 </span>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-0">{action.title}</h3>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{action.status} | Impact: {action.impact}</p>
-              <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 whitespace-pre-line">{action.description}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">Date: {action.date.slice(0,10)}</p>
+              <div className="flex flex-wrap items-center gap-2 mb-2">
+                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-800/60 text-blue-800 dark:text-blue-200">
+                  {action.status}
+                </span>
+                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300">
+                  {action.impact} Impact
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 ml-auto">
+                  {action.date.slice(0, 10)}
+                </span>
+              </div>
+
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 whitespace-pre-line leading-relaxed">
+                {action.description}
+              </p>
+
+              {action.civicContext && (
+                <div className="bg-blue-100/50 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-800/50 rounded-xl p-2.5 mb-3 text-xs text-blue-900 dark:text-blue-200">
+                  <span className="font-semibold block mb-0.5">🏛️ Civic Impact:</span>
+                  <span>{action.civicContext}</span>
+                </div>
+              )}
+
+              {action.sourceUrl && (
+                <div className="flex items-center justify-between mb-4 pt-2 border-t border-blue-200/50 dark:border-blue-800/40 text-xs">
+                  <span className="text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                    <Newspaper className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                    <span>Reported by <strong>{action.sourcePublisher || 'Verified Outlet'}</strong></span>
+                  </span>
+                  <a
+                    href={action.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                  >
+                    <span>Read Original Article</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+              )}
               {/* Satisfaction Rate and Vote Counts as progress bar */}
               {typeof action.satisfactionRate === 'number' && (
                 <div className="flex flex-col items-center mb-4 w-full">

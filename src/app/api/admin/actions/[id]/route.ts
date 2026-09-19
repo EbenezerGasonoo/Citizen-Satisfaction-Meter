@@ -5,7 +5,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   try {
     const id = Number(params.id);
     const body = await req.json();
-    const { title, description, status, date, impact, ministerId } = body;
+    const { title, description, status, date, impact, ministerId, sourceUrl, sourcePublisher, civicContext } = body;
     if (!title || !description || !status || !date || !impact || !ministerId) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
@@ -17,6 +17,9 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         status,
         date: new Date(date),
         impact,
+        sourceUrl: sourceUrl !== undefined ? sourceUrl : undefined,
+        sourcePublisher: sourcePublisher !== undefined ? sourcePublisher : undefined,
+        civicContext: civicContext !== undefined ? civicContext : undefined,
         ministerId: Number(ministerId),
       },
     });

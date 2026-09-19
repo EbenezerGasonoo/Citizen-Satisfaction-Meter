@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Edit, Trash2 } from 'lucide-react'
+import { Plus, Edit, Trash2, ExternalLink, Newspaper, Sparkles } from 'lucide-react'
 
 interface Action {
   id: number
@@ -10,6 +10,15 @@ interface Action {
   status: string
   date: string
   impact: string
+  sourceUrl?: string | null
+  sourcePublisher?: string | null
+  civicContext?: string | null
+  ministerId: number
+  minister?: {
+    id: number
+    fullName: string
+    portfolio: string
+  }
 }
 
 export default function AdminActionsClient() {
@@ -23,6 +32,10 @@ export default function AdminActionsClient() {
     status: 'Active',
     date: '',
     impact: 'Medium',
+    ministerId: 1,
+    sourceUrl: '',
+    sourcePublisher: '',
+    civicContext: '',
   })
 
   useEffect(() => {
@@ -76,8 +89,12 @@ export default function AdminActionsClient() {
       title: action.title,
       description: action.description,
       status: action.status,
-      date: action.date,
+      date: action.date ? new Date(action.date).toISOString().slice(0, 10) : '',
       impact: action.impact,
+      ministerId: action.ministerId || (action.minister?.id || 1),
+      sourceUrl: action.sourceUrl || '',
+      sourcePublisher: action.sourcePublisher || '',
+      civicContext: action.civicContext || '',
     })
     setShowForm(true)
   }
@@ -107,6 +124,10 @@ export default function AdminActionsClient() {
       status: 'Active',
       date: '',
       impact: 'Medium',
+      ministerId: 1,
+      sourceUrl: '',
+      sourcePublisher: '',
+      civicContext: '',
     })
   }
 
@@ -155,13 +176,42 @@ export default function AdminActionsClient() {
             <div key={action.id} className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {action.minister && (
+                    <div className="mb-2">
+                      <span className="inline-block text-xs font-bold text-green-800 bg-green-100 px-2.5 py-0.5 rounded-full border border-green-200">
+                        {action.minister.fullName} — {action.minister.portfolio}
+                      </span>
+                    </div>
+                  )}
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">
                     {action.title}
                   </h3>
-                  <p className="text-gray-600 mb-4">{action.description}</p>
+                  <p className="text-gray-600 mb-2">{action.description}</p>
                   
-                  <div className="flex gap-4 text-sm">
-                    <span className={`px-2 py-1 rounded-full ${
+                  {action.civicContext && (
+                    <div className="bg-blue-50 border border-blue-200 text-blue-900 text-xs rounded-lg p-2.5 mb-3">
+                      <strong>🏛️ Civic Impact:</strong> {action.civicContext}
+                    </div>
+                  )}
+
+                  {action.sourceUrl && (
+                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
+                      <Newspaper className="w-3.5 h-3.5 text-blue-600" />
+                      <span>Source: <strong>{action.sourcePublisher || 'Verified Outlet'}</strong></span>
+                      <a
+                        href={action.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline flex items-center gap-1 font-medium ml-2"
+                      >
+                        <span>View Article</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  )}
+
+                  <div className="flex flex-wrap gap-3 text-sm items-center">
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                       action.status === 'Active' 
                         ? 'bg-green-100 text-green-800' 
                         : action.status === 'Completed'
@@ -170,7 +220,7 @@ export default function AdminActionsClient() {
                     }`}>
                       {action.status}
                     </span>
-                    <span className={`px-2 py-1 rounded-full ${
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                       action.impact === 'High' 
                         ? 'bg-red-100 text-red-800' 
                         : action.impact === 'Medium'
@@ -179,7 +229,7 @@ export default function AdminActionsClient() {
                     }`}>
                       {action.impact} Impact
                     </span>
-                    <span className="text-gray-500">
+                    <span className="text-gray-500 text-xs">
                       Date: {new Date(action.date).toLocaleDateString()}
                     </span>
                   </div>
@@ -290,6 +340,46 @@ export default function AdminActionsClient() {
                   onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cocoa-green focus:border-transparent"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  🏛️ Civic Context / Why This Matters to Citizens
+                </label>
+                <textarea
+                  rows={2}
+                  value={formData.civicContext}
+                  onChange={(e) => setFormData({ ...formData, civicContext: e.target.value })}
+                  placeholder="Explain why everyday Ghanaians should care about this update..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cocoa-green focus:border-transparent text-sm"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    News Publisher
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.sourcePublisher}
+                    onChange={(e) => setFormData({ ...formData, sourcePublisher: e.target.value })}
+                    placeholder="e.g. Citi Newsroom, JoyNews"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cocoa-green focus:border-transparent text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Original Article URL
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.sourceUrl}
+                    onChange={(e) => setFormData({ ...formData, sourceUrl: e.target.value })}
+                    placeholder="https://..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cocoa-green focus:border-transparent text-sm"
+                  />
+                </div>
               </div>
 
               <div className="flex gap-4 pt-4">

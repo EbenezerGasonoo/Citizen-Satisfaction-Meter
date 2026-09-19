@@ -13,7 +13,8 @@ import {
   Users,
   Activity,
   CheckCircle2,
-  Newspaper
+  Newspaper,
+  ExternalLink
 } from 'lucide-react'
 
 interface TrendingMinister {
@@ -32,8 +33,13 @@ interface TrendingMinister {
   badgeType: 'top_voted' | 'high_approval' | 'recent_action' | 'surging' | 'admin_pick'
   isTrending: boolean
   latestAction?: {
+    id?: number
     title: string
     description: string
+    civicContext?: string | null
+    sourceUrl?: string | null
+    sourcePublisher?: string | null
+    impact?: string | null
     date: string
   } | null
 }
@@ -261,16 +267,50 @@ export default function TrendingGrid() {
 
                       {/* Why In The News / Latest Headline Box */}
                       {minister.latestAction && (
-                        <div className="flex flex-col gap-1 text-xs text-slate-200 bg-white/10 rounded-xl p-3 border border-white/15 backdrop-blur-md group-hover:bg-white/15 transition-colors">
-                          <div className="flex items-center gap-1.5">
-                            <Newspaper className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                            <span className="text-[10px] uppercase font-bold text-amber-300 tracking-wider">
-                              Why in the News
-                            </span>
+                        <div className="flex flex-col gap-1.5 text-xs text-slate-200 bg-white/10 rounded-xl p-3 border border-white/15 backdrop-blur-md group-hover:bg-white/15 transition-colors">
+                          <div className="flex items-center justify-between gap-1.5">
+                            <div className="flex items-center gap-1.5">
+                              <Newspaper className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+                              <span className="text-[10px] uppercase font-bold text-amber-300 tracking-wider">
+                                Why in the News
+                              </span>
+                            </div>
+                            {minister.latestAction.impact && (
+                              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-200 border border-amber-400/30">
+                                {minister.latestAction.impact} Impact
+                              </span>
+                            )}
                           </div>
+
                           <span className="font-semibold line-clamp-2 leading-relaxed text-white">
                             {minister.latestAction.title}
                           </span>
+
+                          {minister.latestAction.civicContext && (
+                            <p className="text-[10px] text-slate-300/90 line-clamp-2 italic font-normal bg-black/20 rounded-lg p-1.5 border border-white/5">
+                              {minister.latestAction.civicContext}
+                            </p>
+                          )}
+
+                          {minister.latestAction.sourceUrl && (
+                            <div className="flex items-center justify-between pt-1 border-t border-white/10 text-[10px]">
+                              <span className="text-white/60 truncate max-w-[130px]">
+                                {minister.latestAction.sourcePublisher || 'Verified Source'}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  window.open(minister.latestAction!.sourceUrl!, '_blank');
+                                }}
+                                className="flex items-center gap-1 text-amber-300 hover:text-amber-200 underline font-medium cursor-pointer"
+                              >
+                                <span>Read Source</span>
+                                <ExternalLink className="w-2.5 h-2.5" />
+                              </button>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>

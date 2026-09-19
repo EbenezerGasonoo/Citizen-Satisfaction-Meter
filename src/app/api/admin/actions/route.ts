@@ -16,7 +16,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { title, description, status, date, impact, ministerId } = body;
+    const { title, description, status, date, impact, ministerId, sourceUrl, sourcePublisher, civicContext } = body;
     if (!title || !description || !status || !date || !impact || !ministerId) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
@@ -27,6 +27,9 @@ export async function POST(req: NextRequest) {
         status,
         date: new Date(date),
         impact,
+        sourceUrl: sourceUrl || null,
+        sourcePublisher: sourcePublisher || null,
+        civicContext: civicContext || null,
         ministerId: Number(ministerId),
       },
     });

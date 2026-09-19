@@ -72,8 +72,13 @@ export async function GET() {
         trendingReason,
         badgeType,
         latestAction: latestAction ? {
+          id: latestAction.id,
           title: latestAction.title,
           description: latestAction.description,
+          civicContext: latestAction.civicContext,
+          sourceUrl: latestAction.sourceUrl,
+          sourcePublisher: latestAction.sourcePublisher,
+          impact: latestAction.impact,
           date: latestAction.date
         } : null
       }
