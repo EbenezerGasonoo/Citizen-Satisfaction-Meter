@@ -1623,7 +1623,7 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-50 flex items-center gap-2">
                         <Zap className="w-5 h-5 text-primary" />
-                        Recent Actions
+                        In the News & Recent Actions
                       </h3>
                       <button
                         onClick={() => setActiveTab('actions')}
@@ -1664,10 +1664,10 @@ export default function MinisterPage({ params }: { params: { id: string } }) {
                 <div className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-slate-800/50 rounded-2xl p-6 lg:p-8 shadow-2xl" style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)' }}>
                   <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-2 flex items-center gap-2">
                     <Zap className="w-6 h-6 text-primary" />
-                    Key Actions & Initiatives
+                    Why In The News: Key Actions & National Headlines
                   </h2>
                   <p className="text-slate-600 dark:text-slate-400 mb-6">
-                    Track major initiatives and activities undertaken by this minister
+                    Track the major news headlines, policy reforms, and verified activities undertaken by this minister
                   </p>
                   <ActionSection ministerId={minister.id} />
                 </div>

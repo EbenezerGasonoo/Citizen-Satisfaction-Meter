@@ -12,7 +12,8 @@ import {
   Award,
   Users,
   Activity,
-  CheckCircle2
+  CheckCircle2,
+  Newspaper
 } from 'lucide-react'
 
 interface TrendingMinister {
@@ -258,13 +259,13 @@ export default function TrendingGrid() {
                         </p>
                       )}
 
-                      {/* Latest Action / Policy Box */}
+                      {/* Why In The News / Latest Headline Box */}
                       {minister.latestAction && (
                         <div className="flex flex-col gap-1 text-xs text-slate-200 bg-white/10 rounded-xl p-3 border border-white/15 backdrop-blur-md group-hover:bg-white/15 transition-colors">
                           <div className="flex items-center gap-1.5">
-                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-                            <span className="text-[10px] uppercase font-bold text-white/70 tracking-wider">
-                              Latest Action
+                            <Newspaper className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+                            <span className="text-[10px] uppercase font-bold text-amber-300 tracking-wider">
+                              Why in the News
                             </span>
                           </div>
                           <span className="font-semibold line-clamp-2 leading-relaxed text-white">

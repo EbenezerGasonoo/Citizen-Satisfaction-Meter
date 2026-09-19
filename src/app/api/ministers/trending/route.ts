@@ -49,11 +49,12 @@ export async function GET() {
       const votes24h = minister.votes.filter(v => v.createdAt >= last24h).length
       const satisfactionRate = totalVotes > 0 ? Math.round((positiveVotes / totalVotes) * 100) : 50
 
-      const trendingScore = candidate?.trendingScore || (minister.isTrending ? 25 : 10)
-      const trendingReason = candidate?.reason || (minister.isTrending ? '📌 Featured by Moderation' : 'Active Engagement')
-      const badgeType = candidate?.badgeType || (minister.isTrending ? 'admin_pick' : 'surging')
-
       const latestAction = minister.actions && minister.actions.length > 0 ? minister.actions[0] : null
+      const trendingScore = candidate?.trendingScore || (minister.isTrending ? 60 : 10)
+      const trendingReason = candidate?.reason && !candidate.reason.includes('Moderation')
+        ? candidate.reason
+        : (latestAction ? `📰 ${latestAction.title}` : (minister.isTrending ? '⭐ In the News' : 'Active Engagement'))
+      const badgeType = candidate?.badgeType || (latestAction ? 'recent_action' : (minister.isTrending ? 'admin_pick' : 'surging'))
 
       return {
         id: minister.id,

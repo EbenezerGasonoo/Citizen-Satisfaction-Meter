@@ -142,7 +142,7 @@ export async function calculateTrendingMinisters(criteria: TrendingCriteria = DE
       score += 15
       if (!reason || badgeType === 'surging') {
         badgeType = 'recent_action'
-        reason = `📢 Action: ${latestAction.title}`
+        reason = `📰 ${latestAction.title}`
       }
     }
 
@@ -151,7 +151,7 @@ export async function calculateTrendingMinisters(criteria: TrendingCriteria = DE
       score += 25
       if (!reason) {
         badgeType = 'admin_pick'
-        reason = `📌 Featured by Moderation`
+        reason = latestAction ? `📰 ${latestAction.title}` : `⭐ Top Newsmaker`
       }
     }
 
