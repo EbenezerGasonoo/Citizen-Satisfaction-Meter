@@ -96,10 +96,13 @@ export class PresidencyHarvester {
     for (let i = 1; i < items.length; i++) {
       const itemChunk = items[i];
 
-      // Extract Name
-      const nameMatch = itemChunk.match(/<h3 class="h6">([^<]+)(?:<br\s*\/?>)?<\/h3>/i);
+      // Extract Name (allowing any whitespace or breaks inside h3)
+      const nameMatch = itemChunk.match(/<h3 class="h6">([\s\S]*?)<\/h3>/i);
       if (!nameMatch) continue;
-      const rawName = nameMatch[1].replace(/<[^>]+>/g, '').trim();
+      const rawName = nameMatch[1]
+        .replace(/<[^>]+>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
 
       // Extract Portfolio
       const portfolioMatch = itemChunk.match(/<div class="subtitle">\s*<p>([^<]+)<\/p>/i);
@@ -160,17 +163,36 @@ export class PresidencyHarvester {
     const filename = `${slug}${ext}`;
     const targetPath = path.join(this.uploadsDir, filename);
 
+    // If file already exists and is healthy, we already have the canonical photo
+    if (fs.existsSync(targetPath)) {
+      const stats = fs.statSync(targetPath);
+      if (stats.size > 1000) {
+        console.log(`[PresidencyHarvester] Canonical photo already exists for ${fullName}: /uploads/${filename}`);
+        return `/uploads/${filename}`;
+      }
+    }
+
     try {
+      console.log(`[PresidencyHarvester] Downloading official photo for ${fullName} from ${remoteUrl}...`);
       const res = await fetch(remoteUrl, {
-        headers: { 'User-Agent': DEFAULT_USER_AGENT }
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+          'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+        }
       });
 
-      if (!res.ok) return null;
+      if (!res.ok) {
+        console.warn(`[PresidencyHarvester] Photo HTTP ${res.status} for ${fullName}: ${remoteUrl}`);
+        return null;
+      }
 
       const buffer = Buffer.from(await res.arrayBuffer());
       if (buffer.length > 1000) {
         await fs.promises.writeFile(targetPath, buffer);
+        console.log(`[PresidencyHarvester] Saved photo for ${fullName}: /uploads/${filename} (${buffer.length} bytes)`);
         return `/uploads/${filename}`;
+      } else {
+        console.warn(`[PresidencyHarvester] Photo buffer too small (${buffer.length} bytes) for ${fullName}`);
       }
     } catch (err) {
       console.warn(`[PresidencyHarvester] Could not download photo for ${fullName}:`, err);
