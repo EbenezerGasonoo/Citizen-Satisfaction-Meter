@@ -2,9 +2,10 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions'
 import { redirect } from 'next/navigation'
 import React from 'react'
-import { Suspense } from 'react'
-import Link from 'next/link'
-import AdminStatsClient from './AdminStatsClient'
+import { prisma } from '@/lib/prisma'
+import AdminDashboardClient from './AdminDashboardClient'
+
+export const dynamic = 'force-dynamic'
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions)
@@ -12,206 +13,158 @@ export default async function AdminPage() {
     redirect('/auth/signin')
   }
   if ((session.user as any).role !== 'ADMIN') {
-    return <div className="p-8 text-center text-red-600">Unauthorized: Admins only.</div>
+    return <div className="p-8 text-center text-red-600 font-semibold">Unauthorized: Admins only.</div>
   }
+
+  const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000)
+
+  // Fetch all core admin telemetry in parallel
+  const [
+    ministers,
+    totalVotes,
+    votesToday,
+    positiveVotes,
+    totalActions,
+    actionsWithSource,
+    pendingSubmissions,
+    stagedMinisters,
+    activePolicies,
+    recentVotesRaw,
+    recentSubmissionsRaw
+  ] = await Promise.all([
+    prisma.minister.findMany({
+      select: {
+        id: true,
+        fullName: true,
+        portfolio: true,
+        photoUrl: true,
+        isTrending: true,
+        votes: {
+          select: { positive: true }
+        }
+      }
+    }),
+    prisma.vote.count(),
+    prisma.vote.count({
+      where: {
+        createdAt: { gte: yesterday }
+      }
+    }),
+    prisma.vote.count({
+      where: { positive: true }
+    }),
+    prisma.action.count(),
+    prisma.action.count({
+      where: { sourceUrl: { not: null } }
+    }),
+    prisma.submission.count({
+      where: { status: 'pending' }
+    }),
+    prisma.stagedMinister.count({
+      where: { status: 'PENDING' }
+    }),
+    prisma.policy.count(),
+    prisma.vote.findMany({
+      take: 6,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        positive: true,
+        createdAt: true,
+        minister: {
+          select: {
+            id: true,
+            fullName: true,
+            portfolio: true,
+            photoUrl: true
+          }
+        }
+      }
+    }),
+    prisma.submission.findMany({
+      take: 4,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        type: true,
+        message: true,
+        status: true,
+        createdAt: true
+      }
+    })
+  ])
+
+  // Calculate satisfaction rates for each minister
+  const ministerStats = ministers.map((m) => {
+    const total = m.votes.length
+    const positive = m.votes.filter((v) => v.positive).length
+    const satisfactionRate = total > 0 ? Math.round((positive / total) * 100) : 50
+    return {
+      id: m.id,
+      fullName: m.fullName,
+      portfolio: m.portfolio,
+      photoUrl: m.photoUrl,
+      isTrending: m.isTrending,
+      totalVotes: total,
+      positiveVotes: positive,
+      satisfactionRate
+    }
+  })
+
+  // Sort by satisfaction rate & vote confidence
+  const sortedMinisters = [...ministerStats].sort((a, b) => {
+    if (b.satisfactionRate !== a.satisfactionRate) {
+      return b.satisfactionRate - a.satisfactionRate
+    }
+    return b.totalVotes - a.totalVotes
+  })
+
+  const topMinisters = sortedMinisters.slice(0, 3)
+  const scrutinyMinisters = [...sortedMinisters].reverse().slice(0, 3)
+
+  const satisfactionRate = totalVotes > 0 ? Math.round((positiveVotes / totalVotes) * 100) : 0
+
+  const metrics = {
+    totalMinisters: ministers.length,
+    totalVotes,
+    votesToday,
+    satisfactionRate,
+    totalActions,
+    actionsWithSource,
+    pendingSubmissions,
+    stagedMinisters,
+    trendingMinisters: ministers.filter((m) => m.isTrending).length,
+    activePolicies
+  }
+
+  // Serialize dates for client boundary
+  const recentVotes = recentVotesRaw.map((v) => ({
+    id: v.id,
+    positive: v.positive,
+    createdAt: v.createdAt.toISOString(),
+    minister: v.minister
+  }))
+
+  const recentSubmissions = recentSubmissionsRaw.map((s) => ({
+    id: s.id,
+    type: s.type,
+    message: s.message,
+    status: s.status,
+    createdAt: s.createdAt.toISOString()
+  }))
+
   return (
-    <main className="container mx-auto px-4 py-8">
-      <div className="max-w-6xl mx-auto">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold text-cocoa-green dark:text-green-400 mb-2">
-            Admin Dashboard
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Manage ministers, view analytics, and export data
-          </p>
-        </header>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* V2 AI Automated Pipeline */}
-          <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-slate-800 dark:to-slate-800/80 rounded-lg shadow-md p-6 border-2 border-emerald-500/30 dark:border-emerald-500/20">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-emerald-950 dark:text-emerald-300 flex items-center gap-2">
-                <span>🤖</span> V2 Harvester & Staging
-              </h2>
-              <span className="px-2 py-0.5 bg-emerald-600 text-white text-xs font-bold rounded-full">
-                V2 AI
-              </span>
-            </div>
-            <p className="text-xs text-slate-600 dark:text-slate-400 mb-4">
-              Automated Wikipedia data scraper, portrait downloading pipeline, and quality review dashboard.
-            </p>
-            <div className="space-y-3">
-              <Link
-                href="/admin/v2-review"
-                className="block w-full text-center bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-medium py-2 px-4 rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all shadow-sm"
-              >
-                Review & Publish Staged Ministers
-              </Link>
-            </div>
-          </div>
-
-          {/* Minister Management */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Minister Management
-            </h2>
-            <div className="space-y-3">
-              <Link
-                href="/admin/ministers"
-                className="block w-full text-center bg-cocoa-green dark:bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-cocoa-green/90 dark:hover:bg-green-700 transition-colors"
-              >
-                View All Ministers
-              </Link>
-              <Link
-                href="/admin/ministers/new"
-                className="block w-full text-center bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"
-              >
-                Add New Minister
-              </Link>
-            </div>
-          </div>
-
-          {/* Policy Management */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Policy Management
-            </h2>
-            <div className="space-y-3">
-              <Link
-                href="/admin/policies"
-                className="block w-full text-center bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
-              >
-                View All Policies
-              </Link>
-              <Link
-                href="/admin/policies/new"
-                className="block w-full text-center bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600 transition-colors"
-              >
-                Create New Policy
-              </Link>
-            </div>
-          </div>
-
-          {/* Action Management */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Action Management
-            </h2>
-            <div className="space-y-3">
-              <Link
-                href="/admin/actions"
-                className="block w-full text-center bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                View All Actions
-              </Link>
-              <Link
-                href="/admin/actions/new"
-                className="block w-full text-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
-              >
-                Create New Action
-              </Link>
-            </div>
-          </div>
-
-          {/* Analytics */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Analytics
-            </h2>
-            <div className="space-y-3">
-              <Link
-                href="/admin/analytics"
-                className="block w-full text-center bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                View Analytics
-              </Link>
-              <Link
-                href="/admin/analytics/export"
-                className="block w-full text-center bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors"
-              >
-                Export Data
-              </Link>
-            </div>
-          </div>
-
-          {/* Vote Preservation */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Vote Preservation
-            </h2>
-            <div className="space-y-3">
-              <Link
-                href="/admin/vote-preservation"
-                className="block w-full text-center bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
-              >
-                Manage Vote Backups
-              </Link>
-              <Link
-                href="/admin/vote-preservation?action=verify"
-                className="block w-full text-center bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors"
-              >
-                Verify Vote Integrity
-              </Link>
-            </div>
-          </div>
-
-          {/* Trending Management */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Trending Management
-            </h2>
-            <div className="space-y-3">
-              <Link
-                href="/admin/trending"
-                className="block w-full text-center bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors"
-              >
-                Manage Trending
-              </Link>
-              <Link
-                href="/admin/trending/analytics"
-                className="block w-full text-center bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors"
-              >
-                Trending Analytics
-              </Link>
-            </div>
-          </div>
-
-          {/* System */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              System
-            </h2>
-            <div className="space-y-3">
-              <Link
-                href="/admin/settings"
-                className="block w-full text-center bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                Admin Settings
-              </Link>
-              <Link
-                href="/admin/logs"
-                className="block w-full text-center bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors"
-              >
-                System Logs
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-            Quick Statistics
-          </h2>
-          <Suspense fallback={<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-            ))}
-          </div>}>
-            <AdminStatsClient />
-          </Suspense>
-        </div>
+    <main className="min-h-screen bg-slate-50/60 dark:bg-slate-950 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <AdminDashboardClient
+          metrics={metrics}
+          topMinisters={topMinisters}
+          scrutinyMinisters={scrutinyMinisters}
+          recentVotes={recentVotes}
+          recentSubmissions={recentSubmissions}
+          adminEmail={session.user?.email}
+        />
       </div>
     </main>
   )
-} 
+}
